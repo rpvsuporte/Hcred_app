@@ -1,0 +1,196 @@
+<ion-content [fullscreen]="true" class="pageCadastro">
+
+    <!-- Topo -->
+
+    <div class="topo-cadastro">
+        <ion-icon name="chevron-back-outline" (click)="navigation('simulador')" class="icone-voltar"></ion-icon>
+        <h1>Cadastro</h1>
+        <img src="../../assets/img/logoHcred-mobile.png" class="logo-cadastro" alt="">
+    </div>
+
+    <!-- Form Cadastro -->
+
+    <h2>Dados Pessoais</h2>
+
+    <ion-list class="form-cadastro">
+
+        <ion-item *ngIf="camposVisiveis.has('cpf')">
+            <ion-input [class.input-erro]="errosCampos['cpf']" label="CPF" fill="outline" type="text" labelPlacement="floating" inputmode="numeric" maxlength="14" [(ngModel)]="cadastro.cpf" (ionInput)="formatarCPF($event)"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('nomeCompleto')">
+            <ion-input label="Nome Completo" [class.input-erro]="errosCampos['nomeCompleto']"  fill="outline" type="text" labelPlacement="floating" [(ngModel)]="cadastro.nomeCompleto"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('rg')">
+            <ion-input label="RG" [class.input-erro]="errosCampos['rg']" fill="outline" type="text" labelPlacement="floating" [(ngModel)]="cadastro.rg"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('dataNascimento')">
+            <ion-input label="Data de Nascimento" (ionInput)="mascararData($event)" placeholder="dd/mm/aaaa" maxlength="10" [class.input-erro]="errosCampos['dataNascimento']" fill="outline" labelPlacement="stacked" [(ngModel)]="cadastro.dataNascimento"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('whatsapp')">
+            <ion-input label="WhatsApp" [class.input-erro]="errosCampos['whatsapp']" fill="outline" labelPlacement="floating" type="tel" maxlength="15" [(ngModel)]="cadastro.whatsapp" (ionInput)="formatarTelefone($event)"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('celular')">
+            <ion-input label="Celular" [class.input-erro]="errosCampos['celular']" labelPlacement="floating" fill="outline" type="tel" inputmode="tel" maxlength="15" [(ngModel)]="cadastro.celular" (ionInput)="formatarTelefone($event)"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('email')">
+            <ion-input label="Email" [class.input-erro]="errosCampos['email']" fill="outline" labelPlacement="floating" type="email" [(ngModel)]="cadastro.email"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('prazo') && operacao.tabela === 'PIX FÁCIL'">
+            <ion-select label="Prazo" [ngClass]="{'input-erro': errosCampos['bandeiraCartao'], 'select-erro': errosCampos['bandeiraCartao']}" fill="outline" labelPlacement="floating" [(ngModel)]="cadastro.prazo">
+                <ion-select-option *ngFor="let parcela of listaResultado" [value]="parcela.prazo + 'x de ' + getValorParcela(parcela)">{{ parcela.prazo }}x de {{ getValorParcela(parcela) }}</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('prazo') && operacao.tabela !== 'PIX FÁCIL'">
+            <ion-input label="Prazo" [class.input-erro]="errosCampos['prazo']" fill="outline" type="number" labelPlacement="floating" [(ngModel)]="cadastro.prazo"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('valorFinal')">
+            <ion-input label="Valor Final" [class.input-erro]="errosCampos['valorFinal']" labelPlacement="floating" fill="outline" type="text" [(ngModel)]="cadastro.valorFinal"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('nomePai')">
+            <ion-input label="Nome do Pai" [class.input-erro]="errosCampos['nomePai']" labelPlacement="floating" fill="outline" type="text" [(ngModel)]="cadastro.nomePai"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('nomeMae')">
+            <ion-input label="Nome da Mãe" [class.input-erro]="errosCampos['nomeMae']" labelPlacement="floating" fill="outline" type="text" [(ngModel)]="cadastro.nomeMae"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('naturalidade')">
+            <ion-input label="Naturalidade" [class.input-erro]="errosCampos['naturalidade']" labelPlacement="floating" fill="outline" type="text" [(ngModel)]="cadastro.naturalidade"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('sexo')">
+            <ion-select label="Sexo" [ngClass]="{'input-erro': errosCampos['bandeiraCartao'], 'select-erro': errosCampos['bandeiraCartao']}" labelPlacement="floating" fill="outline" type="text" [(ngModel)]="cadastro.sexo">
+                <ion-select-option value="Masculino">Masculino</ion-select-option>
+                <ion-select-option value="Feminino">Feminino</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('bandeiraCartao')">
+            <ion-select
+                label="Bandeira do Cartão"
+                [ngClass]="{'input-erro': errosCampos['bandeiraCartao'], 'select-erro': errosCampos['bandeiraCartao']}"
+                fill="outline"
+                labelPlacement="floating"
+                [(ngModel)]="cadastro.bandeiraCartao"
+            >
+                <ion-select-option value="Elo">Elo</ion-select-option>
+                <ion-select-option value="Visa">Visa</ion-select-option>
+                <ion-select-option value="Mastercard">Mastercard</ion-select-option>
+                <ion-select-option value="Hipercard">Hipercard</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('digitosCartao')">
+            <ion-input label="4 últimos dígitos do cartão" [class.input-erro]="errosCampos['digitosCartao']" labelPlacement="floating" fill="outline" type="text" inputmode="numeric" maxlength="4"[(ngModel)]="cadastro.digitosCartao"></ion-input>
+        </ion-item>
+
+
+        <h3 *ngIf="camposVisiveis.has('atividade')">Dados Profissionais</h3>
+
+
+        <ion-item *ngIf="camposVisiveis.has('atividade')">
+            <ion-select label="Selecione a Atividade" [ngClass]="{'input-erro': errosCampos['bandeiraCartao'], 'select-erro': errosCampos['bandeiraCartao']}" labelPlacement="floating" fill="outline" [(ngModel)]="cadastro.atividade" (ionChange)="exibirCampos(operacao.tipo)">
+                <ion-select-option value="Assalariado">Assalariado</ion-select-option>
+                <ion-select-option value="Funcionário Público">Funcionário Público</ion-select-option>
+                <ion-select-option value="Profissional Empresa">Profissional Empresa</ion-select-option>
+                <ion-select-option value="Outras Atividades">Outras Atividades</ion-select-option>
+                <ion-select-option value="Autônomo">Autônomo</ion-select-option>
+                <ion-select-option value="Aposentado/Pensionista">Aposentado/Pensionista</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('tipoOperacao')">
+            <ion-select label="Selecione o tipo da operação" [ngClass]="{'input-erro': errosCampos['bandeiraCartao'], 'select-erro': errosCampos['bandeiraCartao']}" labelPlacement="floating" fill="outline" [(ngModel)]="cadastro.tipoOperacao" (ionChange)="listarOperadora()" (ngModelChange)="tipoOperacao = $event">
+                <ion-select-option value="Máquina">Máquina</ion-select-option>
+                <ion-select-option value="On-line">On-line</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('operadora')">
+            <ion-select label="Selecione a Operadora" [ngClass]="{'input-erro': errosCampos['bandeiraCartao'],'select-erro': errosCampos['bandeiraCartao']}" labelPlacement="floating" fill="outline" [(ngModel)]="cadastro.operadora">
+                <ion-select-option *ngFor="let operadora of listaOperadoras" [value]="operadora.operadora">{{operadora.operadora.toUpperCase()}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('profissao')">
+            <ion-input label="Profissão" [class.input-erro]="errosCampos['profissao']" labelPlacement="floating" fill="outline" type="text" [(ngModel)]="cadastro.profissao"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('empresa')">
+            <ion-input label="Empresa" [class.input-erro]="errosCampos['empresa']" labelPlacement="floating" fill="outline" type="text" [(ngModel)]="cadastro.empresa"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('cnpj')">
+            <ion-input label="CNPJ" [class.input-erro]="errosCampos['cnpj']" labelPlacement="floating" fill="outline" type="text" [(ngModel)]="cadastro.cnpj"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('salario')">
+            <ion-input label="Salário" [class.input-erro]="errosCampos['salario']" labelPlacement="floating" fill="outline" type="text" [(ngModel)]="cadastro.salario"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('tempoEmpresa')">
+            <ion-input label="Tempo de Empresa" [class.input-erro]="errosCampos['tempoEmpresa']" labelPlacement="floating" fill="outline" type="text" [(ngModel)]="cadastro.tempoEmpresa"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('dataInicio')">
+            <ion-input type="date" label="Data Inicial" [class.input-erro]="errosCampos['dataInicio']" fill="outline" labelPlacement="stacked" [(ngModel)]="cadastro.dataInicio"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('telefoneEmpresa')">
+            <ion-input label="Telefone da Empresa" [class.input-erro]="errosCampos['telefoneEmpresa']" labelPlacement="floating" fill="outline" type="text"[(ngModel)]="cadastro.telefoneEmpresa"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('numBeneficio')">
+            <ion-input label="Número do Benefício" [class.input-erro]="errosCampos['numBeneficio']" labelPlacement="floating" fill="outline" type="text" [(ngModel)]="cadastro.numBeneficio"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('especieBeneficio')">
+            <ion-input label="Espécie do Benefício" [class.input-erro]="errosCampos['especieBeneficio']" labelPlacement="floating" fill="outline" type="text" [(ngModel)]="cadastro.especieBeneficio"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('valorBeneficio')">
+            <ion-input label="Valor do Benefício" [class.input-erro]="errosCampos['valorBeneficio']" labelPlacement="floating" fill="outline" type="text" [(ngModel)]="cadastro.valorBeneficio"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('outrasAtividades')">
+            <ion-textarea label="Outras Atividades" [class.input-erro]="errosCampos['outrasAtividades']" fill="outline" labelPlacement="floating" type="text" [(ngModel)]="cadastro.outrasAtividades"></ion-textarea>
+        </ion-item>
+
+
+
+        <h3 *ngIf="this.cadastro.atividade && operacao.tabela !== 'PIX FÁCIL'">Referência Pessoal</h3>
+
+
+
+        <ion-item *ngIf="camposVisiveis.has('nomeReferencia')">
+            <ion-input label="Nome" [class.input-erro]="errosCampos['nomeReferencia']" labelPlacement="floating" fill="outline" type="text" [(ngModel)]="cadastro.nomeReferencia"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('afinidadeReferencia')">
+            <ion-input label="Afinidade" [class.input-erro]="errosCampos['afinidadeReferencia']" labelPlacement="floating" fill="outline" type="text" [(ngModel)]="cadastro.afinidadeReferencia"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('telefoneReferencia')">
+            <ion-input label="Telefone" [class.input-erro]="errosCampos['telefoneReferencia']" labelPlacement="floating" fill="outline"  [(ngModel)]="cadastro.telefoneReferencia" type="tel" inputmode="tel" maxlength="15" (ionInput)="formatarTelefone($event)"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="camposVisiveis.has('celularReferencia')">
+            <ion-input label="Celular" [class.input-erro]="errosCampos['celularReferencia']" labelPlacement="floating" fill="outline" type="tel" inputmode="tel" maxlength="15" [(ngModel)]="cadastro.celularReferencia" (ionInput)="formatarTelefone($event)"></ion-input>
+        </ion-item>
+    </ion-list>
+
+    <div class="buttons-container">
+        <ion-button style="--background: #004977" (click)="navigation('simulador')">Voltar</ion-button>
+        <ion-button style="--background: #F89B24" (click)="continuar()">Avançar</ion-button>
+    </div>
+</ion-content>

@@ -1,0 +1,13 @@
+{
+	"appId": "com.hcred.hcredApp",
+	"appName": "HCred - Soluções Financeiras",
+	"webDir": "www",
+	"packageClassList": [
+		"AppPlugin",
+		"CAPCameraPlugin",
+		"ClipboardPlugin",
+		"HapticsPlugin",
+		"KeyboardPlugin",
+		"StatusBarPlugin"
+	]
+}

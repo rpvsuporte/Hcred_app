@@ -1,0 +1,112 @@
+<ion-content [fullscreen]="true" class="pageEndereco">
+
+    <!-- Topo -->
+
+    <div class="topo-endereco">
+        <ion-icon name="chevron-back-outline" (click)="navigation('simulador/cadastro')" class="icone-voltar"></ion-icon>
+        <h1>Endereço</h1>
+        <img src="../../assets/img/logoHcred-mobile.png" class="logo-endereco" alt="">
+    </div>
+
+    <!-- Form Endereço -->
+
+    <h2>Endereço</h2>
+
+    <ion-list class="form-endereco">
+
+        <ion-item>
+            <ion-input
+                [class.input-erro]="errosCampos['cep']"
+                label="CEP"
+                labelPlacement="floating"
+                fill="outline"
+                type="text"
+                inputmode="numeric"
+                maxlength="9"
+                [(ngModel)]="endereco.cep"
+                (ionBlur)="buscarEnderecoPorCep()"
+                (ionInput)="formatarCEP($event)"
+            >
+            </ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-input
+                [class.input-erro]="errosCampos['rua']"
+                label="Rua"
+                labelPlacement="floating"
+                fill="outline"
+                type="text"
+                [(ngModel)]="endereco.rua"
+            >
+            </ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-input
+                [class.input-erro]="errosCampos['numero']"
+                label="Número"
+                labelPlacement="floating"
+                fill="outline"
+                type="text"
+                inputmode="numeric"
+                [(ngModel)]="endereco.numero"
+            >
+            </ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-input
+                [class.input-erro]="errosCampos['complemento']"
+                label="Complemento"
+                labelPlacement="floating"
+                fill="outline"
+                type="text"
+                [(ngModel)]="endereco.complemento"
+            >
+            </ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-input
+                [class.input-erro]="errosCampos['bairro']"
+                label="Bairro"
+                labelPlacement="floating"
+                fill="outline"
+                type="text"
+                [(ngModel)]="endereco.bairro"
+            >
+            </ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-input
+                [class.input-erro]="errosCampos['cidade']"
+                label="Cidade"
+                labelPlacement="floating"
+                fill="outline"
+                type="text"
+                [(ngModel)]="endereco.cidade"
+            >
+            </ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-input
+                [class.input-erro]="errosCampos['estado']"
+                label="Estado (UF)"
+                labelPlacement="floating"
+                fill="outline"
+                maxlength="2"
+                [(ngModel)]="endereco.estado"
+            >
+            </ion-input>
+        </ion-item>
+
+    </ion-list>
+
+    <div class="buttons-container">
+        <ion-button style="--background: #004977" (click)="navigation('simulador/cadastro')">Voltar</ion-button>
+        <ion-button style="--background: #F89B24" (click)="avancar()">Avançar</ion-button>
+    </div>
+</ion-content>

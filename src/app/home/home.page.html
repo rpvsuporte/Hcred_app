@@ -1,0 +1,31 @@
+<ion-content [fullscreen]="true" class="pageLogin" scroll-y="false">
+    <div class="login-container">
+
+        <img src="../../assets/img/logoHcred.png" class="logoHcred" alt="Logo Hcred">
+
+        <h1 class="titleLogin">Bem-vindo!</h1>
+
+        <ion-input
+            placeholder="Usuário ou E-mail"
+            [(ngModel)]="login.usuario"
+            fill="outline"
+            class="custom-input"
+        ></ion-input>
+
+        <ion-input
+            placeholder="Senha"
+            [(ngModel)]="login.senha"
+            type="password"
+            fill="outline"
+            class="custom-input"
+        ></ion-input>
+
+        <ion-button shape="round" (click)="loginApp()" *ngIf="!isLoading">Acessar</ion-button>
+
+        <ion-button shape="round" disabled *ngIf="isLoading">
+            <img src="../../assets/img/loading.gif" height="24" alt="Carregando">
+        </ion-button>
+
+        <p class="subtext">Gestão de Propostas</p>
+    </div>
+</ion-content>

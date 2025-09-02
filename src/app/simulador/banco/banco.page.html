@@ -1,0 +1,277 @@
+<ion-content [fullscreen]="true" class="pageBanco">
+
+    <!-- Topo -->
+
+    <div class="topo-banco">
+        <ion-icon name="chevron-back-outline" (click)="navigation('simulador/endereco')" class="icone-voltar"></ion-icon>
+        <h1>Banco</h1>
+        <img src="../../assets/img/logoHcred-mobile.png" class="logo-banco" alt="">
+    </div>
+
+    <!-- Form dados bancários -->
+
+    <h2>Dados Bancários</h2>
+
+    <ion-list class="form-banco">
+
+        <!-- Tipo de Recebimento -->
+
+        <ion-item>
+            <ion-select
+                label="Tipo de Recebimento"
+                labelPlacement="floating"
+                fill="outline"
+                [(ngModel)]="tipoRecebimento"
+                [class.input-erro]="errosCampos['tipoRecebimento']"
+            >
+                <ion-select-option value="pix">Chave PIX</ion-select-option>
+                <ion-select-option value="banco">Banco</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <!-- Formulário quando seleciona Banco -->
+
+        <ng-container *ngIf="tipoRecebimento === 'banco'">
+
+            <ion-item>
+                <ion-input
+                    label="Banco"
+                    labelPlacement="floating"
+                    fill="outline"
+                    [(ngModel)]="termoBuscaBanco"
+                    (ionInput)="filtrarBancos()"
+                    (ionFocus)="mostrarListaBancos = true"
+                    (blur)="ocultarComDelay()"
+                    placeholder="Digite para buscar"
+                    autocomplete="off"
+                    [class.input-erro]="errosCampos['banco']"
+                >
+                </ion-input>
+            </ion-item>
+
+            <!-- Lista de sugestões -->
+
+            <div *ngIf="mostrarListaBancos && bancosFiltrados.length" class="lista-bancos">
+                <div *ngFor="let banco of bancosFiltrados" class="item-banco" (mousedown)="selecionarBancoInput(banco)">
+                    {{ banco.Code === '-' ? banco.Name : (banco.Name + ' - ' + banco.Code) }}
+                </div>
+            </div>
+
+            <ion-item>
+                <ion-input
+                    label="Agência"
+                    labelPlacement="floating"
+                    fill="outline"
+                    type="text"
+                    [(ngModel)]="dadosBanco.agencia"
+                    maxlength="6"
+                    [class.input-erro]="errosCampos['agencia']"
+                >
+                </ion-input>
+            </ion-item>
+
+            <ion-item>
+                <ion-input
+                    label="Conta"
+                    labelPlacement="floating"
+                    fill="outline"
+                    type="text"
+                    maxlength="12"
+                    [(ngModel)]="dadosBanco.conta"
+                    [class.input-erro]="errosCampos['conta']"
+                >
+                </ion-input>
+            </ion-item>
+
+            <ion-item>
+                <ion-input
+                    label="Dígito"
+                    labelPlacement="floating"
+                    fill="outline"
+                    type="text"
+                    maxlength="2"
+                    [(ngModel)]="dadosBanco.digito"
+                    [class.input-erro]="errosCampos['digito']"
+                >
+                </ion-input>
+            </ion-item>
+
+            <ion-item>
+                <ion-select
+                    label="Tipo de Conta"
+                    labelPlacement="floating"
+                    fill="outline"
+                    [(ngModel)]="dadosBanco.tipoConta"
+                    [class.input-erro]="errosCampos['tipoConta']"
+                >
+                    <ion-select-option value="corrente">Corrente</ion-select-option>
+                    <ion-select-option value="poupanca">Poupança</ion-select-option>
+                </ion-select>
+            </ion-item>
+
+        </ng-container>
+
+        <!-- Formulário quando seleciona PIX -->
+
+        <ng-container *ngIf="tipoRecebimento === 'pix'">
+
+            <ion-item>
+                <ion-select
+                    label="Tipo de Chave PIX"
+                    labelPlacement="floating"
+                    fill="outline"
+                    [(ngModel)]="dadosPix.tipoChave"
+                    [class.input-erro]="errosCampos['tipoChave']"
+                    (ionChange)="onTipoChavePixChange()"
+                >
+                    <ion-select-option value="cpf">CPF</ion-select-option>
+                    <ion-select-option value="cnpj">CNPJ</ion-select-option>
+                    <ion-select-option value="email">E-mail</ion-select-option>
+                    <ion-select-option value="telefone">Telefone</ion-select-option>
+                    <ion-select-option value="aleatoria">Chave Aleatória</ion-select-option>
+                </ion-select>
+            </ion-item>
+
+            <ion-item>
+                <ion-input
+                    label="Chave PIX"
+                    labelPlacement="floating"
+                    fill="outline"
+                    type="text"
+                    [(ngModel)]="dadosPix.chave"
+                    [class.input-erro]="errosCampos['chave']"
+                    (ionInput)="onInputChavePix($event)"
+                >
+                </ion-input>
+
+            </ion-item>
+
+        </ng-container>
+
+        <!-- Toggle -->
+
+        <ion-item>
+            <ion-toggle labelPlacement="end" [(ngModel)]="liberacaoContaTerceiros">Liberação em conta de terceiros</ion-toggle>
+        </ion-item>
+
+        <!-- Conteúdo exibido somente se liberacaoContaTerceiros for true -->
+        
+        <ng-container *ngIf="liberacaoContaTerceiros">
+
+            <!-- Radio group para escolher PF ou PJ -->
+            
+            <ion-radio-group [(ngModel)]="tipoPessoaTerceiro" class="radio-terceiro">
+                <ion-item>
+                    <ion-label style="--color: #004977;">Pessoa Física</ion-label>
+                    <ion-radio slot="start" value="pf"></ion-radio>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label style="--color: #004977;">Pessoa Jurídica</ion-label>
+                    <ion-radio slot="start" value="pj"></ion-radio>
+                </ion-item>
+            </ion-radio-group>
+
+            <!-- Campos para Pessoa Física -->
+
+            <ng-container *ngIf="tipoPessoaTerceiro === 'pf'">
+                <ion-item>
+                    <ion-input
+                        label="Nome do Terceiro"
+                        labelPlacement="floating"
+                        fill="outline"
+                        [(ngModel)]="dadosTerceiro.nomeTerceiro"
+                        [class.input-erro]="errosCampos['nome']"
+                        type="text"
+                    ></ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-input
+                        label="CPF do Terceiro"
+                        labelPlacement="floating"
+                        fill="outline"
+                        [(ngModel)]="dadosTerceiro.cpfTerceiro"
+                        type="text"
+                        maxlength="14"
+                        [class.input-erro]="errosCampos['cpf']"
+                        (ionInput)="formatarCPFInput($event)"
+                    ></ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-select
+                        label="Parentesco"
+                        labelPlacement="floating"
+                        fill="outline"
+                        [class.input-erro]="errosCampos['parentesco']"
+                        [(ngModel)]="dadosTerceiro.parentescoTerceiro"
+                    >
+                        <ion-select-option value="pai/mãe">Pai/Mãe</ion-select-option>
+                        <ion-select-option value="avô/avó">Avô/Avó</ion-select-option>
+                        <ion-select-option value="filho">Filho</ion-select-option>
+                        <ion-select-option value="irmãos">Irmãos</ion-select-option>
+                        <ion-select-option value="conjuge">Cônjuge</ion-select-option>
+                        <ion-select-option value="outro">Outro</ion-select-option>
+                    </ion-select>
+                </ion-item>
+
+                <ion-item *ngIf="dadosTerceiro.parentescoTerceiro === 'outro'">
+                    <ion-input
+                        label="Outros"
+                        labelPlacement="floating"
+                        fill="outline"
+                        [(ngModel)]="dadosTerceiro.outrosParentesco"
+                        placeholder="Descreva o parentesco"
+                        [class.input-erro]="errosCampos['outrosParentesco']"
+                        type="text"
+                    ></ion-input>
+                </ion-item>
+            </ng-container>
+
+            <!-- Campos para Pessoa Jurídica -->
+
+            <ng-container *ngIf="tipoPessoaTerceiro === 'pj'">
+                <ion-item>
+                    <ion-input
+                        label="Razão Social"
+                        fill="outline"
+                        labelPlacement="floating"
+                        [class.input-erro]="errosCampos['razaoSocial']"
+                        [(ngModel)]="dadosTerceiro.razaoSocialTerceiro"
+                        type="text"
+                    ></ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-input
+                        label="CNPJ"
+                        fill="outline"
+                        labelPlacement="floating"
+                        [(ngModel)]="dadosTerceiro.cnpjTerceiro"
+                        type="text"
+                        [class.input-erro]="errosCampos['cnpj']"
+                        maxlength="18"
+                        (ionInput)="formatarCNPJInput($event)"
+                    ></ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-input
+                        label="Vínculo com a Empresa"
+                        fill="outline"
+                        labelPlacement="floating"
+                        [class.input-erro]="errosCampos['vinculo']"
+                        [(ngModel)]="dadosTerceiro.vinculoTerceiro"
+                        type="text"
+                    ></ion-input>
+                </ion-item>
+            </ng-container>
+        </ng-container>
+    </ion-list>
+
+    <div class="buttons-container">
+        <ion-button style="--background: #004977" (click)="navigation('simulador/endereco')">Voltar</ion-button>
+        <ion-button style="--background: #F89B24" (click)="avancar()">Avançar</ion-button>
+    </div>
+</ion-content>

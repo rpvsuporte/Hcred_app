@@ -1,0 +1,166 @@
+<ion-content [fullscreen]="true" class="pageSimulador">
+
+    <!-- Topo -->
+
+    <div class="topo-simulador">
+        <ion-icon name="chevron-back-outline" (click)="navigation('index')" class="icone-voltar"></ion-icon>
+        <h1>Simulador</h1>
+        <img src="../../assets/img/logoHcred-mobile.png" class="logo-simulador" alt="">
+    </div>
+
+    <h1 class="title_simulacao" style="margin-top: 30px;">Informe o valor desejado</h1>
+
+    <ion-list class="form-simulador">
+        <ion-select
+            label="Selecione o tipo"
+            fill="outline"
+            [(ngModel)]="simula.tipo"
+            (ionChange)="atualizaTabelas(); validarFormulario();"
+            [errorText]="erroTipo ? 'Selecione um tipo de operação' : ''"
+        >
+            <ion-select-option *ngFor="let tipo of tiposDisponiveis" [value]="tipo">{{tipo}}</ion-select-option>
+        </ion-select>
+
+        <ion-select
+            *ngIf="tabelasDisponiveis.length > 0 && simula.tipo !== 'D Zero'"
+            label="Selecione a tabela"
+            fill="outline"
+            [(ngModel)]="simula.tabela"
+            [errorText]="erroTabela ? 'Selecione uma tabela' : ''"
+            (ionChange)="validarFormulario()"
+        >
+            <ion-select-option *ngFor="let tabela of tabelasDisponiveis" [value]="tabela">{{ tabela }}</ion-select-option>
+        </ion-select>
+
+        <ion-select
+            *ngIf="simula.tabela === 'PIX FÁCIL'"
+            label="Selecione o tipo de Pix Fácil"
+            fill="outline"
+            [(ngModel)]="simula.tipoPixFacil"
+            [errorText]="erroTabela ? 'Selecione o tipo' : ''"
+            (ionChange)="validarFormulario()"
+        >
+            <ion-select-option value="Boleto">Boleto</ion-select-option>
+            <ion-select-option value="Cartão de Crédito">Cartão de Crédito</ion-select-option>
+        </ion-select>
+
+        <ion-input
+            label="Digite aqui o valor"
+            *ngIf="simula.tipo && simula.tipo !== 'Cartão de Crédito - Boleto'"
+            label-placement="floating"
+            fill="outline"
+            [(ngModel)]="simula.valor"
+            (ionInput)="formatarMoeda($event); validarFormulario()"
+            type="text"
+            inputmode="decimal"
+            [errorText]="erroValor ? 'Informe o valor corretamente' : ''"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+        ></ion-input>
+
+        <ng-container *ngIf="simula.tipo === 'Cartão de Crédito - Boleto' && simula.tabela">
+
+            <div *ngFor="let boleto of boletos; let i = index" class="boleto-item">
+                <ion-input
+                    label="Digite a linha digitável do boleto"
+                    label-placement="floating"
+                    fill="outline"
+                    [(ngModel)]="boleto.codigo"
+                    required
+                    maxlength="70"
+                    (ionInput)="mascaraBoleto($event, i)"
+                    [disabled]="boleto.validado === true"
+                ></ion-input>
+
+                <ion-button
+                    expand="block"
+                    (click)="validarBoleto(i)"
+                    *ngIf="!boleto.loading && boleto.validado !== true"
+                >
+                    Validar
+                </ion-button>
+
+                <div class="loading-indicator" *ngIf="boleto.loading">
+                    <div class="dots-loader">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>
+                
+                <div class="result-container" *ngIf="boleto.validado !== null">
+                    <ion-icon [name]="boleto.validado ? 'checkmark-circle-outline' : 'close-circle-outline'" style="font-size: 1.5em; color: #004977;"></ion-icon>
+
+                    <p style="color: #004977;">
+                        {{ boleto.validado ? 'Boleto Válido!' : 'Boleto Inválido!' }}
+                    </p>
+                </div>
+
+                <ion-select
+                    (ionChange)="handleEscolhaOutroBoleto($event, i)"
+                    [(ngModel)]="adicionouOutroBoleto"
+                    label="Adicionar outro boleto?"
+                    label-placement="floating"
+                    *ngIf="boleto.validado && i === boletos.length - 1 && boletos.length < 3"
+                >
+                    <ion-select-option [value]="true">Sim</ion-select-option>
+                    <ion-select-option [value]="false">Não</ion-select-option>
+                </ion-select>
+            </div>
+        </ng-container>
+
+        <!-- Botões condicionais para Cartão de Crédito -->
+
+        <div *ngIf="simula.tipo === 'Cartão de Crédito'" class="botoes-tipo-cartao">
+            <ion-button fill="outline" (click)="setTipoValor('solicitado')" [class.selecionado]="tipoValorSelecionado === 'solicitado'">
+                Valor Solicitado
+            </ion-button>
+            
+            <ion-button fill="outline" (click)="setTipoValor('limite')" [class.selecionado]="tipoValorSelecionado === 'limite'">
+                Limite Necessário
+            </ion-button>
+        </div>
+    </ion-list>
+
+    <!-- Botões de simular -->
+
+    <div class="botoes-simulador">
+        <ion-button
+            shape="round"
+            (click)="simular()"
+            [disabled]="formInvalido || loadingAcessa || !todosBoletosValidos()"
+            *ngIf="!loadingAcessa"
+        >
+            Avançar
+        </ion-button>
+
+        <ion-button shape="round" expand="block" disabled *ngIf="loadingAcessa">
+            <img src="../../assets/img/loading.gif" height="25" alt="Carregando" />
+        </ion-button>
+    </div>
+
+    <h1 *ngIf="listaResultado.length > 0 && simula?.tipo?.includes('Cartão de Crédito')" class="title_simulacao">Confira o resultado da simulação</h1>
+
+    <!-- Resultados -->
+
+    <div *ngIf="listaResultado.length > 0 && simula?.tipo?.includes('Cartão de Crédito')" class="lista-cards">
+        <ion-card *ngFor="let item of listaResultado" class="resultado-card">
+            <ion-card-header>
+                <ion-card-subtitle>{{ item.prazo }}x de {{ formatarValorReal(calculaParcela(item)) }}</ion-card-subtitle>
+            </ion-card-header>
+
+            <ion-card-content>
+                {{this.tipoValorSelecionado === 'solicitado' ? 'Limite Necessário' : 'Valor Líquido'}}: <br><strong>{{ formatarValorReal(calculaValorTotal(item)) }}</strong>
+            </ion-card-content>
+
+            <div class="buttons-card">
+                <ion-button shape="round" (click)="salvarEAvancar(item)">
+                    <ion-icon name="checkmark-outline"></ion-icon>
+                </ion-button>
+        
+                <ion-button shape="round" (click)="linkCopiado(item)">
+                    <ion-icon name="link-outline"></ion-icon>
+                </ion-button>
+            </div>
+        </ion-card>
+    </div>
+</ion-content>

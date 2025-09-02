@@ -1,0 +1,7 @@
+{
+  "name": "HCred - Soluções Financeiras",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

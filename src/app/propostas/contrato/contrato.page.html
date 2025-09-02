@@ -1,0 +1,217 @@
+<ion-content [fullscreen]="true" class="pageContrato">
+    <div *ngIf="isLoading" class="loading-overlay">
+        <div class="loading-box">
+            <ion-spinner name="crescent" color="primary"></ion-spinner>
+            <p class="loading-text">Carregando informações...</p>
+        </div>
+    </div>
+
+    <header class="contract-header">
+        <ion-icon name="chevron-back-outline" style="color: #004977; display: flex; justify-self: flex-start; font-size: 2em; margin-top: 15px;" (click)="navigation('propostas/atuar-proposta')"></ion-icon>
+
+        <img src="../../../assets/img/logoHcred-azul.png" alt="Logo Hcred" class="logo">
+
+        <h1>PROPOSTA - HCRED</h1>
+
+        <h2>Loja: {{loja}}</h2>
+    </header>
+
+    <main class="contract-main">
+
+        <ion-card class="contract-card">
+            <ion-card-header>
+                <ion-card-subtitle style="margin-top: 15px;">ID da Proposta: {{proposta.idProposta}}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+                <div class="info-line">
+                    <span>Data da Proposta:</span>
+                    <span>{{proposta.dataPropostaBr}}</span>
+                </div>
+                <div class="info-line">
+                    <span>Localização:</span>
+                    <span>Gestão 2025</span>
+                </div>
+
+                <div class="info-line">
+                    <span>Tipo:</span>
+                    <span>{{proposta.tipo}}</span>
+                </div>
+
+                <div class="info-line">
+                    <span>Tabela:</span>
+                    <span>{{proposta.tipoDescricao}} - {{proposta.tipoOperacaoCC}}</span>
+                </div>
+            </ion-card-content>
+        </ion-card>
+
+        <ion-card class="contract-card summary-card">
+            <ion-card-header>
+                <ion-card-title>Resumo Financeiro</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+                <div class="summary-item">
+                    <span class="label">Valor Solicitado</span>
+                    <span class="value principal">R$ {{proposta.valorFinanciado}}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Parcelamento</span>
+                    <span class="value">{{proposta.quantPrestacoes}}x de R$ {{proposta.valorPacela}}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Custo Total</span>
+                    <span class="value">R$ {{proposta.valorTotal}}</span>
+                </div>
+            </ion-card-content>
+        </ion-card>
+        
+        <ion-card class="contract-card">
+            <ion-card-header>
+                <ion-card-title>Dados Pessoais</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+                <ion-grid class="data-grid">
+                    <ion-row>
+                        <ion-col size="12">
+                            <div class="data-item">
+                                <p class="label">Nome Completo</p>
+                                <p class="value">{{proposta.nome}}</p>
+                            </div>
+                        </ion-col>
+
+                        <ion-col size="6">
+                            <div class="data-item">
+                                <p class="label">CPF</p>
+                                <p class="value">{{proposta.cpf}}</p>
+                            </div>
+                        </ion-col>
+
+                        <ion-col size="6">
+                            <div class="data-item">
+                                <p class="label">RG</p>
+                                <p class="value">{{proposta.rg}}</p>
+                            </div>
+                        </ion-col>
+
+                        <ion-col size="12">
+                            <div class="data-item">
+                                <p class="label">Email</p>
+                                <p class="value">{{proposta.email}}</p>
+                            </div>
+                        </ion-col>
+
+                        <ion-col size="6">
+                            <div class="data-item">
+                                <p class="label">Celular</p>
+                                <p class="value">{{proposta.celular}}</p>
+                            </div>
+                        </ion-col>
+
+                        <ion-col size="6">
+                            <div class="data-item">
+                                <p class="label">Data de Nascimento</p>
+                                <p class="value">{{ formatarData(proposta.dataNascimento) }}</p>
+                            </div>
+                        </ion-col>
+
+                        <ion-col size="12">
+                            <div class="data-item">
+                                <p class="label">Endereço</p>
+                                <p class="value">{{proposta.endereco}}</p>
+                            </div>
+                        </ion-col>
+
+                        <ion-col size="12">
+                            <div class="data-item">
+                                <p class="label">Nº</p>
+                                <p class="value">{{proposta.numEndereco}}</p>
+                            </div>
+                        </ion-col>
+
+                        <ion-col size="12">
+                            <div class="data-item">
+                                <p class="label">Bairro</p>
+                                <p class="value">{{proposta.bairroEndereco}}</p>
+                            </div>
+                        </ion-col>
+
+                        <ion-col size="6">
+                            <div class="data-item">
+                                <p class="label">Cidade/UF</p>
+                                <p class="value">{{proposta.cidadeEndereco}} - {{proposta.estadoEndereco}}</p>
+                            </div>
+                        </ion-col>
+
+                        <ion-col size="6">
+                            <div class="data-item">
+                                <p class="label">CEP</p>
+                                <p class="value">{{proposta.cepEndereco}}</p>
+                            </div>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-card-content>
+        </ion-card>
+
+        <ion-card class="contract-card">
+            <ion-card-header>
+                <ion-card-title>Dados de Pagamento</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+                <ion-grid class="data-grid">
+                    <ion-row>
+                        <ion-col size="12">
+                            <div class="data-item">
+                                <p class="label">Chave PIX</p>
+                                <p class="value">{{proposta.chavePix}}</p>
+                            </div>
+                        </ion-col>
+
+                        <ion-col size="12">
+                            <div class="data-item">
+                                <p class="label">Conta de Terceiros</p>
+                                <p class="value">{{proposta.terceiroConta == 1 ? 'Sim' : 'Não'}}</p>
+                            </div>
+                        </ion-col>
+    
+                        <ng-container *ngIf="proposta.tipo === 'Cartão de Crédito'">
+                            <ion-col size="6">
+                                <div class="data-item">
+                                    <p class="label">Bandeira do Cartão</p>
+                                    <p class="value">{{ proposta.bandeiraCartao }}</p>
+                                </div>
+                            </ion-col>
+
+                            <ion-col size="6">
+                                <div class="data-item">
+                                    <p class="label">Final do Cartão</p>
+                                    <p class="value">{{ proposta.numeroCartao }}</p>
+                                </div>
+                            </ion-col>
+                        </ng-container>
+
+                    </ion-row>
+                </ion-grid>
+            </ion-card-content>
+        </ion-card>
+
+        <div class="declaration-section">
+            <h3>Declaração e Aceite</h3>
+
+            <p class="declaration-text">
+                Eu, <strong>{{proposta.nome}}</strong>, portador do RG: <strong>{{proposta.rg}}</strong> e CPF: <strong>{{proposta.cpf}}</strong>, residente em {{proposta.endereco}}, {{proposta.numEndereco}} - {{proposta.bairroEndereco}}, {{proposta.cidadeEndereco}} - {{proposta.estadoEndereco}}, reconheço e autorizo a compra realizada na empresa HCred em <strong>{{proposta.dataPropostaBr}}</strong>, no valor de <strong>R$ {{proposta.valorTotal}}</strong> ({{valorPorExtenso(proposta.valorTotal)}}) parcelados em <strong>{{proposta.quantPrestacoes}} vez(es) de R$ {{proposta.valorPacela}}</strong> ({{valorPorExtenso(proposta.valorPacela)}}) <ng-content *ngIf="proposta.tipo === 'Cartão de Crédito'"> utilizando o cartão de crédito da bandeira <strong>{{proposta.bandeiraCartao}}</strong> com final <strong>{{proposta.numeroCartao}}</strong></ng-content>.
+            </p>
+
+            <div class="signature-block">
+                <p class="signature-date">{{ dataAtualExtenso }}</p>
+
+                <div class="signature-line"></div>
+
+                <p class="signature-name">{{proposta.nome}}</p>
+                <p class="signature-cpf">CPF: {{proposta.cpf}}</p>
+            </div>
+        </div>
+    </main>
+</ion-content>

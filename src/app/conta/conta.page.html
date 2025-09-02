@@ -1,0 +1,128 @@
+<ion-content [fullscreen]="true" class="pageConta">
+
+    <!-- Topo -->
+
+    <div class="topo-conta">
+        <ion-icon name="chevron-back-outline" class="icone-voltar" (click)="navigation('index')"></ion-icon>
+
+        <h1>Conta Digital</h1>
+
+        <img class="logo-conta" src="../../assets/img/logoHcred-mobile.png" alt="Logo">
+    </div>
+
+    <div class="saldo-container">
+        <div class="quadroSaldo">
+            <p>Saldo:</p>
+            <h2>R$ {{saldoValue}}</h2>
+        </div>
+
+        <div class="side-bar"></div>
+
+        <div class="quadroSaldo">
+            <p>Valores/Saques Bloqueados:</p>
+            <h2>R$ {{bloqueioValue}}</h2>
+        </div>
+    </div>
+
+    <div class="input-form">
+        <ion-input
+            placeholder="dd/mm/aaaa"
+            [(ngModel)]="dataInicialExibicao"
+            (ionInput)="mascararData($event, 'dataInicial')"
+            maxlength="10"
+            label="Data Inicial"
+            label-placement="stacked"
+        ></ion-input>
+
+        <ion-input
+            placeholder="dd/mm/aaaa"
+            [(ngModel)]="dataFinalExibicao"
+            (ionInput)="mascararData($event, 'dataFinal')"
+            maxlength="10"
+            label="Data Final"
+            label-placement="stacked"
+        ></ion-input>
+    </div>
+
+    <div class="select">
+        <ion-select label="Tipo de Saque" label-placement="floating" [(ngModel)]="tipoSaque" fill="outline">
+            <ion-select-option value="Crédito">Crédito</ion-select-option>
+            <ion-select-option value="Débito">Débito</ion-select-option>
+            <ion-select-option value="Futuro">Futuro</ion-select-option>
+        </ion-select>
+    </div>
+
+    <div class="button-form">
+        <ion-button class="saldoAcao" expand="block" (click)="abrirModal()">+ Saque</ion-button>
+        <ion-button class="buscar" expand="block" style="font-size: 1em;" (click)="consultarContas()"><ion-icon name="search-outline"></ion-icon></ion-button>
+    </div>
+
+    <div *ngIf="contas.length > 0" class="table-container">
+
+        <h1 style="color: #004977; margin: 40px 0; text-align: center;">Resultados da Pesquisa</h1>
+
+        <ion-card class="contas-card" *ngFor="let conta of contas">  
+            <ion-card-content class="extrato-item">
+                <div class="extrato-header">
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <h3 class="extrato-data">{{ conta.dataBr }}</h3>
+                        <h2 class="extrato-id" *ngIf="conta.tipoLancamento !== 'lancamento'">ID: {{ conta.idProposta }}</h2>
+                    </div>
+                    <div class="extrato-valor" [class.debito]="conta.tipo.toLowerCase() === 'débito'">
+                        R$ {{ (conta.tipo.toLowerCase() === 'débito' ? '-' : '') + conta.valor }}
+                    </div>
+                </div>
+
+                <div class="extrato-detalhes">
+                    <ng-container *ngIf="conta.tipoLancamento == 'lancamento'">
+                        <h2>{{conta.nome}}.</h2>
+                    </ng-container>
+
+                    <ng-container *ngIf="conta.tipoLancamento !== 'lancamento'">
+                        <p><strong>Nome/CPF:</strong> {{ conta.nome }}</p>
+                        <p><strong>Prazo:</strong> {{ conta.prazo }}x</p>
+                        <p><strong>Tipo/Tabela:</strong> {{ conta.tipo }}</p>
+                        <p><strong>Comissão:</strong> {{ conta.comissao }}%</p>
+                        <p><strong>Saldo:</strong> R$ {{ conta.saldo }}</p>
+                    </ng-container>
+                </div>
+            </ion-card-content>
+        </ion-card>
+    </div>
+
+    <ion-modal #modal [presentingElement]="presentingElement" style="--background: transparent;">
+        <ng-template>
+            <ion-content class="ion-padding">
+                <div class="container-modal">
+                    <ion-button fill="clear" class="btn-close" (click)="modal.dismiss();">
+                        <ion-icon name="close-outline"></ion-icon>
+                    </ion-button>
+
+                    <h2 class="titulo-modal">Novo Saque</h2>
+
+                    <div class="form-modal">
+                        <ion-input label="Valor do Saque" [(ngModel)]="valorExibicao" label-placement="floating" fill="outline" (ionInput)="formatarMoeda($event)" placeholder="Digite o valor" type="text" inputmode="decimal"></ion-input>
+            
+                        <ion-button expand="block" class="btn-solicitar" (click)="sacar()">Solicitar</ion-button>
+                    </div>
+
+                    <div class="avisos">
+                        <ion-text style="color: red;" class="aviso-titulo">Aviso:</ion-text>
+                        <ion-text>Valor mínimo para saque é de R$ 30,00.</ion-text>
+                        <ion-text>Permitido somente 1 saque por dia.</ion-text>
+                        <ion-text>Limite para o saque no mesmo dia é 16h. Após esse horário, será realizado no próximo dia útil.</ion-text>
+                    </div>
+                </div>
+            </ion-content>
+        </ng-template>
+    </ion-modal>
+</ion-content>
+
+<ion-loading
+    [isOpen]="loading"
+    message="Carregando dados..."
+    spinner="crescent"
+    translucent="true"
+    backdropDismiss="false"
+>
+</ion-loading>

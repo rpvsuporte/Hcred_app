@@ -1,0 +1,115 @@
+<!-- Menu dropdown -->
+
+<ion-menu side="end" menuId="statusMenu" contentId="main-content">
+    <ion-header>
+        <ion-toolbar>
+            <ion-title>Status</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <ion-content id="optionsContent">
+        <ion-list>
+            <ion-item lines="none" *ngFor="let opt of optionsProps" button="true" (click)="selecionarStatus(opt.tipo)">
+                <ion-icon slot="start" [name]="opt.img"></ion-icon>
+                {{ opt.titulo }}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-menu>
+
+<!-- Ion-Content -->
+
+<ion-content id="main-content" class="pagePropostas">
+
+    <!-- Topo -->
+
+    <div class="topo-propostas">
+        <ion-icon name="chevron-back-outline" (click)="navigation('index')" class="icone-voltar"></ion-icon>
+
+        <h1>Propostas {{ title }}</h1>
+
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false" menu="statusMenu"></ion-menu-button>
+        </ion-buttons>
+    </div>
+
+    <main>
+
+        <!-- Select do filtro -->
+
+        <ion-select
+            label="Filtrar por..."
+            label-placement="floating"
+            fill="outline"
+            [(ngModel)]="filtroSelecionado"
+            (ionChange)="onFiltroSelecionado()"
+            *ngIf="!mostrarInputFiltro"
+        >
+            <ion-select-option value="nome">Nome Composto</ion-select-option>
+            <ion-select-option value="cpf">CPF</ion-select-option>
+            <ion-select-option value="idProposta">ID da Proposta</ion-select-option>
+        </ion-select>
+
+        <!-- Input que aparece após selecionar -->
+
+        <div *ngIf="mostrarInputFiltro" class="filtro-input-container">
+            <ion-input
+                [label]="labelFiltro"
+                label-placement="floating"
+                [(ngModel)]="valorFiltro"
+                fill="outline"
+                [type]="tipoInput"
+                [maxlength]="filtroSelecionado === 'cpf' ? 14 : null"
+                (ionInput)="aplicarMascaraOuVerificacao($event)"
+                [value]="valorFiltro"
+            >
+            </ion-input>
+
+            <ion-button (click)="cancelarFiltro()" fill="outline">
+                <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+
+            <ion-button fill="outline" (click)="realizarBusca()">
+                <ion-icon name="search-outline"></ion-icon>
+            </ion-button>
+        </div>
+
+        <!-- Tabela -->
+
+        <div class="table-container">
+            <ion-card *ngFor="let proposta of paginatedPropostas" class="proposta-card">
+                <ion-card-header>
+                    <ion-card-title style="font-size: 16px; font-weight: bold;">{{ proposta.tipo }}</ion-card-title>
+                    <ion-card-title style="font-size: 14px; font-weight: 400;">
+                        Tabela: {{ proposta.tipoDescricao }} - {{proposta.tipoOperacaoCC}}
+                    </ion-card-title>
+                </ion-card-header>
+
+                <ion-card-content [style.backgroundColor]="cor">
+                    <div class="card_left_content">
+                        <p><strong>Valor:</strong> R$ {{ proposta.valorTotal }}</p>
+                        <p><strong>Prazo:</strong> {{ proposta.quantPrestacoes }}x</p>
+                        <p><strong>Data:</strong> {{ proposta.dataPropostaBr }}</p>
+                        <p><strong>Nome:</strong> {{ proposta.nome }}</p>
+                        <p><strong>Última atualização:</strong> {{ proposta.ultimaAtualizacao }}</p>
+                    </div>
+                    <div class="card_right_content">
+                        <ion-icon name="eye-outline" (click)="navigation('propostas/atuar-proposta', '', proposta.idProposta)"></ion-icon>
+                    </div>
+                </ion-card-content>
+            </ion-card>
+
+            <div class="paginacao">
+                <ion-button class="btn-paginacao" (click)="prevPage()" [disabled]="currentPage === 1" fill="outline" size="default">
+                    <ion-icon name="chevron-back-outline"></ion-icon>
+                </ion-button>
+
+                <span style="color: #004977;">{{ currentPage }} de {{ totalPages() }}</span>
+
+                <ion-button class="btn-paginacao" (click)="nextPage()" [disabled]="currentPage === totalPages()" fill="outline" size="default">
+                    <ion-icon name="chevron-forward-outline"></ion-icon>
+                </ion-button>
+            </div>
+        </div>
+    </main>
+</ion-content>

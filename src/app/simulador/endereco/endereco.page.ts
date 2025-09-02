@@ -1,0 +1,152 @@
+// endereco.page.ts
+
+import { Component, OnInit } from '@angular/core';
+import { ApiService } from '../../services/api.service';
+import { AlertController, NavController } from '@ionic/angular';
+import { NavigationService } from '../../services/navigation.service';
+import { AUTH_HASH } from 'src/app/services/auth-config';
+
+@Component({
+    selector: 'app-endereco',
+    templateUrl: './endereco.page.html',
+    styleUrls: ['./endereco.page.scss'],
+    standalone: false
+}) 
+export class EnderecoPage implements OnInit {
+
+    // Variáveis iniciais
+
+    public endereco = {
+        cep: '',
+        rua: '',
+        numero: '',
+        complemento: '', 
+        bairro: '',
+        cidade: '',
+        estado: ''
+    };
+
+    // Objeto para controlar os erros dos campos
+
+    public errosCampos: { [key: string]: boolean } = {};
+
+    constructor(
+        private navCtrl: NavController,
+        private alertController: AlertController,
+        private apiService: ApiService,
+        private navigationService: NavigationService
+    ) { }
+
+    ngOnInit() {
+        this.carregarEnderecoSalvo();
+    }
+
+    // Função para formatar o CEP
+
+    formatarCEP(event: any) {
+        let valor = event.target.value.replace(/\D/g, '');
+        valor = valor.replace(/^(\d{5})(\d{0,3})/, '$1-$2');
+        event.target.value = valor;
+        this.endereco.cep = valor;
+    }
+
+    // Função com integração da API dos Correios
+
+    buscarEnderecoPorCep() {
+        const cepLimpo = this.endereco.cep.replace(/\D/g, '');
+        
+        if (cepLimpo.length !== 8) {
+            return;
+        }
+
+        fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`)
+        .then(res => res.json())
+        .then(dados => {
+            if (dados.erro) {
+                this.endereco.rua = '';
+                this.endereco.bairro = '';
+                this.endereco.cidade = '';
+                this.endereco.estado = '';
+                return;
+            }
+            this.endereco.rua = dados.logradouro || '';
+            this.endereco.bairro = dados.bairro || '';
+            this.endereco.cidade = dados.localidade || '';
+            this.endereco.estado = dados.uf || '';
+            this.validarCampos();
+        })
+        .catch(err => {
+            console.error('Erro na consulta do CEP:', err);
+        });
+    }
+
+    validarCampos(): boolean {
+        this.errosCampos = {}; 
+        const camposObrigatorios: (keyof typeof this.endereco)[] = ['cep', 'rua', 'numero', 'bairro', 'cidade', 'estado'];
+        let formularioValido = true;
+
+        for (const campo of camposObrigatorios) {
+            if (!this.endereco[campo] || this.endereco[campo].trim() === '') {
+                this.errosCampos[campo] = true;
+                formularioValido = false;
+            }
+        }
+        return formularioValido;
+    }
+
+    salvarEnderecoNoLocalStorage() {
+        try {
+            const dadosAntigos = JSON.parse(localStorage.getItem('dados') || '{}');
+            const dadosAtualizados = {
+                ...dadosAntigos,
+                ...this.endereco 
+            };
+
+            localStorage.setItem('dados', JSON.stringify(dadosAtualizados));
+            console.log('Endereço salvo no localStorage:', dadosAtualizados);
+        } catch (e) {
+            console.error('Erro ao salvar endereço no localStorage:', e);
+        }
+    }
+
+    carregarEnderecoSalvo() {
+        try {
+            const dadosCliente = JSON.parse(localStorage.getItem('dadosCliente') || '{}');
+
+            if (dadosCliente && Object.keys(dadosCliente).length > 0) {
+                this.endereco.cep = dadosCliente.cepEndereco || '';
+                this.endereco.rua = dadosCliente.endereco || '';
+                this.endereco.numero = dadosCliente.numEndereco || '';
+                this.endereco.complemento = dadosCliente.compEndereco || '';
+                this.endereco.bairro = dadosCliente.bairroEndereco || '';
+                this.endereco.cidade = dadosCliente.cidadeEndereco || '';
+                this.endereco.estado = dadosCliente.estadoEndereco || '';
+                console.log('Endereço carregado do localStorage:', this.endereco);
+            }
+        } catch (e) {
+        console.error('Erro ao carregar endereço do localStorage:', e);
+        }
+    }
+
+    avancar() {
+        if (this.validarCampos()) {
+            this.salvarEnderecoNoLocalStorage();
+
+            const dados = localStorage.getItem('dados');
+            const tipo = dados ? JSON.parse(dados).tipo : '';
+
+            if (tipo === 'Cartão de Crédito - Boleto') {
+                this.navigation('simulador/anexos');
+            } else {
+                this.navigation('simulador/banco');
+            }
+
+        } else {
+        console.log('Formulário inválido. Por favor, preencha todos os campos obrigatórios.');
+        }
+    }
+
+    navigation(page: string) {
+        this.navigationService.navigate(page);
+    }
+}

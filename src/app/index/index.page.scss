@@ -1,0 +1,44 @@
+.pageIndex {
+    --background: #FFF;
+}
+
+.img-home{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.img-home img{
+    width: 90%;
+    height: 230px;
+    border-radius: 10px;
+}
+
+ion-fab-button.fab-main {
+    --background: #FFF;
+    --box-shadow: none;
+    --color: #F89B24;
+    --width: 80px;
+    --height: 80px;
+}
+
+ion-icon {
+    font-size: 5rem; 
+}
+
+ion-fab-button.fab-list-item {
+    --background: #FFF;
+    --color: #F89B24;
+    width: 60px;
+    height: 60px;
+
+    ion-icon {
+        font-size: 2rem;
+    }
+}
+
+
+
+
+

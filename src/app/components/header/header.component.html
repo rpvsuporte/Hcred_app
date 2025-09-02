@@ -1,0 +1,75 @@
+    <div class="topo">
+        <div class="first_line">
+            <div class="img">
+                <img src="../../../assets/img/logoHcred.png" class="logoHcred" (click)="navigation('index')">
+            </div>
+
+            <div class="info-header">
+                <h1>Olá <ion-label>{{name}}</ion-label>!</h1>
+
+                <div class="side-bar"></div>
+
+                <ion-icon name="exit-outline" style="font-size: 2.2em;" (click)="logout()"></ion-icon>
+            </div>
+        </div>
+
+        <div class="second_line" *ngIf="tipoLogado?.toLowerCase() !== 'colaborador' && tipoLogado?.toLowerCase() !== 'gerente'">
+            <div class="left-side">
+                <div class="saldo">
+                    <p style="color: #FFF;">Saldo</p>
+                </div>
+                <div class="value">
+                    <span id="saldoValue" style="color: #FFF;">R$ {{saldoValue}}</span>
+                    <ion-icon style="color: #FFF;" name="eye-outline" class="olhoSaldo" (click)="olhoClic()"></ion-icon>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="menu">
+        
+            <div class="itemMenu" style="position: relative;" (click)="togglePopover($event)">
+                <ion-icon name="receipt-outline" class="iconsMenu"></ion-icon>
+
+                <div class="menu-label">
+                    <p>Propostas</p>
+                    <ion-icon name="chevron-down-outline"></ion-icon>
+                </div>
+
+                <!-- Popover dentro do itemMenu -->
+
+                <div *ngIf="mostrarPopover" class="popover-container" (click)="$event.stopPropagation()">
+                    <ion-item lines="none">
+                        <ion-input placeholder="Buscar..." [(ngModel)]="buscaProposta"></ion-input>
+                        <ion-icon name="search-outline" (click)="buscarPropostas();"></ion-icon>
+                    </ion-item>
+
+                    <ion-button expand="block" size="medium" (click)="navigation('simulador'); mostrarPopover = false">+ Nova Proposta</ion-button>
+
+                    <ion-item lines="none">
+                        <ion-select interface="action-sheet" placeholder="Status de propostas" cancelText="Voltar" [(ngModel)]="statusSelecionado" (ionChange)="selecionarProposta(statusSelecionado); $event.stopPropagation()">
+                            <ion-select-option *ngFor="let option of optionsProps" [value]="option.tipo">{{ option.titulo }}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </div>
+            </div>
+
+
+            <div class="itemMenu" (click)="navigation('simulador')">
+                <ion-icon name="calculator-outline" class="iconsMenu"></ion-icon>
+                <p>Simulador</p>
+            </div>
+
+            <div class="itemMenu" (click)="navigation('conta')" *ngIf="tipoLogado?.toLowerCase() !== 'colaborador' && tipoLogado?.toLowerCase() !== 'gerente'">
+                <ion-icon name="wallet-outline" class="iconsMenu"></ion-icon>
+                <p>Conta Digital</p>
+            </div>
+
+            <div class="itemMenu" id="open-relatorios-popover" *ngIf="tipoLogado?.toLowerCase() !== 'colaborador'" (click)="navigation('relatorios')">
+                <ion-icon name="document-text-outline" class="iconsMenu"></ion-icon>
+                <p>Relatórios</p>
+            </div>
+        </div>
+    </div>
+

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">HCred - Gestão de Propostas</string>
+    <string name="title_activity_main">HCred - Gestão de Propostas</string>
+    <string name="package_name">com.hcred.hcredApp</string>
+    <string name="custom_url_scheme">com.hcred.hcredApp</string>
+</resources>

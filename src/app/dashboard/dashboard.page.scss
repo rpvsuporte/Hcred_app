@@ -1,0 +1,156 @@
+.pageDashboard {
+    --background: #efeef4;
+}
+
+.topo {
+    background: #004977 url('../../assets/img/pattern-hcred-bg.png') no-repeat center center / cover;
+    padding: 20px 20px 5px;
+}
+
+.first_line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    color: #FFF;
+    padding: 0 10px;
+}
+
+.info-header{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logoHcred {
+    width: 100px;
+}
+
+h1 {
+    font-size: 18px;
+    color: #FFF;
+    margin: 0;
+}
+
+.side-bar{
+    width: 2px;
+    height: 30px;
+    background: #FFF;
+}
+
+.sairIcon {
+    width: 50px;
+}
+
+.second_line {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.second_line .value{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: -15px;
+}
+
+.second_line ion-icon{
+    font-size: 2em;
+}
+
+#saldoValue {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.menu {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 15px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.itemMenu {
+    width: 80px;
+    text-align: center;
+    color: #FFF;
+    font-size: 14px;
+}
+
+.iconsMenu {
+    color: #F89B24;
+    font-size: 2em;
+}
+
+.propostas-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: #FFF;
+    padding: 20px 10px;
+    justify-content: center;
+}
+
+.proposta-card {
+    background-color: #F89B24;
+    border-radius: 10px;
+    width: 150px;
+    padding: 15px;
+    color: #FFF;
+    position: relative;
+}
+
+.icon-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: #FFF;
+    border-radius: 50%;
+    padding: 5px;
+    position: absolute;
+    top: -20px;
+    left: 5px;
+}
+
+.icon-card ion-icon{
+    color: #004977;
+    font-size: 1.5em;
+}
+
+.proposta-title {
+    font-size: 1em;
+    display: flex;
+    justify-content: flex-start;
+    padding: 20px 12px 0 5px;
+}
+
+.proposta-value {
+    font-size: 1.8em;
+    font-weight: bold;
+    display: flex;
+    color: #004977;
+    justify-content: flex-end;
+}
+
+.search-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFF;
+    padding: 0 10px;
+}
+
+.inputBuscaProp {
+    flex: 1;
+    border-bottom: 1px solid #FFF;
+    color: #FFF;
+}
+
+.inputSearch {
+    width: 20px;
+}
+

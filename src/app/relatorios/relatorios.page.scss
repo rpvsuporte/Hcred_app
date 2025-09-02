@@ -1,0 +1,133 @@
+.pageRelatorios {
+    --background: #efeef4;
+}
+
+.topo-relatorios {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    padding: 20px 20px 0 20px;
+    background: #004977 url('../../assets/img/pattern-hcred-bg.png') no-repeat center center / cover;
+    height: 70px;
+    color: #FFF;
+}
+
+.topo-relatorios h1 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.icone-voltar {
+    font-size: 1.5em;
+}
+
+.logo-relatorios {
+    height: 50px;
+    width: 50px;
+}
+
+.form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    background: #FFF;
+    padding: 20px;
+    margin: 20px 15px;
+    border-radius: 10px;
+    flex-wrap: wrap;
+}
+
+.form ion-input {
+    flex: 1 1 140px;
+    --color: #004977;
+}
+
+.form ion-input {
+    --background: transparent;
+    --color: #004977;
+    --highlight-color-valid: #004977;
+    --highlight-color: #004977; 
+    font-size: 16px;
+}
+
+.form ion-input ion-label {
+    color: #004977;
+}
+
+.form ion-input .native-input {
+    padding: 10px 0;
+}
+
+.form ion-select{
+    --background: #FFF;
+    --border-color: #004977;
+    --border-radius: 10px;
+    width: 100%;
+}
+
+ion-select::part(label) {
+    color: #004977; 
+}
+
+ion-select::part(text) {
+    color: #004977;
+}
+
+ion-select::part(icon) {
+    color: #004977;
+    opacity: 1;
+}
+
+.form .buttons-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form ion-button{
+    --background: #004977;
+    color: #FFF;
+    font-size: 15px;
+    padding: 10px;
+    --border-radius: 10px;
+    --padding-top: 15px;
+    --padding-bottom: 15px;
+    --padding-start: 1.5em;
+    --padding-end: 1.5em;
+}
+
+.table-container{
+    display: flex;
+    flex-direction: column;
+    background: #FFF;
+    padding: 10px 20px;
+    margin: 20px 15px;
+    border-radius: 10px;
+    flex-wrap: wrap;
+}
+
+.table-container h1{
+    color: #004977;
+    text-align: center;
+    margin: 30px 0;
+}
+
+.table-container .relatorios-card{
+    --background: transparent;
+    box-shadow: none;
+    border-radius: 10px;
+    border: 2px solid #004977
+}
+
+.relatorios-card ion-card-content p{
+    font-size: 1.2em;
+    color: #004977;
+}
+
+
+

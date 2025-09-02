@@ -1,0 +1,233 @@
+
+.pageContrato {
+    --ion-background-color: #f4f5f8; 
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(3px);
+}
+
+.loading-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #ffffff;
+    padding: 25px 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.loading-box ion-spinner{
+    color: #004977;
+}
+
+.loading-text {
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    text-align: center;
+}
+
+// Animação fadeIn
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+// Estilos do Cabeçalho
+
+.contract-header {
+    padding: 20px 16px;
+    background-color: #ffffff;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+
+    .logo {
+        max-width: 150px;
+        margin-bottom: 12px;
+    }
+    h1 {
+        margin: 0;
+        font-size: 1.5rem;
+        color:  #004977;
+    }
+    h2 {
+        margin: 4px 0 0;
+        font-size: 1rem;
+        color: var(--ion-color-medium-shade);
+        font-weight: normal;
+    }
+}
+
+// Estilos do Conteúdo Principal
+
+.contract-main {
+    padding: 8px 0;
+}
+
+// Estilo Padrão para os Cards
+
+.contract-card {
+    margin: 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --background: #ffffff;
+
+    ion-card-header {
+        padding-bottom: 8px;
+    }
+    ion-card-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #004977;
+    }
+}
+
+// Estilos para Linhas de Informação Simples
+
+.info-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    padding: 4px 0;
+    color: #000;
+    
+    span:first-child {
+        color: var(--ion-color-medium-shade);
+    }
+}
+
+// Estilos para o Grid de Dados (Dados Pessoais, etc.)
+
+.data-grid {
+    padding: 0;
+
+    .data-item {
+        margin-bottom: 12px;
+
+        .label {
+            font-size: 0.8rem;
+            color: var(--ion-color-medium-shade);
+            margin: 0 0 2px 0;
+            text-transform: uppercase;
+        }
+        .value {
+            font-size: 1rem;
+            color: #000;
+            margin: 0;
+            font-weight: 500;
+        }
+    }
+}
+
+// Estilos Específicos do Card de Resumo Financeiro
+
+.summary-card {
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            font-size: 1rem;
+            color: var(--ion-color-medium-shade);
+        }
+        .value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #000;
+        }
+        .value.principal {
+            color: var(--ion-color-success, #2dd36f);
+        }
+    }
+    .summary-item.total {
+
+        .label {
+            font-weight: bold;
+            color: var(--ion-color-dark);
+        }
+        .value {
+            font-size: 1.2rem;
+            color: #000;
+        }
+    }
+}
+
+// Estilos da Seção de Declaração e Assinatura
+
+.declaration-section {
+    background: #ffffff;
+    padding: 20px;
+    margin: 16px;
+    border-radius: 12px;
+
+    h3 {
+        text-align: center;
+        color: #004977;
+        margin-top: 0;
+    }
+
+    .declaration-text {
+        text-align: justify;
+        line-height: 1.6;
+        color: #333;
+        margin: 30px 0;
+    }
+}
+
+.signature-block {
+    text-align: center;
+    margin-top: 40px;
+
+    .signature-date {
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+    .signature-line {
+        border-bottom: 1px solid #888;
+        margin: 40px auto 8px;
+        width: 80%;
+        max-width: 300px;
+        padding-top: 10px;
+        
+        span {
+            font-family: 'cursive', 'Dancing Script', sans-serif; // Fonte de assinatura bonita
+            font-size: 1.2rem;
+            color: #777;
+        }
+    }
+
+    .signature-name, .signature-cpf {
+        margin: 2px 0;
+        font-weight: 500;
+        color: #333;
+    }
+}

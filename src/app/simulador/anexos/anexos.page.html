@@ -1,0 +1,51 @@
+<ion-content [fullscreen]="true" class="pageAnexo">
+
+    <div class="topo-anexo">
+        <ion-icon name="chevron-back-outline" (click)="voltar()" class="icone-voltar"></ion-icon>
+        <h1>Anexos</h1>
+        <img src="../../assets/img/logoHcred-mobile.png" class="logo-anexo" alt="">
+    </div>
+
+    <h2>Anexos</h2>
+
+    <ion-list class="form-anexo">
+
+        <div *ngFor="let anexo of anexos; let i = index" class="grupo-anexo">
+            <ion-item>
+                <input type="file" #fileInput style="display: none;" (change)="selecionarArquivo($event, i)" accept="image/*">
+
+                <ion-button *ngIf="!anexo.nomeArquivo" expand="block" (click)="abrirCameraOuGaleria(i)" [class.input-erro]="errosAnexos[i]?.arquivo">
+                    Anexar Foto
+                    <ion-icon name="camera-outline"></ion-icon>
+                </ion-button>
+
+                <div *ngIf="anexo.nomeArquivo" class="arquivo-selecionado">
+                    <span>{{ anexo.nomeArquivo }}</span>
+                    <ion-icon name="trash-outline" (click)="removerAnexo(i)"></ion-icon>
+                </div>
+
+                <ion-select [class.input-erro]="errosAnexos[i]?.tipo" label="Tipo do Anexo" labelPlacement="floating" fill="outline" [(ngModel)]="anexo.tipo">
+                    <ion-select-option *ngFor="let tipo of tiposAnexo" [value]="tipo">{{ tipo }}</ion-select-option>
+                </ion-select>
+            </ion-item>
+        </div>
+
+        <div class="contratoOnline">
+            <ion-select
+                [class.input-erro]="erroContratoOnline"
+                label="Envio de Contrato Online?"
+                labelPlacement="floating"
+                fill="outline"
+                [(ngModel)]="contratoOnline"
+            >
+                <ion-select-option value="Sim">Sim</ion-select-option>
+                <ion-select-option value="Não">Não</ion-select-option>
+            </ion-select>
+        </div>
+    </ion-list>
+
+    <div class="buttons-container">
+        <ion-button style="--background: #004977" (click)="voltar()">Voltar</ion-button>
+        <ion-button style="--background: #F89B24" (click)="cadastrarProposta()">Cadastrar Proposta</ion-button>
+    </div>
+</ion-content>

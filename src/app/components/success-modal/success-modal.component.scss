@@ -1,0 +1,63 @@
+:host {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed; 
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent !important;
+}
+
+
+ion-modal::part(backdrop) {
+    background: transparent !important;
+    --backdrop-opacity: 0;
+}
+
+ion-modal {
+    --backdrop-opacity: 0;
+    --background: transparent;
+}
+
+.modal-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    border-radius: 20px;
+    background: #fff;
+    z-index: 10; 
+}
+
+ion-icon {
+    font-size: 100px;
+    margin-bottom: 16px;
+    --ion-toolbar-background: transparent;
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: #435054;
+}
+
+.message {
+    color: #435054;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.btn-ok {
+    --background: #004977;
+    color: #FFF;
+    --border-radius: 12px;
+    --box-shadow: 0 4px 10px #004977;
+    font-weight: bold;
+    width: 80px;
+}

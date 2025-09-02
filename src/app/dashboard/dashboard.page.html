@@ -1,0 +1,18 @@
+<ion-content [fullscreen]="true" class="pageDashboard">
+    <app-header></app-header>
+
+    <div class="propostas-grid">
+        <div class="proposta-card" *ngFor="let item of propostasList" (click)="navigation('propostas', item.tipo)">
+            <div class="icon-card">
+                <ion-icon [name]="item.img"></ion-icon>
+            </div>
+            <div class="proposta-title">
+                {{item.titulo}}
+            </div>
+            <div class="proposta-value">
+                {{item.valor}}
+            </div>
+        </div>
+    </div>
+</ion-content>
+

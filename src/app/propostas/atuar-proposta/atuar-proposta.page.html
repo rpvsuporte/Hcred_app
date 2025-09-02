@@ -1,0 +1,244 @@
+<ion-content [fullscreen]="true" class="pageView_propostas" [scrollY]="!mostrarModal">
+
+    <!-- Topo -->
+
+    <div class="topo-view_propostas">
+        <ion-icon name="chevron-back-outline" (click)="navigation('propostas')" class="icone-voltar"></ion-icon>
+        <h1>Visualizar Propostas</h1>
+    </div>
+
+    <main *ngIf="propsStatus">
+        <div class="date-list">
+            <ion-card class="proposta-card">
+                <ion-card-header>
+                    <ion-card-title style="font-size: 22px; font-weight: bold; color: #004977; text-align: center;">Dados da Proposta</ion-card-title>
+                </ion-card-header>
+
+                <ion-card-content>
+                    <p><strong>ID Proposta:</strong> {{ prop.idProposta }}</p>
+                    <p><strong>Status:</strong> {{ status }}</p>
+                    <p><strong>Tipo:</strong> {{ prop.tipo }}</p>
+                    <p><strong>Valor Financiado:</strong> R$ {{ prop.valorFinanciado }}</p>
+                    <p><strong>Parcelas:</strong> {{ prop.quantPrestacoes }}x</p>
+                    <p><strong>Valor Total:</strong> R$ {{ prop.valorTotal }}</p>
+                </ion-card-content>
+            </ion-card>
+
+            <ion-card class="proposta-card">
+                <ion-card-header>
+                    <ion-card-title style="font-size: 22px; font-weight: bold; color: #004977; text-align: center;">Dados do Cliente</ion-card-title>
+                </ion-card-header>
+
+                <ion-card-content>
+                    <p><strong>Nome:</strong> {{ prop.nome }}</p>
+                    <p><strong>CPF:</strong> {{ prop.cpf }}</p>
+                    <p><strong>Telefone:</strong> {{ prop.celular }}</p>
+                    <p><strong>Email:</strong> {{ prop.email }}</p>
+                </ion-card-content>
+            </ion-card>
+        </div>
+
+        <div class="buttons-container">
+            <ion-button style="--background: #004977" (click)="navigation('propostas/contrato')">Visualizar Proposta</ion-button>
+            <ion-button style="--background: red" (click)="fecharProposta('back')">Fechar Proposta</ion-button>
+        </div>
+
+        <div class="atuar" *ngIf="!mostrarAtuacao && statusAtuacao !== 'sendo atuada por outro'">
+            <ion-button (click)="atuar()">Atuar na Proposta</ion-button>
+        </div>
+
+        <div class="atuado borda-vermelha" style="align-items: center;" *ngIf="statusAtuacao === 'sendo atuada por outro'">
+            <p class="mensagem-aviso">
+                Proposta sendo atuada por <strong>{{ msgAtuacao.nomeUsuario | uppercase }},</strong> expira em {{ msgAtuacao.expire | date:'dd/MM/yyyy HH:mm' }}
+            </p>
+        </div>
+
+        <div class="atuado" *ngIf="mostrarAtuacao">
+            <div class="camera-container" style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
+                <ion-button *ngIf="!arquivoSelecionado" (click)="abrirCameraOuGaleria()">
+                    <ion-icon slot="start" name='camera-outline'></ion-icon>
+                    
+                    Anexar Foto
+                </ion-button>
+
+                <p *ngIf="arquivoSelecionado">
+                    {{ nomeArquivoAnexado }}
+                    <ion-icon name="trash-outline" style="color: red; font-size: 1.5em;" (click)="limparAnexo()"></ion-icon>
+                </p>
+            </div>
+
+            <ion-item lines="none">
+                <ion-select label="Tipo do Anexo" labelPlacement="floating" fill="outline" [(ngModel)]="opcaoSelecionada">
+                    <ion-select-option *ngFor="let anexo of tiposAnexo">{{anexo}}</ion-select-option>
+                </ion-select>
+            </ion-item>
+
+            <div class="last-line">
+                <ion-button (click)="salvarAnexo()">Salvar</ion-button>
+                <ion-button (click)="abrirModal()">Dados Bancários</ion-button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <ion-card *ngFor="let prop of propsStatus" class="proposta-status-card">
+                <ion-card-content>
+                    <p>{{ prop.data }}</p>
+                    
+                    <p style="white-space: pre-line; text-align: start; line-height: 35px;" 
+                        [innerHTML]="formatarObservacoes(prop.observacoes)">
+                    </p>
+
+
+                    <p>{{ prop.operador }}</p>
+
+                    <ng-container *ngIf="prop.anexo">
+                        <p style="display: flex; align-items: center; justify-content: flex-end;">
+                            <ion-icon name="eye-outline" style="cursor: pointer; color: #004977; font-size: 2.2em;" (click)="abrirAnexo(prop.anexo)">
+                            </ion-icon>
+                        </p>
+                    </ng-container>
+                </ion-card-content>
+            </ion-card>
+        </div>
+
+        <div *ngIf="mostrarModal" class="fundo-modal">
+            <div class="janela-modal">
+                <div class="modal-header">
+                    <ion-icon name="close-outline" (click)="fecharModal()"></ion-icon>
+                </div>
+
+                <h2 style="text-align: center;">Dados Bancários</h2>
+
+                <ion-select label="Tipo de Recebimento" labelPlacement="floating" fill="outline" [(ngModel)]="tipoRecebimento" (ionChange)="onTipoRecebimentoChange()">
+                    <ion-select-option value="pix">Chave PIX</ion-select-option>
+                    <ion-select-option value="banco">Banco</ion-select-option>
+                </ion-select>
+
+                <ng-container *ngIf="tipoRecebimento === 'pix'">
+                    <ion-select label="Tipo Chave PIX" labelPlacement="floating" (ionChange)="dadosPix.chave = ''" fill="outline" [(ngModel)]="dadosPix.tipoChave">
+                        <ion-select-option value="cpf">CPF</ion-select-option>
+                        <ion-select-option value="cnpj">CNPJ</ion-select-option>
+                        <ion-select-option value="email">E-mail</ion-select-option>
+                        <ion-select-option value="telefone">Telefone</ion-select-option>
+                        <ion-select-option value="aleatoria">Chave Aleatória</ion-select-option>
+                    </ion-select>
+
+                    <ion-input
+                        label="Chave PIX"
+                        [(ngModel)]="dadosPix.chave"
+                        (ionInput)="formatarChavePix($event)"
+                        (ionBlur)="validarChavePix()"
+                        labelPlacement="floating"
+                        [attr.maxlength]="maxLength"
+                        fill="outline"
+                        [class.borda-vermelha-input]="!chavePixValida && dadosPix.chave.length > 0"
+                    ></ion-input>
+                </ng-container>
+
+                <ng-container *ngIf="tipoRecebimento === 'banco'">
+                    <ion-input label="Banco"
+                        labelPlacement="floating" 
+                        fill="outline" 
+                        [(ngModel)]="dadosBanco.banco"
+                        (ionInput)="filtrarBancos()"
+                        (ionFocus)="mostrarListaBancos = true"
+                        (blur)="ocultarComDelay()"
+                        placeholder="Digite para buscar"
+                        autocomplete="off"
+                    >
+                    </ion-input>
+
+                    <div *ngIf="mostrarListaBancos && bancosFiltrados.length" class="lista-bancos">
+                        <div *ngFor="let banco of bancosFiltrados" class="item-banco" (mousedown)="selecionarBancoInput(banco)">
+                            {{ banco.Code === '-' ? banco.Name : (banco.Name + ' - ' + banco.Code) }}
+                        </div>
+                    </div>
+
+                    <ion-input label="Agência" maxlength="6" labelPlacement="floating" fill="outline" [(ngModel)]="dadosBanco.agencia"></ion-input>
+
+                    <ion-input label="Conta" maxlength="12" labelPlacement="floating" fill="outline" [(ngModel)]="dadosBanco.conta"></ion-input>
+
+                    <ion-input label="Dígito" maxlength="2" labelPlacement="floating" fill="outline" [(ngModel)]="dadosBanco.digito"></ion-input>
+
+                    <ion-select label="Tipo Conta" labelPlacement="floating" fill="outline" [(ngModel)]="dadosBanco.tipoConta">
+                        <ion-select-option value="corrente">Corrente</ion-select-option>
+                        <ion-select-option value="poupanca">Poupança</ion-select-option>
+                    </ion-select>
+                </ng-container>
+
+                <ion-toggle labelPlacement="end" [(ngModel)]="liberacaoContaTerceiros" style="color: #004977;">Liberação em conta de terceiros</ion-toggle>
+
+                <ng-container *ngIf="liberacaoContaTerceiros">
+                    <ion-radio-group [(ngModel)]="tipoTerceiro" style="margin-top: 10px;">
+                        <ion-item lines="none">
+                            <ion-label>Pessoa Física</ion-label>
+                            <ion-radio style="--color: #004977;" slot="start" value="pf"></ion-radio>
+                        </ion-item>
+                
+                        <ion-item lines="none">
+                            <ion-label>Pessoa Jurídica</ion-label>
+                            <ion-radio style="--color: #004977;" slot="start" value="pj"></ion-radio>
+                        </ion-item>
+                    </ion-radio-group>
+
+                    <!-- Pessoa Física -->
+
+                    <ng-container *ngIf="tipoTerceiro === 'pf'">
+                        <ion-input label="Nome do Terceiro" labelPlacement="floating" fill="outline" [(ngModel)]="terceiroPF.nome"></ion-input>
+                        <ion-input
+                            label="CPF do Terceiro"
+                            labelPlacement="floating"
+                            fill="outline"
+                            [(ngModel)]="terceiroPF.cpf"
+                            (ionInput)="formatarCPF($event)"
+                            [class.borda-vermelha-input]="!cpfValidoTerceiro && terceiroPF.cpf.length > 0"
+                            maxlength="14"
+                        ></ion-input>
+
+                        <ion-select label="Parentesco" labelPlacement="floating" fill="outline" [(ngModel)]="terceiroPF.parentesco">
+                            <ion-select-option value="pai_mae">Pai/Mãe</ion-select-option>
+                            <ion-select-option value="avo">Avó/Avô</ion-select-option>
+                            <ion-select-option value="filho">Filho</ion-select-option>
+                            <ion-select-option value="irmao">Irmãos</ion-select-option>
+                            <ion-select-option value="conjuge">Cônjuge</ion-select-option>
+                            <ion-select-option value="outros">Outros</ion-select-option>
+                        </ion-select>
+
+                        <!-- Se escolher outros -->
+
+                        <ion-input
+                            *ngIf="terceiroPF.parentesco === 'outros'"
+                            label="Informe o Parentesco"
+                            labelPlacement="floating"
+                            fill="outline"
+                            [(ngModel)]="terceiroPF.parentescoOutros"
+                        ></ion-input>
+
+                    </ng-container>
+
+                    <!-- Pessoa Jurídica -->
+
+                    <ng-container *ngIf="tipoTerceiro === 'pj'">
+                        <ion-input label="Razão Social" labelPlacement="floating" fill="outline" [(ngModel)]="terceiroPJ.razaoSocial"></ion-input>
+
+                        <ion-input
+                            label="CNPJ"
+                            labelPlacement="floating"
+                            fill="outline"
+                            [(ngModel)]="terceiroPJ.cnpj"
+                            (ionInput)="formatarCNPJ($event)"
+                            (ionBlur)="validarCNPJInput()"
+                            [class.borda-vermelha-input]="!cnpjValidoTerceiro && terceiroPJ.cnpj.length > 0"
+                            maxlength="18"
+                        ></ion-input>
+
+                        <ion-input label="Vínculo com a Empresa" labelPlacement="floating" fill="outline" [(ngModel)]="terceiroPJ.vinculo"></ion-input>
+                    </ng-container>
+
+                </ng-container>
+
+                <ion-button expand="block" (click)="salvarDados()">Alterar Dados</ion-button>
+            </div>
+        </div>
+    </main>
+</ion-content>

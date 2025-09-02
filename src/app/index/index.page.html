@@ -1,0 +1,14 @@
+<ion-content [fullscreen]="true" class="pageIndex">
+    <app-header></app-header>
+
+    <div class="img-home">
+        <img src="../../assets/img/aviso_home.png" alt="Aviso Home">
+    </div>
+
+    <ion-fab slot="fixed" style="z-index: 100000; margin-right: 15px; margin-bottom: 15px;" vertical="bottom" horizontal="end">
+        <ion-fab-button class="fab-list-item" (click)="navigation('dashboard')">
+            <ion-icon name="bar-chart-outline"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+</ion-content>
+
