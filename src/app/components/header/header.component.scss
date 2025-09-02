@@ -3,7 +3,10 @@
     flex-direction: column;
     gap: 20px;
     background:  url('../../../assets/img/pattern-hcred-bg.png') no-repeat center center / cover;
-    padding: 20px 10px 5px;
+    padding-top: env(safe-area-inset-top); 
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
 }
 
 .first_line {
@@ -127,6 +130,36 @@ h1 {
 .popover-container ion-item ion-select .select-placeholder{
     color: #FFF;
     opacity: 1;
+}
+
+/* Placeholder do ion-input dentro do popover */
+.popover-container ion-item ion-input::part(native)::placeholder {
+  color: #FFF;      /* cor branca */
+  opacity: 1;       /* garante visibilidade */
+}
+
+/* Placeholder do ion-select dentro do popover */
+.popover-container ion-item ion-select .select-placeholder {
+  color: #FFF;      /* cor branca */
+  opacity: 1;
+}
+
+/* Placeholder do input genérico, se tiver outros */
+.popover-container ion-input::part(native)::placeholder {
+  color: #FFF;
+  opacity: 1;
+}
+
+/* Input dentro do popover */
+.popover-container ion-input {
+  --color: #FFF;          /* texto digitado */
+  --placeholder-color: #FFF; /* placeholder */
+}
+
+/* Select dentro do popover */
+.popover-container ion-select {
+  --color: #FFF;           /* texto selecionado */
+  --placeholder-color: #FFF; /* placeholder */
 }
 
 .popover-container ion-button {

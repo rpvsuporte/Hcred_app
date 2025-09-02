@@ -7,7 +7,7 @@
     align-items: center;
     justify-content: space-between;
     position: relative;
-    padding: 20px 20px 0 20px;
+    padding: env(safe-area-inset-top)20px 0 20px;
     background: #004977 url('../../../assets/img/pattern-hcred-bg.png') no-repeat center center / cover;
     height: 70px;
     color: #FFF;

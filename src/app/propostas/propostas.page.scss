@@ -7,10 +7,19 @@
     align-items: center;
     justify-content: space-between;
     position: relative;
-    padding: 20px 20px 0 20px;
+    padding: env(safe-area-inset-top) 20px 0 20px;
     background: #F89B24;
     height: 70px;
     color: #FFF;
+}
+
+.topo-propostas ion-icon,
+.topo-propostas ion-menu-button {
+  --color: #FFF; /* cor laranja igual os outros ícones */
+}
+
+ion-menu ion-title {
+  color: #FFF !important; /* força título branco */
 }
 
 .topo-propostas h1 {
