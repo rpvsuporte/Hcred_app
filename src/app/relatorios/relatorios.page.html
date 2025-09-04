@@ -10,85 +10,25 @@
 
     <main>
         <div class="form">
-            <ion-input
-                placeholder="dd/mm/aaaa"
-                [(ngModel)]="dataInicialExibicao"
-                (ionInput)="mascararData($event, 'dataInicial')"
-                maxlength="10"
-                label="Data Inicial"
-                label-placement="stacked"
-            ></ion-input>
-
-            <ion-input
-                placeholder="dd/mm/aaaa"
-                [(ngModel)]="dataFinalExibicao"
-                (ionInput)="mascararData($event, 'dataFinal')"
-                maxlength="10"
-                label="Data Final"
-                label-placement="stacked"
-            ></ion-input>
-
-            <ion-select label="Status da Operação"
-                [(ngModel)]="statusSelecionado"
-                label-placement="floating"
-                fill="outline"
-            >
-                <ion-select-option *ngFor="let option of options" [value]="option.value">{{option.title}}</ion-select-option>
-            </ion-select>
 
             <ion-select
-                label="Tipo da Operação"
-                [(ngModel)]="tipoOperacao"
+                label="Selecione o período"
                 label-placement="floating"
+                [(ngModel)]="periodo"
                 fill="outline"
             >
-                <ion-select-option *ngFor="let tipo of tiposDisponiveis" [value]="tipo">{{tipo}}</ion-select-option>
-            </ion-select>
-
-            <ion-select
-                *ngIf="tipoUser !== 'Gerente'"
-                label="Selecione o Gerente"
-                label-placement="floating"
-                (ionChange)="consultarColab()"
-                [(ngModel)]="gerenteSelecionado"
-                fill="outline"
-            >
-                <ion-select-option *ngFor="let gerente of gerentes" [value]="gerente.idUser">{{gerente.nomeUsuario}}</ion-select-option>
-            </ion-select>
-
-            <ion-select
-                *ngIf="colaboradores.length > 0"
-                label="Selecione o Colaborador"
-                label-placement="floating"
-                [(ngModel)]="colabSelecionado"
-                fill="outline"
-            >
-                <ion-select-option *ngFor="let colab of colaboradores" [value]="colab.idUser">{{colab.nomeUsuario}}</ion-select-option>
+                <ion-select-option [value]="1">1 dias</ion-select-option>
+                <ion-select-option [value]="3">3 dias</ion-select-option>
+                <ion-select-option [value]="7">7 dias</ion-select-option>
+                <ion-select-option [value]="10">10 dias</ion-select-option>
+                <ion-select-option [value]="30">30 dias</ion-select-option>
             </ion-select>
 
             <div class="buttons-form">
-                <ion-button (click)="consultarProps()"><ion-icon slot="start" name="search-outline"></ion-icon>Buscar</ion-button>
-                <ion-button (click)="clear()"><ion-icon slot="start" name="trash-outline"></ion-icon>Limpar</ion-button>
+                <ion-button><ion-icon name="document-text-outline" slot="start"></ion-icon>Gerar Relatório</ion-button>    
             </div>
-
         </div>
 
-        <div *ngIf="propostas.length > 0" class="table-container">
-            <h1>Resultados da Pesquisa</h1>
 
-            <ion-card class="relatorios-card" *ngFor="let proposta of propostas">  
-                <ion-card-content>
-                    <p><strong>Data:</strong> {{proposta.dataPropostaBr}}</p>
-                    <p><strong>Status:</strong> {{ proposta.estatus.charAt(0).toUpperCase() + proposta.estatus.slice(1).toLowerCase() }}</p>
-                    <p><strong>Tipo:</strong> {{proposta.tipo}}</p>
-                    <p><strong>Nome:</strong> {{proposta.nome}}</p>
-                    <p><strong>Valor Financiado:</strong> R$ {{proposta.valorFinanciado}}</p>
-                    <p><strong>Valor Total:</strong> R$ {{proposta.valorTotal}}</p>
-                    <p><strong>Valor Parcela:</strong> R$ {{proposta.valorPacela}}</p>
-                    <p><strong>Prazo:</strong> {{proposta.quantPrestacoes}}x</p>
-                    <p><strong>Gerente:</strong> {{proposta.gerente}}</p>
-                </ion-card-content>
-            </ion-card>
-        </div>
     </main>
 </ion-content>
