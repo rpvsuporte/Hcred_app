@@ -51,6 +51,7 @@ export class SimuladorPage implements OnInit {
     public erroTipo = false;
     public erroTabela = false;
     public formInvalido = true;
+    public tipoLogado = localStorage.getItem('tipoLogado')?.toLowerCase();
 
     constructor(
         private alertController: AlertController,

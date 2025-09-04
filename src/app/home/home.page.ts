@@ -30,7 +30,7 @@ export class HomePage {
             this.apiService.listarSaldo({
                 auth_hash: AUTH_HASH,
                 idUser: localStorage.getItem("idLogado"),
-                idFranqueado: localStorage.getItem("idFranqueado")
+                ['id'+ localStorage.getItem('tipoLogado')]: localStorage.getItem("idFranqueado")
             }).subscribe({
                 next: (resConta) => {
                     if (resConta.estatus === "erro") {
@@ -67,6 +67,8 @@ export class HomePage {
         this.apiService.loginApp(data).subscribe({
             next: async (resLogin) => {
                 this.resultadoLogin = resLogin;
+                const tipoLogado = this.resultadoLogin.dados.tipoLogado; 
+                const idKey = 'id' + tipoLogado.charAt(0).toUpperCase() + tipoLogado.slice(1);
 
                 if (this.resultadoLogin.estatus === "erro") {
                     this.alert(this.resultadoLogin.mensagem);
@@ -89,7 +91,8 @@ export class HomePage {
                 this.apiService.listarSaldo({
                     auth_hash: AUTH_HASH,
                     idUser: this.resultadoLogin.dados.idLogado,
-                    idFranqueado: this.resultadoLogin.dados.idFranqueado
+                    [idKey]: this.resultadoLogin.dados[idKey],
+                    tipo: tipoLogado
                 }).subscribe({
                     next: (resConta) => {
                         if (resConta.estatus === "erro") {
