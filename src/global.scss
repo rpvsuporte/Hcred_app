@@ -38,17 +38,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 *{  
-  box-sizing: initial;
-  font-family: "Roboto", sans-serif;
+    box-sizing: initial;
+    font-family: "Roboto", sans-serif;
+}
+
+/* iOS: usa safe-area normalmente */
+$topo-selectors: (
+  "app-header .topo",
+  "app-conta .topo-conta",
+  "app-propostas .topo-propostas",
+  "app-atuar-proposta .topo-view_propostas",
+  "app-anexos .topo-anexo",
+  "app-banco .topo-banco",
+  "app-cadastro .topo-cadastro",
+  "app-endereco .topo-endereco",
+  "app-simulador .topo-simulador",
+  "app-relatorios .topo-relatorios"
+);
+
+@each $selector in $topo-selectors {
+    .ios #{$selector} {
+        padding-top: env(safe-area-inset-top);
+    }
+
+    .md #{$selector} {
+        padding-top: calc(env(safe-area-inset-top) + 20px);
+    }
 }
 
 
 .success-modal-style::part(backdrop) {
-  background: #000 !important;
-  --backdrop-opacity: 0.8;
+    background: #000 !important;
+    --backdrop-opacity: 0.8;
 }
 
 .success-modal-style {
-  --background: transparent !important;
+    --background: transparent !important;
 }
 
