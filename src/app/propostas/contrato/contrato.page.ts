@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { NavigationService } from 'src/app/services/navigation.service';
 import { AUTH_HASH } from 'src/app/services/auth-config';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
     selector: 'app-contrato',
@@ -17,7 +18,7 @@ export class ContratoPage implements OnInit {
     loja: string = localStorage.getItem('franqueado') ?? '';
     isLoading: boolean = false;
 
-    constructor(private apiService: ApiService, private navigationService: NavigationService) { }
+    constructor(private apiService: ApiService, private navigationService: NavigationService, private toastService: ToastService) { }
 
     ngOnInit() {
         this.dataAtualExtenso = this.getDataAtualExtenso('AVARÉ');
@@ -38,7 +39,7 @@ export class ContratoPage implements OnInit {
         this.apiService.listarContrato(data).subscribe({
             next: (response) => {
                 if (response.estatus === 'erro') {
-                    this.alert(response.mensagem);
+                    this.toastService.error(response.mensagem); // <-- substituído
                 } else {
                     this.proposta = response.resultado;
                 }
@@ -46,15 +47,11 @@ export class ContratoPage implements OnInit {
                 this.isLoading = false;
             },
             error: () => {
-                this.alert('Erro na conexão.');
+                this.isLoading = false;
+                this.toastService.error('Erro na conexão.'); // <-- substituído
             }
         });
-    }
 
-    // Função de alert
-
-    alert(mensagem: any) {
-        throw new Error('Method not implemented.');
     }
 
     // Função para formatar data

@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AlertController, LoadingController, NavController } from '@ionic/angular';
+import { LoadingController, NavController } from '@ionic/angular';
 import { ApiService } from '../../services/api.service';
 import { NavigationService } from '../../services/navigation.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { AUTH_HASH } from 'src/app/services/auth-config';
 import { firstValueFrom } from 'rxjs';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
     selector: 'app-atuar-proposta',
@@ -14,10 +15,8 @@ import { firstValueFrom } from 'rxjs';
     standalone: false
 })
 export class AtuarPropostaPage implements OnInit {
-    // Variáveis iniciais
-
-    prop:any = {};
-    propsStatus:any[] = [];
+    prop: any = {};
+    propsStatus: any[] = [];
     public mostrarAtuacao = false;
     public opcaoSelecionada = '';
     public arquivoSelecionado: File | null = null;
@@ -29,14 +28,14 @@ export class AtuarPropostaPage implements OnInit {
     public nomeArquivoAnexado: string = '';
     mostrarModal = false;
     liberacaoContaTerceiros = false;
-    public listaBanks:any = [];
+    public listaBanks: any = [];
     public bancosFiltrados: any[] = [];
     public termoBuscaBanco: string = '';
     public mostrarListaBancos: boolean = false;
     maxLength: number = 14;
     chavePixValida: boolean = true;
 
-    tipoRecebimento:string = '';
+    tipoRecebimento: string = '';
     tipoTerceiro: 'pf' | 'pj' | null = null;
 
     cpfValidoTerceiro: boolean = true;
@@ -113,68 +112,55 @@ export class AtuarPropostaPage implements OnInit {
         'contestacao': 'Contestação',
     };
 
-
-    constructor( 
-        private alertController: AlertController,
+    constructor(
+        private toastService: ToastService,
         private apiService: ApiService,
         private navigationService: NavigationService,
         private loadingController: LoadingController,
-        private http: HttpClient 
+        private http: HttpClient
     ) { }
 
     ngOnInit() {
         this.selectBanks();
     }
 
-    // Função de inicialização igual ngOnInit e constructor só que melhor
-
     ionViewWillEnter() {
         this.consultarProps();
         this.verificaAtuacao();
     }
 
-    // Função para trazer os bancos da API
-
     async selectBanks() {
-        this.apiService.buscaBanks({auth_hash: AUTH_HASH}).subscribe({
+        this.apiService.buscaBanks({ auth_hash: AUTH_HASH }).subscribe({
             next: (response) => {
                 if (response.estatus === 'erro') {
-                console.log(response.mensagem);
+                    this.toastService.error(response.mensagem);
                 } else {
-                this.listaBanks = response.resultado;
-                this.filtrarBancos();
+                    this.listaBanks = response.resultado;
+                    this.filtrarBancos();
                 }
             },
             error: () => {
-                console.log('Erro na conexão.');
+                this.toastService.error('Erro na conexão.');
             }
         });
     }
 
-    // Função para filtrar os bancos
-
     filtrarBancos() {
         const termo = this.termoBuscaBanco.toLowerCase();
         this.bancosFiltrados = this.listaBanks.filter((banco: any) =>
-        banco.Name.toLowerCase().includes(termo)
+            banco.Name.toLowerCase().includes(termo)
         );
     }
-
-    // Função de aparecer o banco no input
 
     selecionarBancoInput(banco: any) {
         this.termoBuscaBanco = banco.Name;
         this.mostrarListaBancos = false;
-        this.dadosBanco.banco = banco.Name; 
+        this.dadosBanco.banco = banco.Name;
     }
-
-    // Função de fechar o banco
 
     ocultarComDelay() {
         setTimeout(() => this.mostrarListaBancos = false, 200);
     }
-
-    // Função para pegar o status
 
     get status(): string {
         const status = this.prop.estatus || '';
@@ -185,17 +171,16 @@ export class AtuarPropostaPage implements OnInit {
         if ((window as any).Capacitor?.isNativePlatform()) {
             try {
                 const image = await Camera.getPhoto({
-                quality: 80,
-                allowEditing: false,
-                resultType: CameraResultType.DataUrl,
-                source: CameraSource.Prompt,
+                    quality: 80,
+                    allowEditing: false,
+                    resultType: CameraResultType.DataUrl,
+                    source: CameraSource.Prompt,
                 });
 
                 const arquivo = this.base64ToFile(image.dataUrl!, `anexo.jpg`);
                 this.arquivoSelecionado = arquivo;
                 this.nomeArquivoAnexado = arquivo.name;
 
-                console.log(`Arquivo capturado pelo Capacitor no celular:`, arquivo);
             } catch (error) {
                 console.warn('Captura cancelada ou erro:', error);
             }
@@ -208,14 +193,11 @@ export class AtuarPropostaPage implements OnInit {
                 this.arquivoSelecionado = arquivo;
                 this.nomeArquivoAnexado = arquivo.name;
 
-                console.log(`Arquivo SIMULADO no navegador:`, arquivo);
             } catch (error) {
-                console.error('Erro ao carregar imagem simulada:', error);
+                this.toastService.error('Erro ao carregar imagem simulada.');
             }
         }
     }
-
-    // Função para converter base64 para file
 
     base64ToFile(dataUrl: string, filename: string): File {
         const arr = dataUrl.split(',');
@@ -237,23 +219,23 @@ export class AtuarPropostaPage implements OnInit {
         let valor = event.target.value.replace(/\D/g, '');
 
         if (tipo === 'cpf') {
-        valor = valor.substring(0, 11);
-        this.maxLength = 14;
-        this.dadosPix.chave = valor.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-    
+            valor = valor.substring(0, 11);
+            this.maxLength = 14;
+            this.dadosPix.chave = valor.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+
         } else if (tipo === 'cnpj') {
-        valor = valor.substring(0, 14);
-        this.maxLength = 18;
-        this.dadosPix.chave = valor.replace(/^(\d{2})(\d)/, '$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3').replace(/\.(\d{3})(\d)/, '.$1/$2').replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+            valor = valor.substring(0, 14);
+            this.maxLength = 18;
+            this.dadosPix.chave = valor.replace(/^(\d{2})(\d)/, '$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3').replace(/\.(\d{3})(\d)/, '.$1/$2').replace(/(\d{4})(\d{1,2})$/, '$1-$2');
 
         } else if (tipo === 'telefone') {
-        valor = valor.substring(0, 11);
-        this.maxLength = 15;
-        this.dadosPix.chave = valor.replace(/^(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d{1,4})$/, '$1-$2');
+            valor = valor.substring(0, 11);
+            this.maxLength = 15;
+            this.dadosPix.chave = valor.replace(/^(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d{1,4})$/, '$1-$2');
 
         } else {
-        this.maxLength = 200;
-        this.dadosPix.chave = event.target.value;
+            this.maxLength = 200;
+            this.dadosPix.chave = event.target.value;
         }
 
         this.chavePixValida = this.validarChavePix();
@@ -323,10 +305,10 @@ export class AtuarPropostaPage implements OnInit {
         if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) return false;
 
         const validarDigito = (cnpj: string, posicoes: number[]): boolean => {
-        const soma = cnpj.slice(0, posicoes.length).split('').reduce((acc, num, idx) => acc + +num * posicoes[idx], 0);
-        const resto = soma % 11;
-        const digito = resto < 2 ? 0 : 11 - resto;
-        return digito === +cnpj[posicoes.length];
+            const soma = cnpj.slice(0, posicoes.length).split('').reduce((acc, num, idx) => acc + +num * posicoes[idx], 0);
+            const resto = soma % 11;
+            const digito = resto < 2 ? 0 : 11 - resto;
+            return digito === +cnpj[posicoes.length];
         };
 
         const posicoesPrimeiro = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
@@ -338,8 +320,6 @@ export class AtuarPropostaPage implements OnInit {
     limparPix() {
         this.dadosPix.chave = '';
     }
-
-    // Função para trazer dados da API
 
     async consultarProps() {
         const loading = await this.loadingController.create({
@@ -361,7 +341,7 @@ export class AtuarPropostaPage implements OnInit {
                 loading.dismiss();
 
                 if (response.estatus === 'erro') {
-                    this.alert(response.mensagem);
+                    this.toastService.error(response.mensagem);
                 } else {
                     this.prop = response.resultadoProp;
                     this.propsStatus = response.resultadoPropsStatus;
@@ -369,14 +349,12 @@ export class AtuarPropostaPage implements OnInit {
             },
             error: () => {
                 loading.dismiss();
-                alert('Erro na conexão.');
+                this.toastService.error('Erro na conexão.');
             }
         });
     }
 
-    // Função para verificar se tem alguém atuando
-
-    verificaAtuacao(){
+    verificaAtuacao() {
         const data = {
             auth_hash: AUTH_HASH,
             idProposta: localStorage.getItem('idProposta'),
@@ -386,28 +364,26 @@ export class AtuarPropostaPage implements OnInit {
         this.apiService.verificarPropsView(data).subscribe({
             next: (response) => {
                 if (response.estatus === 'erro') {
-                    this.alert(response.mensagem);
+                    this.toastService.error(response.mensagem);
                 } else {
                     this.statusAtuacao = response.estatus;
 
                     if (this.statusAtuacao === 'sendo atuada por outro') {
-                        this.msgAtuacao = response.result; 
+                        this.msgAtuacao = response.result;
                     }
 
                     if (this.statusAtuacao === 'sendo atuada por você') {
-                        this.mostrarAtuacao = true; 
+                        this.mostrarAtuacao = true;
                     }
                 }
             },
             error: () => {
-                alert('Erro na conexão.');
+                this.toastService.error('Erro na conexão.');
             }
         });
     }
 
-    // Função de fechar proposta
-
-    fecharProposta(action: string){
+    fecharProposta(action: string) {
         const data = {
             auth_hash: AUTH_HASH,
             idProposta: localStorage.getItem('idProposta')
@@ -416,19 +392,17 @@ export class AtuarPropostaPage implements OnInit {
         this.apiService.deletePropsView(data).subscribe({
             next: (response) => {
                 if (response.estatus === 'erro') {
-                    this.alert(response.mensagem);
+                    this.toastService.error(response.mensagem);
                 } else {
-                    this.mostrarAtuacao = false; 
+                    this.mostrarAtuacao = false;
                     action === 'back' ? this.navigation('propostas') : '';
                 }
             },
             error: () => {
-                this.alert('Erro na conexão.');
+                this.toastService.error('Erro na conexão.');
             }
         });
     }
-
-    // Função para atuar
 
     atuar() {
         const data = {
@@ -440,22 +414,20 @@ export class AtuarPropostaPage implements OnInit {
         this.apiService.cadPropsView(data).subscribe({
             next: (response) => {
                 if (response.estatus === 'erro') {
-                    this.alert(response.mensagem);
+                    this.toastService.error(response.mensagem);
                 } else {
-                    this.mostrarAtuacao = true; 
+                    this.mostrarAtuacao = true;
                 }
             },
             error: () => {
-                this.alert('Erro na conexão.');
+                this.toastService.error('Erro na conexão.');
             }
         });
     }
 
-    // Função para salvar o anexo
-
     async salvarAnexo() {
         if (!this.arquivoSelecionado || !this.opcaoSelecionada) {
-            this.alert('Preencha o anexo e o tipo antes de salvar.');
+            this.toastService.warning('Preencha o anexo e o tipo antes de salvar.');
             return;
         }
 
@@ -469,7 +441,7 @@ export class AtuarPropostaPage implements OnInit {
         const formData = new FormData();
         formData.append('arquivo', this.arquivoSelecionado);
         formData.append('tipoAnexo', this.opcaoSelecionada);
-        formData.append('idProposta', localStorage.getItem('idProposta') || ''); 
+        formData.append('idProposta', localStorage.getItem('idProposta') || '');
         formData.append('idUser', localStorage.getItem('idLogado') || '');
         formData.append('nomeLogado', localStorage.getItem('nomeLogado') || '');
         formData.append('auth_hash', AUTH_HASH);
@@ -477,25 +449,21 @@ export class AtuarPropostaPage implements OnInit {
         try {
             await firstValueFrom(this.apiService.S3Upload(formData));
             await loading.dismiss();
-            this.alert('Anexo enviado com sucesso!');
+            this.toastService.success('Anexo enviado com sucesso!');
             this.limparAnexo();
             this.fecharProposta('keep');
             this.consultarProps();
         } catch (error) {
             console.error(error);
             await loading.dismiss();
-            this.alert('Erro ao enviar o anexo.');
+            this.toastService.error('Erro ao enviar o anexo.');
         }
     }
-
-    // Função para abrir o modal de dados bancários
 
     onTipoRecebimentoChange() {
         this.dadosPix = { tipoChave: 'cpf', chave: '' };
         this.dadosBanco = { banco: '', agencia: '', conta: '', digito: '', tipoConta: 'corrente' };
     }
-
-    // Funções para comportamento do modal
 
     abrirModal() {
         this.mostrarModal = true;
@@ -506,8 +474,6 @@ export class AtuarPropostaPage implements OnInit {
         this.mostrarModal = false;
         document.body.classList.remove('modal-open');
     }
-
-    // Função para salvar os dados
 
     async salvarDados() {
         const loading = await this.loadingController.create({
@@ -572,13 +538,14 @@ export class AtuarPropostaPage implements OnInit {
                     this.mostrarModal = false;
                     this.fecharProposta('keep');
                     this.consultarProps();
+                    this.toastService.success('Dados salvos com sucesso!');
                 } else {
-                    this.alert('Erro ao salvar os dados.');
+                    this.toastService.error('Erro ao salvar os dados.');
                 }
             },
             error: async () => {
                 await loading.dismiss();
-                this.alert('Erro ao enviar os dados.');
+                this.toastService.error('Erro ao enviar os dados.');
             }
         });
     }
@@ -600,16 +567,5 @@ export class AtuarPropostaPage implements OnInit {
 
     abrirAnexo(anexoUrl: string) {
         window.open(anexoUrl, '_blank');
-    }
-
-    // Função de alert
-
-    async alert(texto: string) {
-        const alert = await this.alertController.create({
-            header: 'AVISO',
-            message: texto,
-            buttons: ['OK']
-        });
-        await alert.present();
     }
 }

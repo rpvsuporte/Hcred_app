@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core'; 
 import { ApiService } from '../../services/api.service';
-import { AlertController, NavController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 import { NavigationService } from '../../services/navigation.service';
+import { ToastService } from '../../services/toast.service';
 import { AUTH_HASH } from 'src/app/services/auth-config';
 
 @Component({
@@ -11,15 +12,12 @@ import { AUTH_HASH } from 'src/app/services/auth-config';
     standalone: false
 })
 export class BancoPage implements OnInit {
-    // Variáveis Iniciais
-
     public tipoRecebimento: string = '';
-    public listaBanks:any = [];
+    public listaBanks: any = [];
     public bancosFiltrados: any[] = [];
     public termoBuscaBanco: string = '';
     public mostrarListaBancos: boolean = false;
     public errosCampos: { [key: string]: boolean } = {};
-
 
     public dadosBanco = {
         banco: '',
@@ -34,15 +32,8 @@ export class BancoPage implements OnInit {
         chave: ''
     };
 
-    // Controle do toggle
-
     public liberacaoContaTerceiros: boolean = false;
-
-    // Tipo da pessoa: 'pf' ou 'pj'
-
     public tipoPessoaTerceiro: string = 'pf'; 
-
-    // Dados do terceiro
 
     public dadosTerceiro: any = {
         nomeTerceiro: '',
@@ -54,34 +45,32 @@ export class BancoPage implements OnInit {
         outrosParentesco: ''
     };
 
-    constructor(private navCtrl: NavController,
-        private alertController: AlertController,
+    constructor(
+        private navCtrl: NavController,
         private apiService: ApiService,
-        private navigationService: NavigationService) { }
+        private navigationService: NavigationService,
+        private toastService: ToastService
+    ) { }
 
     ngOnInit() {
         this.selectBanks();
     }
 
-    // Função para trazer os bancos da API
-
     async selectBanks() {
-        this.apiService.buscaBanks({auth_hash: AUTH_HASH}).subscribe({
+        this.apiService.buscaBanks({ auth_hash: AUTH_HASH }).subscribe({
             next: (response) => {
                 if (response.estatus === 'erro') {
-                    console.log(response.mensagem);
+                    this.toastService.error(response.mensagem);
                 } else {
                     this.listaBanks = response.resultado;
                     this.filtrarBancos();
                 }
             },
             error: () => {
-                console.log('Erro na conexão.');
+                this.toastService.error('Erro na conexão.');
             }
         });
     }
-
-    // Função para filtrar os bancos
 
     filtrarBancos() {
         const termo = this.termoBuscaBanco.toLowerCase();
@@ -90,27 +79,15 @@ export class BancoPage implements OnInit {
         );
     }
 
-    // Função de aparecer o banco no input
-
     selecionarBancoInput(banco: any) {
         this.termoBuscaBanco = banco.Name;
         this.mostrarListaBancos = false;
-        this.dadosBanco.banco = banco.Name; 
+        this.dadosBanco.banco = banco.Name;
     }
-
-    // Função de fechar o banco
 
     ocultarComDelay() {
         setTimeout(() => this.mostrarListaBancos = false, 200);
     }
-
-    // Função de alert
-
-    alert(mensagem: any) {
-        throw new Error('Method not implemented.');
-    }
-
-    // Função de validar os campos
 
     validarCampos(): boolean {
         this.errosCampos = {};
@@ -118,6 +95,7 @@ export class BancoPage implements OnInit {
 
         if (!this.tipoRecebimento) {
             this.errosCampos['tipoRecebimento'] = true;
+            this.toastService.warning('Selecione o tipo de recebimento.');
             valido = false;
         }
 
@@ -126,8 +104,9 @@ export class BancoPage implements OnInit {
             camposBanco.forEach(campo => {
                 const valor = this.dadosBanco[campo as keyof typeof this.dadosBanco];
                 if (!valor || valor.trim() === '') {
-                this.errosCampos[campo] = true;
-                valido = false;
+                    this.errosCampos[campo] = true;
+                    this.toastService.warning(`Campo ${campo} é obrigatório.`);
+                    valido = false;
                 }
             });
         }
@@ -135,68 +114,57 @@ export class BancoPage implements OnInit {
         if (this.tipoRecebimento === 'pix') {
             if (!this.dadosPix.tipoChave) {
                 this.errosCampos['tipoChave'] = true;
-                valido = false;
+                this.toastService.warning('Selecione o tipo da chave PIX.');
                 return false;
             }
 
             if (!this.dadosPix.chave || this.dadosPix.chave.trim() === '') {
                 this.errosCampos['chave'] = true;
-                valido = false;
+                this.toastService.warning('Informe a chave PIX.');
                 return false;
             } else {
                 const chave = this.dadosPix.chave.trim();
+                let validaPix = true;
                 switch (this.dadosPix.tipoChave) {
-                case 'cpf':
-                    if (!this.validarCPF(chave)) {
+                    case 'cpf':
+                        validaPix = this.validarCPF(chave);
+                        break;
+                    case 'cnpj':
+                        validaPix = this.validarCNPJ(chave);
+                        break;
+                    case 'email':
+                        validaPix = this.validarEmail(chave);
+                        break;
+                    case 'telefone':
+                        validaPix = this.validarTelefone(chave);
+                        break;
+                    case 'aleatoria':
+                        validaPix = chave.length >= 20 && chave.length <= 100;
+                        break;
+                }
+                if (!validaPix) {
                     this.errosCampos['chave'] = true;
+                    this.toastService.warning('Chave PIX inválida.');
                     return false;
-                    }
-                    break;
-                case 'cnpj':
-                    if (!this.validarCNPJ(chave)) {
-                    this.errosCampos['chave'] = true;
-                    return false;
-                    }
-                    break;
-                case 'email':
-                    if (!this.validarEmail(chave)) {
-                    this.errosCampos['chave'] = true;
-                    return false;
-                    }
-                    break;
-                case 'telefone':
-                    if (!this.validarTelefone(chave)) {
-                    this.errosCampos['chave'] = true;
-                    return false;
-                    }
-                    break;
-                case 'aleatoria':
-                    if (chave.length < 20 || chave.length > 100) {
-                    this.errosCampos['chave'] = true;
-                    return false;
-                    }
-                    break;
                 }
             }
         }
 
-        // Validação dos campos do terceiro, se toggle ativado
-    
         if (this.liberacaoContaTerceiros) {
             if (this.tipoPessoaTerceiro === 'pf') {
                 if (!this.dadosTerceiro.nomeTerceiro.trim()) {
                     this.errosCampos['nome'] = true;
+                    this.toastService.warning('Nome do terceiro é obrigatório.');
                     valido = false;
                 }
-                if (!this.dadosTerceiro.cpfTerceiro.trim()) {
+                if (!this.dadosTerceiro.cpfTerceiro.trim() || !this.validarCPF(this.dadosTerceiro.cpfTerceiro)) {
                     this.errosCampos['cpf'] = true;
+                    this.toastService.warning('CPF do terceiro inválido.');
                     valido = false;
-                } else if (!this.validarCPF(this.dadosTerceiro.cpfTerceiro)) {
-                    this.errosCampos['cpf'] = true;
-                    return false;
                 }
                 if (!this.dadosTerceiro.parentescoTerceiro) {
                     this.errosCampos['parentesco'] = true;
+                    this.toastService.warning('Informe o parentesco do terceiro.');
                     valido = false;
                 }
             }
@@ -204,17 +172,17 @@ export class BancoPage implements OnInit {
             if (this.tipoPessoaTerceiro === 'pj') {
                 if (!this.dadosTerceiro.razaoSocialTerceiro.trim()) {
                     this.errosCampos['razaoSocial'] = true;
+                    this.toastService.warning('Razão social do terceiro é obrigatória.');
                     valido = false;
                 }
-                if (!this.dadosTerceiro.cnpjTerceiro.trim()) {
+                if (!this.dadosTerceiro.cnpjTerceiro.trim() || !this.validarCNPJ(this.dadosTerceiro.cnpjTerceiro)) {
                     this.errosCampos['cnpj'] = true;
+                    this.toastService.warning('CNPJ do terceiro inválido.');
                     valido = false;
-                } else if (!this.validarCNPJ(this.dadosTerceiro.cnpjTerceiro)) {
-                    this.errosCampos['cnpj'] = true;
-                    return false;
                 }
                 if (!this.dadosTerceiro.vinculoTerceiro.trim()) {
                     this.errosCampos['vinculo'] = true;
+                    this.toastService.warning('Informe o vínculo do terceiro.');
                     valido = false;
                 }
             }
@@ -223,23 +191,21 @@ export class BancoPage implements OnInit {
         return valido;
     }
 
-    // Função para salvar no localStorage
-
     salvarBancoNoLocalStorage() {
         try {
             const dadosAntigos = JSON.parse(localStorage.getItem('dados') || '{}');
-            
             const dadosAtualizados = {
                 ...dadosAntigos,
                 tipoRecebimento: this.tipoRecebimento,
                 ...(this.tipoRecebimento === 'banco' ? this.dadosBanco : {}),
                 ...(this.tipoRecebimento === 'pix' ? this.dadosPix : {}),
-                ...(this.liberacaoContaTerceiros ? { terceiroConta: 1, tipoTerceiro: this.tipoPessoaTerceiro, ...this.dadosTerceiro } : { terceiroConta: 0 })
-        };
-
+                ...(this.liberacaoContaTerceiros
+                    ? { terceiroConta: 1, tipoTerceiro: this.tipoPessoaTerceiro, ...this.dadosTerceiro }
+                    : { terceiroConta: 0 })
+            };
             localStorage.setItem('dados', JSON.stringify(dadosAtualizados));
         } catch (e) {
-            console.error('Erro ao salvar dados bancários no localStorage:', e);
+            this.toastService.error('Erro ao salvar dados bancários.');
         }
     }
 
@@ -249,8 +215,6 @@ export class BancoPage implements OnInit {
             this.navigation('simulador/anexos');
         } 
     }
-
-    // Chama ao trocar o tipo de Chave PIX
 
     onTipoChavePixChange() {
         this.dadosPix.chave = ''; 
@@ -264,22 +228,19 @@ export class BancoPage implements OnInit {
 
         switch (this.dadosPix.tipoChave) {
             case 'cpf':
-                valor = this.formatarCPF(valor);
-                valor = valor.substring(0, 14); // CPF com máscara: 000.000.000-00
+                valor = this.formatarCPF(valor).substring(0, 14);
                 break;
             case 'cnpj':
-                valor = this.formatarCNPJ(valor);
-                valor = valor.substring(0, 18); // CNPJ com máscara: 00.000.000/0000-00
+                valor = this.formatarCNPJ(valor).substring(0, 18);
                 break;
             case 'telefone':
-                valor = this.formatarTelefone(valor);
-                valor = valor.substring(0, 15); // telefone formatado (xx) xxxxx-xxxx
+                valor = this.formatarTelefone(valor).substring(0, 15);
                 break;
             case 'email':
-                valor = valor.substring(0, 200); // limite arbitrário para email 
+                valor = valor.substring(0, 200);
                 break;
             case 'aleatoria':
-                valor = valor.substring(0, 100); // limite padrão para chave aleatória do PIX
+                valor = valor.substring(0, 100);
                 break;
         }
 
@@ -421,15 +382,6 @@ export class BancoPage implements OnInit {
         valor = valor.replace(/(\d{4})(\d)/, '$1-$2');
         event.target.value = valor;
         this.dadosTerceiro.cnpjTerceiro = valor;
-    }
-
-    async exibirAlerta(mensagem: string) {
-        const alert = await this.alertController.create({
-            header: 'Atenção',
-            message: mensagem,
-            buttons: ['OK']
-        });
-        await alert.present();
     }
 
     // Função de redirecionamento

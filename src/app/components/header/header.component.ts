@@ -1,5 +1,4 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
 import { IonicModule } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service'; 
 import { NavigationService } from 'src/app/services/navigation.service';
@@ -7,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PopoverController } from '@ionic/angular';
 import { AUTH_HASH } from 'src/app/services/auth-config';
+import { ToastService } from 'src/app/services/toast.service'; // <-- import do ToastService
 
 @Component({
     selector: 'app-header',
@@ -15,11 +15,7 @@ import { AUTH_HASH } from 'src/app/services/auth-config';
     standalone: true,
     imports: [IonicModule, FormsModule, CommonModule] 
 })
-
-
-export class HeaderComponent  implements OnInit {
-
-    // Variáveis iniciais
+export class HeaderComponent implements OnInit {
 
     public keyNome: any;
     public saldoValue: any;
@@ -28,7 +24,6 @@ export class HeaderComponent  implements OnInit {
     buscaProposta: string = '';
     tipoLogado: string = localStorage.getItem('tipoLogado') || '';
     mostrarPopover = false;
-
 
     readonly optionsProps = [
         { titulo: 'Novas', tipo: 'nova' },
@@ -48,10 +43,10 @@ export class HeaderComponent  implements OnInit {
     ];
 
     constructor(
-        public alertController: AlertController,
         private apiService: ApiService,
         private navigationService: NavigationService,
-        private popoverCtrl: PopoverController
+        private popoverCtrl: PopoverController,
+        private toastService: ToastService // 
     ) {
         if (localStorage.getItem("idLogado") === null) {
             this.navigation('home');
@@ -62,33 +57,23 @@ export class HeaderComponent  implements OnInit {
 
     ngOnInit() {}
 
-    // Pegar o nome do user
-
     get name(): string {
         const nome = this.keyNome || '';
         return nome.length > 12 ? nome.slice(0, 12) + '...' : nome;
     }
 
-    // Fechar o Modal
-
     async dismissPopover() {
         await this.popoverCtrl.dismiss();
     }
-
-    // Função de logout
 
     logout() {
         localStorage.clear();
         this.navigation('home');
     }
 
-    // Função do olho de saldo
-
     olhoClic() {
         this.saldoValue = (this.saldoValue == "● ● ● ●") ? localStorage.getItem('saldoLoja') : "● ● ● ●";
     }
-
-    // Função para buscar propostas pelo popover
 
     buscarPropostas() {
         const data = {
@@ -100,14 +85,14 @@ export class HeaderComponent  implements OnInit {
         this.apiService.buscaPropsAll(data).subscribe({
             next: (response) => {
                 if (response.estatus === 'erro') {
-                    console.log(response.mensagem);
+                    this.toastService.warning(response.mensagem); 
                 } else {
                     localStorage.setItem('propsQuery', JSON.stringify(response.resultado));
                     this.navigation('propostas');
                 }
             },
             error: () => {
-                alert('Erro na conexão.');
+                this.toastService.error('Erro na conexão.'); 
             }
         });
     }
@@ -132,24 +117,15 @@ export class HeaderComponent  implements OnInit {
         this.mostrarPopover = !this.mostrarPopover;
     }
 
-    // Ir para a página de propostas
-
     selecionarProposta(estatus: string) {
         this.navigation('propostas', estatus);
     }
-
-    // Função de navegação
 
     navigation(page: string, estatus?: string) {
         this.navigationService.navigate(page, estatus || '');
     }
 
     async alert(texto: string) {
-        const alert = await this.alertController.create({
-            header: 'AVISO',
-            message: texto,
-            buttons: ['OK']
-        });
-        await alert.present();
+        this.toastService.info(texto); 
     }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'; 
 import { ApiService } from '../services/api.service';
-import { AlertController } from '@ionic/angular';
+import { ToastService } from '../services/toast.service'; // <-- importado
 import { NavigationService } from '../services/navigation.service';
 import { AUTH_HASH } from '../services/auth-config';
 import { Clipboard } from '@capacitor/clipboard';
@@ -54,9 +54,9 @@ export class SimuladorPage implements OnInit {
     public tipoLogado = localStorage.getItem('tipoLogado')?.toLowerCase();
 
     constructor(
-        private alertController: AlertController,
         private apiService: ApiService,
-        private navigationService: NavigationService
+        private navigationService: NavigationService,
+        private toastService: ToastService // <-- injetado
     ) {}
 
     ngOnInit(){
@@ -64,7 +64,6 @@ export class SimuladorPage implements OnInit {
     }
 
     // Função para validar formulário
-
     validarFormulario() {
         this.erroValor = !this.simula.valor || this.simula.valor === 'R$ 0,00';
         this.erroTipo = !this.simula.tipo;
@@ -73,7 +72,6 @@ export class SimuladorPage implements OnInit {
     }
 
     // Função para consultar as tabelas
-
     async consultarTipo() {
         const data = {
             auth_hash: AUTH_HASH,
@@ -84,14 +82,13 @@ export class SimuladorPage implements OnInit {
         this.apiService.buscaTipo(data).subscribe({
             next: (response) => {
                 if (response.estatus === 'erro') {
-                    this.alert(response.mensagem);
+                    this.toastService.error(response.mensagem);
                 } else {
-                    const listaTipo = response.resultado;
-                    this.tiposDisponiveis = listaTipo;
+                    this.tiposDisponiveis = response.resultado;
                 }
             },
             error: () => {
-                this.alert('Erro na conexão.');
+                this.toastService.error('Erro na conexão.');
             }
         });
     }
@@ -108,47 +105,38 @@ export class SimuladorPage implements OnInit {
         this.apiService.buscaTabelas(data).subscribe({
             next: (response) => {
                 if (response.estatus === 'erro') {
-                    this.alert(response.mensagem);
+                    this.toastService.error(response.mensagem);
                 } else {
-                    const listaTabelas = response.resultado;
-                    this.tabelasDisponiveis = listaTabelas;
+                    this.tabelasDisponiveis = response.resultado;
                 }
             },
             error: () => {
-                this.alert('Erro na conexão.');
+                this.toastService.error('Erro na conexão.');
             }
         });
     }
 
     // Função para trocar o tipo 
-
     setTipoValor(tipo: 'limite' | 'solicitado') {
         this.tipoValorSelecionado = tipo;
     }
 
     // Função para pegar a taxa
-
     private getTaxa(item: any): number {
         const taxaStr = this.tipoValorSelecionado === 'limite' ? item.taxaValorLiquido : item.taxa;
         return parseFloat(taxaStr.replace(',', '.')) || 0;
     }
 
     // Função para converter para o JS reconhecer
-
     private getValorNumerico(valor: any): number {
-        if (typeof valor === 'number') {
-            return valor;
-        }
-
+        if (typeof valor === 'number') return valor;
         if (typeof valor === 'string') {
             return parseFloat(valor.replace(/[R$\s]/g, '').replace(/\./g, '').replace(',', '.')) || 0;
         }
-
         return 0;
     }
 
     // Função para calcular a parcela
-
     calculaParcela(item: any): number {
         const valor = this.getValorNumerico(this.simula.valor);
         const taxa = this.getTaxa(item);
@@ -161,7 +149,6 @@ export class SimuladorPage implements OnInit {
     }
 
     // Função para calcular o valor total
-
     calculaValorTotal(item: any): number {
         const parcela = this.calculaParcela(item);
 
@@ -173,7 +160,6 @@ export class SimuladorPage implements OnInit {
     }
 
     // Função para copiar o link
-
     async linkCopiado(item: any) {
         const valorTotal = this.formatarValorReal(this.calculaValorTotal(item));
         const valorParcela = this.formatarValorReal(this.calculaParcela(item));
@@ -192,29 +178,24 @@ export class SimuladorPage implements OnInit {
         this.apiService.gerarLink(data).subscribe({
             next: async (response) => {
                 if (response.estatus === 'erro') {
-                    this.alert(response.mensagem);
+                    this.toastService.error(response.mensagem);
                 } else {
                     const hash = response.dados.sessionId;
-
                     const link = `https://loja.hcred.com.br/proposta/nova/?session=${hash}`;
-                    
                     await Clipboard.write({ string: link });
-
-                    this.alert('Link copiado para a área de transferência!');
+                    this.toastService.success('Link copiado para a área de transferência!');
                 }
             },
             error: () => {
-                this.alert('Erro na conexão.');
+                this.toastService.error('Erro na conexão.');
             }
         });
     }
 
     // Transforma o valor brasileiro em um para a linguagem entender
-
     formatarMoeda(event: any) {
         let valor = event.target.value.replace(/\D/g, '');
         const valorNumerico = (Number(valor) / 100).toFixed(2);
-
         this.simula.valor = Number(valorNumerico).toLocaleString('pt-BR', {
             style: 'currency',
             currency: 'BRL'
@@ -222,7 +203,6 @@ export class SimuladorPage implements OnInit {
     }
 
     // Transforma o valor em brasileiro
-
     formatarValorReal(valor: number | string): string {
         return Number(valor).toLocaleString('pt-BR', {
             style: 'currency',
@@ -231,10 +211,8 @@ export class SimuladorPage implements OnInit {
     }
 
     // Função de simular
-
     async simular() {
         this.validarFormulario();
-
         if (this.formInvalido) return;
 
         this.buttAcessa = true;
@@ -252,7 +230,7 @@ export class SimuladorPage implements OnInit {
             this.apiService.criaCards(data).subscribe({
                 next: (response) => {
                     if (response.estatus === 'erro') {
-                        this.alert(response.mensagem);
+                        this.toastService.error(response.mensagem);
                     } else {
                         this.listaResultado = response.resultado;
                         this.simula.boletos = this.boletos.filter(b => b.validado).map(b => b.codigo);
@@ -262,7 +240,7 @@ export class SimuladorPage implements OnInit {
                     this.loadingAcessa = false;
                 },
                 error: () => {
-                    this.alert('Erro na conexão.');
+                    this.toastService.error('Erro na conexão.');
                     this.buttAcessa = false;
                     this.loadingAcessa = false;
                 }
@@ -276,7 +254,6 @@ export class SimuladorPage implements OnInit {
     }
 
     // Função para validar o boleto
-
     validarBoleto(index: number) {
         const boleto = this.boletos[index];
         const valor = boleto.codigo.replace(/\D/g, '');
@@ -300,29 +277,25 @@ export class SimuladorPage implements OnInit {
         this.apiService.validarBoleto(data).subscribe({
             next: (response) => {
                 boleto.loading = false;
-
                 if (response.estatus === 'erro') {
-                    this.alert(response.mensagem);
+                    this.toastService.error(response.mensagem);
                 } else {
                     boleto.validado = true;
-                    boleto.valor = response.valor; 
+                    boleto.valor = response.valor;
 
-                    // Soma os valores de todos os boletos validados
-
-                    const total = this.boletos.filter(b => b.validado === true && b.valor).reduce((acc, b) => acc + this.getValorNumerico(b.valor), 0);
-
-                    // Formata e salva no this.simula.valor
+                    const total = this.boletos.filter(b => b.validado === true && b.valor)
+                        .reduce((acc, b) => acc + this.getValorNumerico(b.valor), 0);
 
                     this.simula.valor = total.toLocaleString('pt-BR', {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
                     });
 
-                    this.validarFormulario(); 
+                    this.validarFormulario();
                 }
             },
             error: () => {
-                this.alert('Erro na conexão.');
+                this.toastService.error('Erro na conexão.');
                 boleto.loading = false;
             }
         });
@@ -334,8 +307,6 @@ export class SimuladorPage implements OnInit {
         }
         return true;
     }
-
-    // Função para escolher outro boleto
 
     handleEscolhaOutroBoleto(event: any, index: number) {
         const valor = event.detail.value;
@@ -353,13 +324,9 @@ export class SimuladorPage implements OnInit {
         this.adicionouOutroBoleto = false; 
     }
 
-    // Máscara do boleto
-
     mascaraBoleto(event: any, index: number) {
         let valor = event.detail.value || '';
         valor = valor.replace(/\D/g, '');
-
-        // Aplica a máscara (exemplo para 47 dígitos, mas é genérico)
 
         if (valor.length > 5) valor = valor.replace(/^(\d{5})(\d)/, '$1.$2');
         if (valor.length > 10) valor = valor.replace(/^(\d{5})\.(\d{5})(\d)/, '$1.$2 $3');
@@ -369,23 +336,9 @@ export class SimuladorPage implements OnInit {
         this.boletos[index].codigo = valor;
     }
 
-    // Função de alert
-
-    async alert(mensagem: string) {
-        const alert = await this.alertController.create({
-            header: 'AVISO',
-            message: mensagem,
-            buttons: ['OK']
-        });
-        await alert.present();
-    }
-
     // Função de redirecionamento
-
     salvarEAvancar(item: any) {
         const valorTotal = this.calculaValorTotal(item);
-
-        // Atualiza o objeto simula com o valor total numérico
 
         this.simula.valorTotal = valorTotal.toLocaleString('pt-BR', {
             minimumFractionDigits: 2,
@@ -399,8 +352,6 @@ export class SimuladorPage implements OnInit {
 
         this.simula.prazo = item.prazo;
 
-        // Atualiza também os dados no localStorage
-
         const dados = {
             ...this.simula,
             valor: this.simula.valor.replace(/[^\d.,]/g, '').trim(),
@@ -408,9 +359,6 @@ export class SimuladorPage implements OnInit {
         };
 
         localStorage.setItem('dados', JSON.stringify(dados));
-
-        // Navega para próxima etapa
-
         this.navigation('simulador/cadastro');
     }
 

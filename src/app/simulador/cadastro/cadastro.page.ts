@@ -1,6 +1,8 @@
+// cadastro.page.ts
+
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
-import { AlertController } from '@ionic/angular';
+import { ToastService } from '../../services/toast.service'; // <-- importado
 import { NavigationService } from '../../services/navigation.service';
 import { AUTH_HASH } from 'src/app/services/auth-config';
 
@@ -12,12 +14,11 @@ import { AUTH_HASH } from 'src/app/services/auth-config';
 })
 export class CadastroPage implements OnInit {
     // Variáveis Iniciais
-
     public cadastro: any = {
         cpf: '', nomeCompleto: '', rg: '', dataNascimento: '', sexo: '', whatsapp: '', celular: '',
         email: '', nomePai: '', nomeMae: '', naturalidade: '', bandeiraCartao: '', digitosCartao: '', 
-        atividade: '', profissao: '', empresa: '', cnpj: '', salario: '',tempoEmpresa: '', dataInicio: '', 
-        telefoneEmpresa: '', numBeneficio: '', especieBeneficio: '',valorBeneficio: '', outrasAtividades: '', 
+        atividade: '', profissao: '', empresa: '', cnpj: '', salario: '', tempoEmpresa: '', dataInicio: '', 
+        telefoneEmpresa: '', numBeneficio: '', especieBeneficio: '', valorBeneficio: '', outrasAtividades: '', 
         prazo: '', operadora: '', tipoOperacao: ''
     };
 
@@ -38,15 +39,13 @@ export class CadastroPage implements OnInit {
 
     constructor(
         private apiService: ApiService,
-        private alertController: AlertController,
-        private navigationService: NavigationService
+        private navigationService: NavigationService,
+        private toastService: ToastService // <-- injetado
     ) {}
-
 
     ionViewWillEnter() {
         const dados = JSON.parse(localStorage.getItem('dados') || '{}');
         if (dados.tipo === 'Cartão de Crédito') {
-
             if(dados.tabela.toUpperCase().includes('MAQUINETA')){
                 this.cadastro.tipoOperacao = 'Máquina';
                 this.listarOperadora();
@@ -54,7 +53,6 @@ export class CadastroPage implements OnInit {
                 this.cadastro.tipoOperacao = 'On-line';
                 this.listarOperadora();
             }
-            
         }
 
         if (dados.tabela?.toUpperCase().includes('TABELA') && dados.tipo && this.tiposCampos[dados.tipo]) {
@@ -64,47 +62,41 @@ export class CadastroPage implements OnInit {
         this.loadCadastroData();
     }
 
-    ngOnInit() {
-    }
+    ngOnInit() {}
 
-    // Função para validar os campos
-
+    // Validação de campos
     validarCampos() {
-        this.errosCampos = {}; // reseta os erros
-
+        this.errosCampos = {}; 
 
         this.camposVisiveis.forEach((campo) => {
             const valor = this.cadastro[campo];
-
-            // Verifica se o campo está vazio
 
             if (!valor || valor.toString().trim() === '') {
                 this.errosCampos[campo] = true;
                 return; 
             }
 
-            // Validações específicas por campo
-
             switch (campo) {
                 case 'cpf':
                     if (!this.validarCPF(valor)) this.errosCampos[campo] = true;
-                break;
-
+                    break;
                 case 'email':
                     if (!this.validarEmail(valor)) this.errosCampos[campo] = true;
-                break;
-
+                    break;
                 case 'whatsapp':
                 case 'celular':
                 case 'telefoneEmpresa':
                     if (!this.validarTelefone(valor)) this.errosCampos[campo] = true;
-                break;
-
+                    break;
                 case 'dataNascimento':
                     if (!this.validarDataNascimento(valor)) this.errosCampos[campo] = true;
-                break;
+                    break;
             }
         });
+
+        if (Object.keys(this.errosCampos).length > 0) {
+            this.toastService.error('Preencha corretamente todos os campos obrigatórios.');
+        }
 
         return Object.keys(this.errosCampos).length === 0;
     }
@@ -118,8 +110,6 @@ export class CadastroPage implements OnInit {
         if (m < 1 || m > 12) return false;
         if (d < 1 || d > 31) return false;
 
-        // Verifica dias máximos do mês
-        
         const maxDias = [31, (a % 4 === 0 ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         if (d > maxDias[m - 1]) return false;
 
@@ -127,30 +117,17 @@ export class CadastroPage implements OnInit {
     }
 
     mascararData(event: any) {
-        let valor = event.target.value;
-
-        // Remove tudo que não é número
-        
-        valor = valor.replace(/\D/g, '');
-
-        // Aplica máscara dd/mm/aaaa
-
+        let valor = event.target.value.replace(/\D/g, '');
         if (valor.length > 2) valor = valor.slice(0, 2) + '/' + valor.slice(2);
         if (valor.length > 5) valor = valor.slice(0, 5) + '/' + valor.slice(5, 9);
         if (valor.length > 10) valor = valor.slice(0, 10);
-
-        // Atualiza o input com a máscara
         event.target.value = valor;
-
     }
 
     salvarCadastroNoLocalStorage() {
         try {
             const dadosAntigos = JSON.parse(localStorage.getItem('dados') || '{}');
-            const dadosAtualizados = {
-                ...dadosAntigos,
-                ...this.cadastro,
-            };
+            const dadosAtualizados = { ...dadosAntigos, ...this.cadastro };
 
             if(this.operacao.tabela == 'PIX FÁCIL'){
                 const texto = dadosAtualizados.prazo;
@@ -159,18 +136,11 @@ export class CadastroPage implements OnInit {
                 const prazo = matchPrazo ? parseInt(matchPrazo[1], 10) : null;
 
                 const regexValor = /R\$\s?(\d{1,3}(\.\d{3})*),(\d{2})/u;
-
                 const matchValor = texto.match(regexValor);
 
                 let valorNumerico = null;
-
                 if (matchValor) {
-                    let valorString = matchValor[0]
-                        .replace('R$', '')         // Remove R$
-                        .replace(/\s/g, '')        // Remove todos espaços, inclusive não quebráveis
-                        .replace(/\./g, '')        // Remove pontos de milhar
-                        .replace(',', '.');        // Troca vírgula por ponto decimal
-                    
+                    let valorString = matchValor[0].replace('R$', '').replace(/\s/g, '').replace(/\./g, '').replace(',', '.');
                     valorNumerico = parseFloat(valorString);
                 }
 
@@ -180,8 +150,8 @@ export class CadastroPage implements OnInit {
             }
 
             localStorage.setItem('dados', JSON.stringify(dadosAtualizados));
-            console.log('Cadastro salvo no localStorage:', dadosAtualizados);
         } catch (e) {
+            this.toastService.error('Erro ao salvar cadastro.');
             console.error('Erro ao salvar no localStorage:', e);
         }
     }
@@ -189,30 +159,20 @@ export class CadastroPage implements OnInit {
     continuar() {
         if (this.validarCampos()) {
             this.salvarCadastroNoLocalStorage();
-
             const dados = JSON.parse(localStorage.getItem('dados') || '{}');
-
             dados.tipo === 'Crédito Consignado' ? this.navigation('simulador/anexos') : this.navigation('simulador/endereco');
         }
     }
-
-    // Função para carregar os dados de cadastro
 
     private loadCadastroData() {
         this.operacao = JSON.parse(localStorage.getItem('dados') || '{}');
         if (this.operacao) {
             try {
-                const data = {
-                    auth_hash: AUTH_HASH,
-                    tipo: this.operacao.tipo,
-                    tabela: this.operacao.tabela
-                };
-
+                const data = { auth_hash: AUTH_HASH, tipo: this.operacao.tipo, tabela: this.operacao.tabela };
                 this.apiService.criaParcelas(data).subscribe({
                     next: (response) => {
                         if (response.estatus !== 'erro') {
                             this.listaResultado = response.resultado;
-
                             if (this.operacao.tabela === 'PIX FÁCIL' && this.operacao.parcelas) {
                                 this.cadastro.prazo = String(this.operacao.parcelas);
                             } else if (this.operacao.prazo) {
@@ -220,20 +180,15 @@ export class CadastroPage implements OnInit {
                             }
                         }
                     },
-                    error: () => {
-                        this.presentAlert('Erro ao carregar parcelas. Por favor, tente novamente.');
-                    }
+                    error: () => this.toastService.error('Erro ao carregar parcelas.'),
                 });
             } catch (e) {
                 console.error(e);
-                this.presentAlert('Erro ao carregar dados da operação.');
+                this.toastService.error('Erro ao carregar dados da operação.');
             }
         }
-
         this.exibirCampos(this.operacao.tipo || ''); 
     }
-
-    // Função para determinar os input a serem exibidos
 
     exibirCampos(tipo: string) {
         this.camposVisiveis.clear();
@@ -260,52 +215,33 @@ export class CadastroPage implements OnInit {
         }
     }
 
-    listarOperadora(){
+    listarOperadora() {
         try {
-            const data = {
-                auth_hash: AUTH_HASH,
-                idFranqueado: localStorage.getItem('idFranqueado'),
-                tipoOperacao: this.cadastro.tipoOperacao
-            };
-
+            const data = { auth_hash: AUTH_HASH, idFranqueado: localStorage.getItem('idFranqueado'), tipoOperacao: this.cadastro.tipoOperacao };
             this.apiService.listarOperadoras(data).subscribe({
                 next: (response) => {
-                    if (response.estatus !== 'erro') {
-                        this.listaOperadoras = response.tabelas;
-                    }
+                    if (response.estatus !== 'erro') this.listaOperadoras = response.tabelas;
                 },
-                error: () => {
-                    this.presentAlert('Erro ao carregar operadoras. Por favor, tente novamente.');
-                }
+                error: () => this.toastService.error('Erro ao carregar operadoras.')
             });
         } catch (e) {
             console.error(e);
-            this.presentAlert('Erro ao carregar dados da operação.');
+            this.toastService.error('Erro ao carregar dados da operação.');
         }
     }
 
-    // Validações
-
     validarCPF(cpf: string): boolean {
         cpf = cpf.replace(/[^\d]+/g, '');
-
         if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
 
         let soma = 0;
-        for (let i = 0; i < 9; i++) {
-            soma += parseInt(cpf.charAt(i)) * (10 - i);
-        }
-
+        for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
         let resto = 11 - (soma % 11);
         let digito1 = resto >= 10 ? 0 : resto;
-
         if (digito1 !== parseInt(cpf.charAt(9))) return false;
 
         soma = 0;
-        for (let i = 0; i < 10; i++) {
-            soma += parseInt(cpf.charAt(i)) * (11 - i);
-        }
-
+        for (let i = 0; i < 10; i++) soma += parseInt(cpf.charAt(i)) * (11 - i);
         resto = 11 - (soma % 11);
         let digito2 = resto >= 10 ? 0 : resto;
 
@@ -319,87 +255,57 @@ export class CadastroPage implements OnInit {
 
     validarTelefone(telefone: string): boolean {
         const somenteNumeros = telefone.replace(/\D/g, '');
-
         return somenteNumeros.length >= 10 && somenteNumeros.length <= 11;
     }
 
     validarDataNascimento(data: string): boolean {
         if (!data) return false;
-
         const [dia, mes, ano] = data.split('/');
         const nascimento = new Date(`${ano}-${mes}-${dia}T00:00:00`);
-
         const hoje = new Date();
         let idade = hoje.getFullYear() - nascimento.getFullYear();
         const diffMes = hoje.getMonth() - nascimento.getMonth();
-
-        if (diffMes < 0 || (diffMes === 0 && hoje.getDate() < nascimento.getDate())) {
-            idade--;
-        }
-
+        if (diffMes < 0 || (diffMes === 0 && hoje.getDate() < nascimento.getDate())) idade--;
         return idade >= 18 && nascimento <= hoje;
     }
-
-
-    // Função para formatar o CPF
 
     formatarCPF(event: any) {
         let valor = event.target.value.replace(/\D/g, '');
         valor = valor.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
         event.target.value = valor;
         this.cadastro.cpf = valor;
-
-        // Quando CPF ficar completo (14 caracteres no formato 000.000.000-00), chama a consulta
-
-        if (valor.length === 14) {
-            this.consultarCPF(valor);
-        }
+        if (valor.length === 14) this.consultarCPF(valor);
     }
 
-    // Função para verificar se o cliente já realizou cadastros e preencher os dados
-
     consultarCPF(cpf: string) {
-        const data = {
-            auth_hash: AUTH_HASH,
-            cpf: cpf
-        };
-
+        const data = { auth_hash: AUTH_HASH, cpf };
         this.apiService.consultaCPF(data).subscribe({
             next: (response: any) => {
-                if (response && response.estatus !== 'erro') {
-                    this.preencherCampos(response.dados);
-                } else {
-                    this.presentAlert('CPF não encontrado ou inválido.');
-                }
+                if (response && response.estatus !== 'erro') this.preencherCampos(response.dados);
+                else this.toastService.error('CPF não encontrado ou inválido.');
             },
             error: (err) => {
                 console.error(err);
-                this.presentAlert('Erro ao consultar CPF. Tente novamente.');
+                this.toastService.error('Erro ao consultar CPF. Tente novamente.');
             }
         });
     }
 
     preencherCampos(dados: any) {
         localStorage.setItem('dadosCliente', JSON.stringify(dados));
-
         if (dados.nome) this.cadastro.nomeCompleto = dados.nome;
         if (dados.dataNascimento) this.cadastro.dataNascimento = dados.dataNascimento;
         if (dados.email) this.cadastro.email = dados.email;
         if (dados.celular) this.cadastro.celular = dados.celular;
         if (dados.whatsapp) this.cadastro.whatsapp = dados.telefone;
         if (dados.rg) this.cadastro.rg = dados.rg;
-
     }
-
-    // Função de formatar o telefone
 
     formatarTelefone(event: any) {
         let valor = event.target.value.replace(/\D/g, '');
         valor = valor.replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d{5})(\d{1,4})$/, '$1-$2');
         event.target.value = valor;
     }
-
-    // Função para pegar o valor da parcela
 
     getValorParcela(parcela: any): string {
         const valorOperacao = parseFloat(this.converterMoedaParaNumero(this.operacao.valor));
@@ -409,14 +315,10 @@ export class CadastroPage implements OnInit {
         return this.formatarValorReal((valorOperacao * taxaLiquido));
     }
 
-    // Função de converter número para moeda
-
     formatarValorReal(valor: number | string): string {
         const num = parseFloat(String(valor).replace(/,/g, '.'));
         return isNaN(num) ? 'R$ 0,00' : num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
-
-    // Função de converter moeda para número
 
     converterMoedaParaNumero(valorMoeda: string): string {
         if (!valorMoeda) return '0.00';
@@ -425,20 +327,7 @@ export class CadastroPage implements OnInit {
         return isNaN(num) ? '0.00' : num.toFixed(2);
     }
 
-    // Função de redirecionamento
-
     navigation(page: string) {
         this.navigationService.navigate(page);
-    }
-
-    // Função de alert
-
-    async presentAlert(message: string) {
-        const alert = await this.alertController.create({ 
-            header: 'Atenção', 
-            message, 
-            buttons: ['OK'] 
-        });
-        await alert.present();
     }
 }

@@ -2,7 +2,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
-import { AlertController, NavController } from '@ionic/angular';
+import { ToastService } from '../../services/toast.service'; // <-- importado
 import { NavigationService } from '../../services/navigation.service';
 import { AUTH_HASH } from 'src/app/services/auth-config';
 
@@ -15,7 +15,6 @@ import { AUTH_HASH } from 'src/app/services/auth-config';
 export class EnderecoPage implements OnInit {
 
     // Variáveis iniciais
-
     public endereco = {
         cep: '',
         rua: '',
@@ -27,14 +26,12 @@ export class EnderecoPage implements OnInit {
     };
 
     // Objeto para controlar os erros dos campos
-
     public errosCampos: { [key: string]: boolean } = {};
 
     constructor(
-        private navCtrl: NavController,
-        private alertController: AlertController,
         private apiService: ApiService,
-        private navigationService: NavigationService
+        private navigationService: NavigationService,
+        private toastService: ToastService // <-- injetado
     ) { }
 
     ngOnInit() {
@@ -42,7 +39,6 @@ export class EnderecoPage implements OnInit {
     }
 
     // Função para formatar o CEP
-
     formatarCEP(event: any) {
         let valor = event.target.value.replace(/\D/g, '');
         valor = valor.replace(/^(\d{5})(\d{0,3})/, '$1-$2');
@@ -51,11 +47,11 @@ export class EnderecoPage implements OnInit {
     }
 
     // Função com integração da API dos Correios
-
     buscarEnderecoPorCep() {
         const cepLimpo = this.endereco.cep.replace(/\D/g, '');
         
         if (cepLimpo.length !== 8) {
+            this.toastService.error('CEP inválido.');
             return;
         }
 
@@ -67,6 +63,7 @@ export class EnderecoPage implements OnInit {
                 this.endereco.bairro = '';
                 this.endereco.cidade = '';
                 this.endereco.estado = '';
+                this.toastService.error('CEP não encontrado.');
                 return;
             }
             this.endereco.rua = dados.logradouro || '';
@@ -76,6 +73,7 @@ export class EnderecoPage implements OnInit {
             this.validarCampos();
         })
         .catch(err => {
+            this.toastService.error('Erro na consulta do CEP.');
             console.error('Erro na consulta do CEP:', err);
         });
     }
@@ -91,6 +89,11 @@ export class EnderecoPage implements OnInit {
                 formularioValido = false;
             }
         }
+
+        if (!formularioValido) {
+            this.toastService.error('Preencha todos os campos obrigatórios.');
+        }
+
         return formularioValido;
     }
 
@@ -103,8 +106,8 @@ export class EnderecoPage implements OnInit {
             };
 
             localStorage.setItem('dados', JSON.stringify(dadosAtualizados));
-            console.log('Endereço salvo no localStorage:', dadosAtualizados);
         } catch (e) {
+            this.toastService.error('Erro ao salvar endereço.');
             console.error('Erro ao salvar endereço no localStorage:', e);
         }
     }
@@ -121,10 +124,10 @@ export class EnderecoPage implements OnInit {
                 this.endereco.bairro = dadosCliente.bairroEndereco || '';
                 this.endereco.cidade = dadosCliente.cidadeEndereco || '';
                 this.endereco.estado = dadosCliente.estadoEndereco || '';
-                console.log('Endereço carregado do localStorage:', this.endereco);
             }
         } catch (e) {
-        console.error('Erro ao carregar endereço do localStorage:', e);
+            this.toastService.error('Erro ao carregar endereço.');
+            console.error('Erro ao carregar endereço do localStorage:', e);
         }
     }
 
@@ -140,9 +143,8 @@ export class EnderecoPage implements OnInit {
             } else {
                 this.navigation('simulador/banco');
             }
-
         } else {
-        console.log('Formulário inválido. Por favor, preencha todos os campos obrigatórios.');
+            this.toastService.error('Formulário inválido. Preencha todos os campos obrigatórios.');
         }
     }
 

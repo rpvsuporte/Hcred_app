@@ -1,9 +1,8 @@
-// Import's
-
 import { Component } from '@angular/core';
-import { AlertController, NavController } from "@ionic/angular";
+import { NavController } from "@ionic/angular";
 import { ApiService } from "../services/api.service";
 import { AUTH_HASH, VERSION_APP } from '../services/auth-config'; 
+import { ToastService } from '../services/toast.service'; // <-- import do ToastService
 
 @Component({
     selector: 'app-home',
@@ -19,8 +18,8 @@ export class HomePage {
 
     constructor(
         private navCtrl: NavController,
-        public alertController: AlertController,
-        private apiService: ApiService
+        private apiService: ApiService,
+        private toastService: ToastService // <-- injetando ToastService
     ) {
         if (localStorage.getItem("idLogado")) {
             this.buscarSaldo({
@@ -48,7 +47,7 @@ export class HomePage {
                 this.resultadoLogin = resLogin;
 
                 if (this.resultadoLogin.estatus === "erro") {
-                    this.alert(this.resultadoLogin.mensagem);
+                    this.toastService.warning(this.resultadoLogin.mensagem);
                     this.isLoading = false;
                     return;
                 }
@@ -73,13 +72,12 @@ export class HomePage {
                 });
             },
             error: () => {
-                this.alert("Erro na conexão com o servidor.");
+                this.toastService.error("Erro na conexão com o servidor.");
                 this.isLoading = false;
             }
         });
     }
 
-    // Função unificada para buscar saldo
     private buscarSaldo(params: { idUser: any, tipo: string, idKey: string }) {
         this.apiService.listarSaldo({
             auth_hash: AUTH_HASH,
@@ -89,7 +87,7 @@ export class HomePage {
         }).subscribe({
             next: (resConta) => {
                 if (resConta.estatus === "erro") {
-                    this.alert(resConta.mensagem);
+                    this.toastService.warning(resConta.mensagem);
                 } else {
                     localStorage.setItem('saldoLoja', resConta.dados.saldoDisponivel == '0' ? '0,00' : resConta.dados.saldoDisponivel);
                     localStorage.setItem('saldoBlockLoja', resConta.dados.saldoBloqueado == '0' ? '0,00' : resConta.dados.saldoBloqueado);
@@ -98,7 +96,7 @@ export class HomePage {
                 this.isLoading = false;
             },
             error: () => {
-                this.alert("Erro ao buscar dados da conta.");
+                this.toastService.error("Erro ao buscar dados da conta.");
                 this.isLoading = false;
             }
         });
@@ -111,14 +109,4 @@ export class HomePage {
         const hashArray = Array.from(new Uint8Array(hashBuffer));
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
-
-    async alert(texto: string) {
-        const alert = await this.alertController.create({
-            header: 'AVISO',
-            message: texto,
-            buttons: ['OK']
-        });
-        await alert.present();
-    }
 }
-

@@ -1,10 +1,9 @@
-// Import's
-
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../services/api.service';
 import { NavigationService } from '../services/navigation.service';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { LoadingController } from '@ionic/angular';
 import { AUTH_HASH } from '../services/auth-config';
+import { ToastService } from '../services/toast.service'; // <-- import do ToastService
 
 @Component({
     selector: 'app-dashboard',
@@ -12,20 +11,17 @@ import { AUTH_HASH } from '../services/auth-config';
     styleUrls: ['./dashboard.page.scss'],
     standalone: false,
 })
-
 export class DashboardPage implements OnInit {
-
-    // Variáveis iniciais
 
     propostasList: any[] = [];
     resultadoBusca: any = {};
     idQuery: string = !localStorage.getItem('pontoVenda') ? `id${localStorage.getItem('tipoLogado') || ''}` : 'idPonto';
 
     constructor(
-        private alertController: AlertController,
-        private loadingController: LoadingController,
         private apiService: ApiService,
-        private navigationService: NavigationService
+        private navigationService: NavigationService,
+        private loadingController: LoadingController,
+        private toastService: ToastService // <-- injetando ToastService
     ) {
         if (localStorage.getItem("idLogado") === null) {
             this.navigation('home');
@@ -37,7 +33,6 @@ export class DashboardPage implements OnInit {
     ngOnInit() {}
 
     // Função de loading e para carregar os cards
-
     async buscarDados() {
         const loading = await this.loadingController.create({
             message: 'Carregando informações...',
@@ -54,7 +49,7 @@ export class DashboardPage implements OnInit {
             async (response) => {
                 this.resultadoBusca = response;
                 if (this.resultadoBusca.estatus === "erro") {
-                    await this.alert(this.resultadoBusca.mensagem);
+                    this.toastService.warning(this.resultadoBusca.mensagem);
                 } else {
                     this.atualizarPropostas();
                 }
@@ -62,15 +57,13 @@ export class DashboardPage implements OnInit {
             },
             async () => {
                 loading.dismiss();
-                await this.alert('Erro ao buscar dados do servidor.');
+                this.toastService.error('Erro ao buscar dados do servidor.');
             }
         );
     }
 
-    // Função para pegar o total em cada card
-
     atualizarPropostas() {
-        const resultado = this.resultadoBusca.resultado;
+        const resultado = this.resultadoBusca.resultado || [];
 
         this.propostasList = [
             { tipo: 'nova', titulo: 'Novas', img: 'star', valor: this.getTotal(resultado, 'nova') },
@@ -95,27 +88,12 @@ export class DashboardPage implements OnInit {
         return found ? found.total : 0;
     }
 
-    // Função de logout
-
     logout() {
         localStorage.clear();
         this.navigation('home');
     }
 
-    // Função de redirecionamento
-
     navigation(page: string, estatus?: string) {
         this.navigationService.navigate(page, estatus || '');
-    }
-
-    // Função exibir um alert
-
-    async alert(mensagem: string) {
-        const alert = await this.alertController.create({
-            header: 'Aviso',
-            message: mensagem,
-            buttons: ['OK']
-        });
-        await alert.present();
     }
 }

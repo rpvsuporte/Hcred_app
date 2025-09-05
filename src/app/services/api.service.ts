@@ -28,14 +28,6 @@ export class ApiService {
         return this.http.post<any>(`${this.apiHcred}listarContaAll.php`, JSON.stringify(data), this.options);
     }
 
-    buscaGerente(data: any){
-        return this.http.post<any>(`${this.apiHcred}listarGerente.php`, JSON.stringify(data), this.options);
-    }
-
-    buscaColab(data: any){
-        return this.http.post<any>(`${this.apiHcred}listarColab.php`, JSON.stringify(data), this.options);
-    }
-
     buscaPropsAll(data: any){
         return this.http.post<any>(`${this.apiHcred}selectPropsAll.php`, JSON.stringify(data), this.options);
     }
@@ -98,6 +90,10 @@ export class ApiService {
 
     gerarLink(data: any){
         return this.http.post<any>(`${this.apiHcred}cad_session.php`, JSON.stringify(data), this.options);
+    }
+
+    gerarRelatorio(data: any){
+        return this.http.post<any>(`${this.apiLocal}gerarRelatorios.php`, JSON.stringify(data), this.options);
     }
 
     listarContrato(data: any){

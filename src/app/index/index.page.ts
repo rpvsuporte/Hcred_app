@@ -28,14 +28,4 @@ export class IndexPage implements OnInit {
         this.navigationService.navigate(page, estatus || '');
     }
 
-    // Função para exibir um alert
-
-    async alert(mensagem: any) {
-        const alert = await this.alertController.create({
-            header: 'Atenção',
-            message: mensagem,
-            buttons: ['OK']
-        });
-        await alert.present();
-    }
 }
