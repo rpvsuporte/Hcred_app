@@ -12,6 +12,7 @@ import { AUTH_HASH } from '../services/auth-config';
 })
 export class RelatoriosPage {
 
+    // Variáveis Iniciais
 
     periodo: number = 0;
 

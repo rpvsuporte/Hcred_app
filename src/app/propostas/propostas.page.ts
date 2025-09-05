@@ -3,7 +3,7 @@ import { ApiService } from '../services/api.service';
 import { NavigationService } from '../services/navigation.service';
 import { MenuController, LoadingController } from '@ionic/angular';
 import { AUTH_HASH } from 'src/app/services/auth-config';
-import { ToastService } from '../services/toast.service'; // <-- import do ToastService
+import { ToastService } from '../services/toast.service'; 
 
 @Component({
   selector: 'app-propostas',
@@ -12,6 +12,9 @@ import { ToastService } from '../services/toast.service'; // <-- import do Toast
   standalone: false
 })
 export class PropostasPage  {
+
+    // Variáveis Iniciais
+
     mostrarInputFiltro = false;
     public filtroSelecionado: string = '';
     public valorFiltro: string = '';
@@ -80,7 +83,7 @@ export class PropostasPage  {
         private navigationService: NavigationService,
         private menu: MenuController,
         private loadingController: LoadingController,
-        private toastService: ToastService // <-- injetando ToastService
+        private toastService: ToastService 
     ) { }
 
     ionViewWillEnter() {

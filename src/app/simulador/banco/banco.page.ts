@@ -12,6 +12,9 @@ import { AUTH_HASH } from 'src/app/services/auth-config';
     standalone: false
 })
 export class BancoPage implements OnInit {
+
+    // Variáveis Iniciais
+
     public tipoRecebimento: string = '';
     public listaBanks: any = [];
     public bancosFiltrados: any[] = [];

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from "@ionic/angular";
 import { ApiService } from "../services/api.service";
 import { AUTH_HASH, VERSION_APP } from '../services/auth-config'; 
-import { ToastService } from '../services/toast.service'; // <-- import do ToastService
+import { ToastService } from '../services/toast.service'; 
 
 @Component({
     selector: 'app-home',
@@ -12,6 +12,8 @@ import { ToastService } from '../services/toast.service'; // <-- import do Toast
 })
 export class HomePage {
 
+    // Variáveis Iniciais
+
     public login: any = {};
     resultadoLogin: any = {};
     isLoading = false;
@@ -19,7 +21,7 @@ export class HomePage {
     constructor(
         private navCtrl: NavController,
         private apiService: ApiService,
-        private toastService: ToastService // <-- injetando ToastService
+        private toastService: ToastService 
     ) {
         if (localStorage.getItem("idLogado")) {
             this.buscarSaldo({

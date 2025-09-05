@@ -4,7 +4,7 @@ import { ApiService } from '../services/api.service';
 import { NavigationService } from '../services/navigation.service';
 import { LoadingController } from '@ionic/angular';
 import { AUTH_HASH } from '../services/auth-config';
-import { ToastService } from '../services/toast.service'; // <-- import do ToastService
+import { ToastService } from '../services/toast.service'; 
 
 @Component({
     selector: 'app-conta',
@@ -13,6 +13,8 @@ import { ToastService } from '../services/toast.service'; // <-- import do Toast
     standalone: false
 })
 export class ContaPage {
+
+    // Variáveis Iniciais
 
     presentingElement!: HTMLElement | null;
     public saldoValue: string = localStorage.getItem('saldoLoja') || '';
@@ -39,7 +41,7 @@ export class ContaPage {
         private navigationService: NavigationService,
         private apiService: ApiService,
         private loadingController: LoadingController,
-        private toastService: ToastService // <-- injetando ToastService
+        private toastService: ToastService 
     ) { }
 
     async ngOnInit() {

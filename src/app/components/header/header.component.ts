@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PopoverController } from '@ionic/angular';
 import { AUTH_HASH } from 'src/app/services/auth-config';
-import { ToastService } from 'src/app/services/toast.service'; // <-- import do ToastService
+import { ToastService } from 'src/app/services/toast.service'; 
 
 @Component({
     selector: 'app-header',
@@ -16,6 +16,8 @@ import { ToastService } from 'src/app/services/toast.service'; // <-- import do 
     imports: [IonicModule, FormsModule, CommonModule] 
 })
 export class HeaderComponent implements OnInit {
+    
+    // Variáveis iniciais
 
     public keyNome: any;
     public saldoValue: any;
@@ -46,7 +48,7 @@ export class HeaderComponent implements OnInit {
         private apiService: ApiService,
         private navigationService: NavigationService,
         private popoverCtrl: PopoverController,
-        private toastService: ToastService // 
+        private toastService: ToastService 
     ) {
         if (localStorage.getItem("idLogado") === null) {
             this.navigation('home');

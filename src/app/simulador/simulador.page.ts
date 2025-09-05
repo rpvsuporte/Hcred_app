@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'; 
 import { ApiService } from '../services/api.service';
-import { ToastService } from '../services/toast.service'; // <-- importado
+import { ToastService } from '../services/toast.service'; 
 import { NavigationService } from '../services/navigation.service';
 import { AUTH_HASH } from '../services/auth-config';
 import { Clipboard } from '@capacitor/clipboard';
@@ -20,6 +20,7 @@ interface Boleto {
     standalone: false
 })
 export class SimuladorPage implements OnInit { 
+    
     // Variáveis iniciais
 
     public simula: any = {
@@ -56,7 +57,7 @@ export class SimuladorPage implements OnInit {
     constructor(
         private apiService: ApiService,
         private navigationService: NavigationService,
-        private toastService: ToastService // <-- injetado
+        private toastService: ToastService 
     ) {}
 
     ngOnInit(){

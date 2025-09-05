@@ -21,6 +21,9 @@ interface Anexo {
     standalone: false
 })
 export class AnexosPage implements OnInit {
+
+    // Variáveis Iniciais
+
     anexos: Anexo[] = Array(4).fill({ arquivo: null, tipo: '' });
     errosAnexos: { arquivo: boolean; tipo: boolean }[] = Array(4).fill({ arquivo: false, tipo: false });
     contratoOnline: string = '';

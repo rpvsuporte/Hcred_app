@@ -15,6 +15,9 @@ import { ToastService } from '../../services/toast.service';
     standalone: false
 })
 export class AtuarPropostaPage implements OnInit {
+
+    // Variáveis Iniciais
+
     prop: any = {};
     propsStatus: any[] = [];
     public mostrarAtuacao = false;

@@ -3,7 +3,7 @@ import { ApiService } from '../services/api.service';
 import { NavigationService } from '../services/navigation.service';
 import { LoadingController } from '@ionic/angular';
 import { AUTH_HASH } from '../services/auth-config';
-import { ToastService } from '../services/toast.service'; // <-- import do ToastService
+import { ToastService } from '../services/toast.service'; 
 
 @Component({
     selector: 'app-dashboard',
@@ -13,6 +13,8 @@ import { ToastService } from '../services/toast.service'; // <-- import do Toast
 })
 export class DashboardPage implements OnInit {
 
+    // Variáveis Iniciais
+
     propostasList: any[] = [];
     resultadoBusca: any = {};
     idQuery: string = !localStorage.getItem('pontoVenda') ? `id${localStorage.getItem('tipoLogado') || ''}` : 'idPonto';
@@ -21,7 +23,7 @@ export class DashboardPage implements OnInit {
         private apiService: ApiService,
         private navigationService: NavigationService,
         private loadingController: LoadingController,
-        private toastService: ToastService // <-- injetando ToastService
+        private toastService: ToastService 
     ) {
         if (localStorage.getItem("idLogado") === null) {
             this.navigation('home');

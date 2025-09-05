@@ -2,7 +2,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
-import { ToastService } from '../../services/toast.service'; // <-- importado
+import { ToastService } from '../../services/toast.service'; 
 import { NavigationService } from '../../services/navigation.service';
 import { AUTH_HASH } from 'src/app/services/auth-config';
 
@@ -15,6 +15,7 @@ import { AUTH_HASH } from 'src/app/services/auth-config';
 export class EnderecoPage implements OnInit {
 
     // Variáveis iniciais
+    
     public endereco = {
         cep: '',
         rua: '',
@@ -31,7 +32,7 @@ export class EnderecoPage implements OnInit {
     constructor(
         private apiService: ApiService,
         private navigationService: NavigationService,
-        private toastService: ToastService // <-- injetado
+        private toastService: ToastService 
     ) { }
 
     ngOnInit() {
