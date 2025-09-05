@@ -127,7 +127,7 @@
         <ion-button
             shape="round"
             (click)="simular()"
-            [disabled]="formInvalido || loadingAcessa || !todosBoletosValidos()"
+            [disabled]="formInvalido || loadingAcessa || !todosBoletosValidos() || (tipoLogado === 'master' && simula.tipo === 'Crédito Pessoal')"
             *ngIf="!loadingAcessa"
         >
             Avançar

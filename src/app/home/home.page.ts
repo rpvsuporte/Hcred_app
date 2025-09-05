@@ -11,14 +11,10 @@ import { AUTH_HASH, VERSION_APP } from '../services/auth-config';
     styleUrls: ['./home.page.scss'],
     standalone: false
 })
-
 export class HomePage {
-
-    // Variáveis Iniciais
 
     public login: any = {};
     resultadoLogin: any = {};
-
     isLoading = false;
 
     constructor(
@@ -27,32 +23,15 @@ export class HomePage {
         private apiService: ApiService
     ) {
         if (localStorage.getItem("idLogado")) {
-            this.apiService.listarSaldo({
-                auth_hash: AUTH_HASH,
-                idUser: localStorage.getItem("idLogado"),
-                ['id'+ localStorage.getItem('tipoLogado')]: localStorage.getItem("idFranqueado")
-            }).subscribe({
-                next: (resConta) => {
-                    if (resConta.estatus === "erro") {
-                        this.alert(resConta.mensagem);
-                    } else {
-                        localStorage.setItem('saldoLoja', resConta.dados.saldoDisponivel);
-                        localStorage.setItem('saldoBlockLoja', resConta.dados.saldoBloqueado);
-                        this.navCtrl.navigateForward('index');
-                    }
-                    this.isLoading = false;
-                },
-                error: () => {
-                    this.alert("Erro ao buscar dados da conta.");
-                    this.isLoading = false;
-                }
+            this.buscarSaldo({
+                idUser: localStorage.getItem("idLogado") || '',
+                tipo: localStorage.getItem("tipoLogado") || '',
+                idKey: 'id' + (localStorage.getItem("tipoLogado") || '')
             });
         } else {
             localStorage.clear();
         }
     }
-
-    // Função de login
 
     async loginApp() {
         this.isLoading = true;
@@ -67,8 +46,6 @@ export class HomePage {
         this.apiService.loginApp(data).subscribe({
             next: async (resLogin) => {
                 this.resultadoLogin = resLogin;
-                const tipoLogado = this.resultadoLogin.dados.tipoLogado; 
-                const idKey = 'id' + tipoLogado.charAt(0).toUpperCase() + tipoLogado.slice(1);
 
                 if (this.resultadoLogin.estatus === "erro") {
                     this.alert(this.resultadoLogin.mensagem);
@@ -76,8 +53,10 @@ export class HomePage {
                     return;
                 }
 
-                // Salva dados do usuário
-                
+                const tipoLogado = this.resultadoLogin.dados.tipoLogado;
+                const idKey = 'id' + tipoLogado.charAt(0).toUpperCase() + tipoLogado.slice(1);
+
+                // Salva dados do usuário no localStorage
                 Object.entries(this.resultadoLogin.dados).forEach(([chave, valor]) => {
                     if (chave !== 'senhaAcesso') {
                         localStorage.setItem(chave, valor != null ? String(valor) : '');
@@ -86,28 +65,11 @@ export class HomePage {
 
                 localStorage.setItem('senhaAcesso', await this.hashSenha(this.resultadoLogin.dados.senhaAcesso));
 
-                // Buscando o saldo da loja
-
-                this.apiService.listarSaldo({
-                    auth_hash: AUTH_HASH,
+                // Busca saldo usando a mesma função
+                this.buscarSaldo({
                     idUser: this.resultadoLogin.dados.idLogado,
-                    [idKey]: this.resultadoLogin.dados[idKey],
-                    tipo: tipoLogado
-                }).subscribe({
-                    next: (resConta) => {
-                        if (resConta.estatus === "erro") {
-                            this.alert(resConta.mensagem);
-                        } else {
-                            localStorage.setItem('saldoLoja', resConta.dados.saldoDisponivel);
-                            localStorage.setItem('saldoBlockLoja', resConta.dados.saldoBloqueado);
-                            this.navCtrl.navigateForward('index');
-                        }
-                        this.isLoading = false;
-                    },
-                    error: () => {
-                        this.alert("Erro ao buscar dados da conta.");
-                        this.isLoading = false;
-                    }
+                    tipo: tipoLogado,
+                    idKey: idKey
                 });
             },
             error: () => {
@@ -117,7 +79,30 @@ export class HomePage {
         });
     }
 
-    // Função para colocar hash na senha
+    // Função unificada para buscar saldo
+    private buscarSaldo(params: { idUser: any, tipo: string, idKey: string }) {
+        this.apiService.listarSaldo({
+            auth_hash: AUTH_HASH,
+            idUser: params.idUser,
+            tipo: params.tipo,
+            [params.idKey]: localStorage.getItem(params.idKey) ?? params.idUser
+        }).subscribe({
+            next: (resConta) => {
+                if (resConta.estatus === "erro") {
+                    this.alert(resConta.mensagem);
+                } else {
+                    localStorage.setItem('saldoLoja', resConta.dados.saldoDisponivel == '0' ? '0,00' : resConta.dados.saldoDisponivel);
+                    localStorage.setItem('saldoBlockLoja', resConta.dados.saldoBloqueado == '0' ? '0,00' : resConta.dados.saldoBloqueado);
+                    this.navCtrl.navigateForward('index');
+                }
+                this.isLoading = false;
+            },
+            error: () => {
+                this.alert("Erro ao buscar dados da conta.");
+                this.isLoading = false;
+            }
+        });
+    }
 
     async hashSenha(senha: string): Promise<string> {
         const encoder = new TextEncoder();
@@ -126,8 +111,6 @@ export class HomePage {
         const hashArray = Array.from(new Uint8Array(hashBuffer));
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
-
-    // Função de alert
 
     async alert(texto: string) {
         const alert = await this.alertController.create({
@@ -138,3 +121,4 @@ export class HomePage {
         await alert.present();
     }
 }
+

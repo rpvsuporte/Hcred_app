@@ -39,7 +39,6 @@
     padding: 20px;
     margin: 20px 15px;
     border-radius: 10px;
-    flex-wrap: wrap;
 }
 
 .form ion-input {
@@ -95,8 +94,8 @@ ion-select::part(icon) {
     font-size: 15px;
     padding: 10px;
     --border-radius: 10px;
-    --padding-top: 15px;
-    --padding-bottom: 15px;
+    --padding-top: 18px;
+    --padding-bottom: 18px;
     --padding-start: 1.5em;
     --padding-end: 1.5em;
 }
