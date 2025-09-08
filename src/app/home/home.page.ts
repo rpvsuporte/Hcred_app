@@ -3,6 +3,7 @@ import { NavController } from "@ionic/angular";
 import { ApiService } from "../services/api.service";
 import { AUTH_HASH, VERSION_APP } from '../services/auth-config'; 
 import { ToastService } from '../services/toast.service'; 
+import { Platform } from '@ionic/angular';
 
 @Component({
     selector: 'app-home',
@@ -21,7 +22,8 @@ export class HomePage {
     constructor(
         private navCtrl: NavController,
         private apiService: ApiService,
-        private toastService: ToastService 
+        private toastService: ToastService,
+        private platform: Platform 
     ) {
         if (localStorage.getItem("idLogado")) {
             this.buscarSaldo({
@@ -37,9 +39,12 @@ export class HomePage {
     async loginApp() {
         this.isLoading = true;
 
+        const plataforma = this.platform.is('android') ? 'APP - Android' : 'APP - IOS';
+
         const data = {
             auth_hash: AUTH_HASH,
             version: VERSION_APP,
+            versao_login: plataforma,
             user_access: this.login.usuario,
             password_access: this.login.senha
         };
