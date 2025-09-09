@@ -39,7 +39,7 @@ export class RelatoriosPage {
         next: (res: any) => {
             if (res.url) {
                 // Baixa o arquivo diretamente
-                
+
                 const link = document.createElement('a');
                 link.href = res.url;
                 link.target = '_blank';
