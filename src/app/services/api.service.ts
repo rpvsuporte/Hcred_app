@@ -93,7 +93,7 @@ export class ApiService {
     }
 
     gerarRelatorio(data: any){
-        return this.http.post<any>(`${this.apiHcred}gerarRelatorios.php`, JSON.stringify(data), this.options);
+        return this.http.post<any>(`${this.apiHcred}gerarRelatorio.php`, JSON.stringify(data), this.options);
     }
 
     listarContrato(data: any){
@@ -109,7 +109,7 @@ export class ApiService {
     }
 
     loginApp(data: any) {
-        return this.http.post<any>(`${this.apiLocal}logar.php`, JSON.stringify(data), this.options);
+        return this.http.post<any>(`${this.apiHcred}logar.php`, JSON.stringify(data), this.options);
     }
 
     sacar(data: any){

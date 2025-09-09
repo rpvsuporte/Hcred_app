@@ -22,40 +22,40 @@ export class RelatoriosPage {
         public navigationService: NavigationService,
     ) { }
 
-  gerarRelatorio() {
-    if (!this.periodo) {
-        this.toastService.warning('Selecione um período');
-        return;
-    }
-
-    const payload = {
-        idUser: localStorage.getItem('id' + localStorage.getItem('tipoLogado')) || '',
-        tipoUser: localStorage.getItem('tipoLogado') || '',
-        periodo: this.periodo,
-        auth_hash: AUTH_HASH
-    };
-
-    this.apiService.gerarRelatorio(payload).subscribe({
-        next: (res: any) => {
-            if (res.url) {
-                // Baixa o arquivo diretamente
-                
-                const link = document.createElement('a');
-                link.href = res.url;
-                link.target = '_blank';
-                link.download = `relatorio_${this.periodo}dias.xls`;
-                link.click();
-
-                this.toastService.success('Relatório gerado com sucesso!');
-            } else {
-                this.toastService.warning('Relatório não encontrado');
-            }
-        },
-        error: () => {
-            this.toastService.error('Erro ao gerar relatório');
+    gerarRelatorio() {
+        if (!this.periodo) {
+            this.toastService.warning('Selecione um período');
+            return;
         }
-    });
-  }
+
+        const payload = {
+            idUser: localStorage.getItem('id' + localStorage.getItem('tipoLogado')) || '',
+            tipoUser: localStorage.getItem('tipoLogado') || '',
+            periodo: this.periodo,
+            auth_hash: AUTH_HASH
+        };
+
+        this.apiService.gerarRelatorio(payload).subscribe({
+            next: (res: any) => {
+                if (res.url) {
+                    // Baixa o arquivo diretamente
+                    
+                    const link = document.createElement('a');
+                    link.href = res.url;
+                    link.target = '_blank';
+                    link.download = `relatorio_${this.periodo}dias.xls`;
+                    link.click();
+
+                    this.toastService.success('Relatório gerado com sucesso!');
+                } else {
+                    this.toastService.warning('Relatório não encontrado');
+                }
+            },
+            error: () => {
+                this.toastService.error('Erro ao gerar relatório');
+            }
+        });
+    }
 
     navigation(page: string, estatus?: string, idProposta?:string) {
         this.navigationService.navigate(page, estatus || '', idProposta || '');
