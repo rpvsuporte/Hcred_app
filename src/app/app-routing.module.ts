@@ -34,7 +34,11 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
     {
         path: 'index',
         loadChildren: () => import('./index/index.module').then( m => m.IndexPageModule)
-    }
+    },  {
+    path: 'atualizar-senha',
+    loadChildren: () => import('./atualizar-senha/atualizar-senha.module').then( m => m.AtualizarSenhaPageModule)
+  }
+
 ];
 
 @NgModule({
