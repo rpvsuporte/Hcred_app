@@ -1,6 +1,8 @@
-<ion-content class="ion-padding">
+<ion-content>
 
     <div class="container">
+        <img src="../../assets/img/logoHcred.png" class="logoHcred" alt="Logo Hcred">
+
         <h2 class="titulo">Defina uma nova senha!</h2>
         <p class="subtitulo">Por motivos de segurança, sua senha expirou.</p>
     
@@ -13,6 +15,9 @@
             <ion-button expand="block" type="submit" [disabled]="isLoading">
                 {{ isLoading ? 'Aguarde...' : 'Salvar' }}
             </ion-button>
+
+
+            <p class="subtext">Gestão de Propostas</p>
     
         </form>
     </div>

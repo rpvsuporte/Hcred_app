@@ -9,11 +9,17 @@ ion-content {
         min-height: 100vh;
     }
 
+    .logoHcred {
+        width: 150px;
+        margin-bottom: 20px;
+    }
+
     .titulo {
         text-align: center;
         font-weight: bold;
         margin-bottom: 5px;
         font-size: 1.5rem;
+        color: #FFF;
     }
 
     .subtitulo {
@@ -36,11 +42,18 @@ ion-content {
         --placeholder-color: #eee;
         margin-bottom: 20px;
         color: #fff;
+        text-align: center;
     }
 
     ion-button {
         --background: #DE9F13;
         --color: #FFF;
         width: 60%;
+    }
+
+    .subtext {
+        color: #fff;
+        margin-top: 50px;
+        font-size: 1.125em;
     }
 }

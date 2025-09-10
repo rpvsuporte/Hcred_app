@@ -25,7 +25,10 @@ export class HomePage {
         private toastService: ToastService,
         private platform: Platform 
     ) {
-        if (localStorage.getItem("idLogado")) {
+        const idLogado = localStorage.getItem("idLogado");
+        const senhaExpirada = localStorage.getItem("senhaExpirada");
+
+        if (idLogado && senhaExpirada !== "true") {
             this.buscarSaldo({
                 idUser: localStorage.getItem("idLogado") || '',
                 tipo: localStorage.getItem("tipoLogado") || '',
@@ -62,6 +65,7 @@ export class HomePage {
                 if (this.resultadoLogin.estatus === "senha_expirada") {
                     this.toastService.warning(this.resultadoLogin.mensagem);
                     localStorage.setItem('idLogado', this.resultadoLogin.idUser);
+                    localStorage.setItem('senhaExpirada', 'true');
                     this.navCtrl.navigateForward('atualizar-senha'); 
                     this.isLoading = false;
                     return;
