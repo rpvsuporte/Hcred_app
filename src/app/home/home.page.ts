@@ -54,7 +54,15 @@ export class HomePage {
                 this.resultadoLogin = resLogin;
 
                 if (this.resultadoLogin.estatus === "erro") {
+                    this.toastService.error(this.resultadoLogin.mensagem);
+                    this.isLoading = false;
+                    return;
+                }
+
+                if (this.resultadoLogin.estatus === "senha_expirada") {
                     this.toastService.warning(this.resultadoLogin.mensagem);
+                    localStorage.setItem('idLogado', this.resultadoLogin.idUser);
+                    this.navCtrl.navigateForward('atualizar-senha'); 
                     this.isLoading = false;
                     return;
                 }

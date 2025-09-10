@@ -1,0 +1,46 @@
+ion-content {
+    --background: #004977 url('../../assets/img/pattern-hcred-bg.png') no-repeat center center / cover;
+
+    .container{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .titulo {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 5px;
+        font-size: 1.5rem;
+    }
+
+    .subtitulo {
+        text-align: center;
+        color: #FFF;
+        margin-bottom: 40px;
+    }
+
+    form{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 80%;
+    }
+
+    ion-input{
+        --border-color: #fff;
+        --color: #fff;
+        --placeholder-color: #eee;
+        margin-bottom: 20px;
+        color: #fff;
+    }
+
+    ion-button {
+        --background: #DE9F13;
+        --color: #FFF;
+        width: 60%;
+    }
+}

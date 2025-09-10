@@ -6,8 +6,8 @@ import { Injectable } from '@angular/core';
 })
 export class ApiService {
 
-    private apiHcred: string = 'https://lojas.hcred.com.br/API/';
-    private apiLocal: string = 'https://hcred.rpvtecnologia.com.br/API/';
+    // private apiHcred: string = 'https://lojas.hcred.com.br/API/';
+    private apiHcred: string = 'https://hcred.rpvtecnologia.com.br/API/';
 
     private options = {
         headers: new HttpHeaders({ 'Content-Type': 'application/json; charset=UTF-8' }),
@@ -15,6 +15,10 @@ export class ApiService {
     };
 
     constructor(private http: HttpClient) { }
+
+    atualizarSenha(data: any){
+        return this.http.post<any>(`${this.apiHcred}atualizar_senha.php`, JSON.stringify(data), this.options);
+    }
 
     buscaBanks(data: any){
         return this.http.post<any>(`${this.apiHcred}selectBanks.php`, JSON.stringify(data), this.options);
