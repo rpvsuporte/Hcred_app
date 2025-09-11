@@ -159,11 +159,6 @@ export class PropostasPage  {
             return;
         }
 
-        if (this.filtroSelecionado === 'nome' && valor.split(' ').length < 2) {
-            this.toastService.warning('Digite nome e sobrenome.');
-            return;
-        }
-
         if (this.filtroSelecionado === 'id' && isNaN(Number(valor))) {
             this.toastService.warning('ID inválido.');
             return;
