@@ -553,7 +553,6 @@ export class AtuarPropostaPage implements OnInit {
         });
     }
 
-
     // Função de redirecionamento
 
     navigation(page: string) {
@@ -564,7 +563,6 @@ export class AtuarPropostaPage implements OnInit {
         if (!observacao) return '';
         return observacao.replace(/ - /g, '<br>');
     }
-
 
     // Função para abrir o anexo
 

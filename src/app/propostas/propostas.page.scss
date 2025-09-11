@@ -15,11 +15,11 @@
 
 .topo-propostas ion-icon,
 .topo-propostas ion-menu-button {
-  --color: #FFF; /* cor laranja igual os outros ícones */
+    --color: #FFF; /* cor laranja igual os outros ícones */
 }
 
 ion-menu ion-title {
-  color: #FFF !important; /* força título branco */
+    color: #FFF !important; /* força título branco */
 }
 
 .topo-propostas h1 {
@@ -190,8 +190,13 @@ ion-card-content{
 
 .card_left_content{    
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: 8px;
+}
+
+.card_left_content ion-chip{
+    --background: gray;
+    --color: #FFF;
 }
 
 .card_right_content{    

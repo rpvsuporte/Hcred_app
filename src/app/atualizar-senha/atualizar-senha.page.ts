@@ -11,6 +11,8 @@ import { AUTH_HASH, VERSION_APP } from '../services/auth-config';
     standalone: false
 })
 export class AtualizarSenhaPage {
+
+    // Variáveis Iniciais
     
     novaSenha: string = '';
     confirmaSenha: string = '';

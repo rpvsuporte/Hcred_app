@@ -15,12 +15,14 @@
                 fill="outline"
                 required
                 [(ngModel)]="novaSenha"
-                name="novaSenha">
+                name="novaSenha"
+            >
                 <ion-icon
-                slot="end"
-                [name]="showNovaSenha ? 'eye-off' : 'eye'"
-                (click)="toggleNovaSenha()"
-                style="cursor: pointer; font-size: 20px; margin-right: 8px;">
+                    slot="end"
+                    [name]="showNovaSenha ? 'eye-off' : 'eye'"
+                    (click)="toggleNovaSenha()"
+                    style="cursor: pointer; font-size: 20px; margin-right: 8px;"
+                >
                 </ion-icon>
             </ion-input>
 
@@ -31,12 +33,15 @@
                 fill="outline"
                 required
                 [(ngModel)]="confirmaSenha"
-                name="confirmaSenha">
+                name="confirmaSenha"
+            >
+
                 <ion-icon
-                slot="end"
-                [name]="showConfirmaSenha ? 'eye-off' : 'eye'"
-                (click)="toggleConfirmaSenha()"
-                style="cursor: pointer; font-size: 20px; margin-right: 8px;">
+                    slot="end"
+                    [name]="showConfirmaSenha ? 'eye-off' : 'eye'"
+                    (click)="toggleConfirmaSenha()"
+                    style="cursor: pointer; font-size: 20px; margin-right: 8px;"
+                >
                 </ion-icon>
             </ion-input>
 

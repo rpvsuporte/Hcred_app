@@ -78,26 +78,52 @@
 
         <div class="table-container">
             <ion-card *ngFor="let proposta of paginatedPropostas" class="proposta-card">
-                <ion-card-header>
-                    <ion-card-title style="font-size: 16px; font-weight: bold;">{{ proposta.tipo }}</ion-card-title>
-                    <ion-card-title style="font-size: 14px; font-weight: 400;">
-                        Tabela: {{ proposta.tipoDescricao }} - {{proposta.tipoOperacaoCC}}
-                    </ion-card-title>
-                </ion-card-header>
+            <ion-card-header>
+                <ion-card-title class="titulo-principal">
+                    <ion-icon name="card"></ion-icon>
+                    {{ proposta.tipo }}
+                </ion-card-title>
+                <ion-card-subtitle>
+                    <ion-icon name="list"></ion-icon>
+                    {{ proposta.tipoDescricao }} - {{ proposta.tipoOperacaoCC }}
+                </ion-card-subtitle>
+            </ion-card-header>
 
-                <ion-card-content [style.backgroundColor]="cor">
-                    <div class="card_left_content">
-                        <p><strong>Valor:</strong> R$ {{ proposta.valorTotal }}</p>
-                        <p><strong>Prazo:</strong> {{ proposta.quantPrestacoes }}x</p>
-                        <p><strong>Data:</strong> {{ proposta.dataPropostaBr }}</p>
-                        <p><strong>Nome:</strong> {{ proposta.nome }}</p>
-                        <p><strong>Última atualização:</strong> {{ proposta.ultimaAtualizacao }}</p>
-                    </div>
-                    <div class="card_right_content">
-                        <ion-icon name="eye-outline" (click)="navigation('propostas/atuar-proposta', '', proposta.idProposta)"></ion-icon>
-                    </div>
-                </ion-card-content>
+            <ion-card-content [style.backgroundColor]="cor">
+                <div class="card_left_content">
+
+                <ion-icon name="cash-outline"></ion-icon>
+                <ion-label>R$ {{ proposta.valorTotal }}</ion-label>
+
+
+                <ion-chip>
+                    <ion-icon name="time-outline"></ion-icon>
+                    <ion-label>{{ proposta.quantPrestacoes }}x</ion-label>
+                </ion-chip>
+
+                <ion-chip>
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    <ion-label>{{ proposta.dataPropostaBr }}</ion-label>
+                </ion-chip>
+
+                <ion-chip>
+                    <ion-icon name="person-outline"></ion-icon>
+                    <ion-label>{{ proposta.nome }}</ion-label>
+                </ion-chip>
+
+                <ion-chip>
+                    <ion-icon name="trending-up-outline"></ion-icon>
+                    <ion-label>{{ proposta.ultimaAtualizacao }}</ion-label>
+                </ion-chip>
+
+                </div>
+
+                <div class="card_right_content">
+                    <ion-icon name="eye-outline" (click)="navigation('propostas/atuar-proposta', '', proposta.idProposta)"></ion-icon>
+                </div>
+            </ion-card-content>
             </ion-card>
+
 
             <div class="paginacao">
                 <ion-button class="btn-paginacao" (click)="prevPage()" [disabled]="currentPage === 1" fill="outline" size="default">

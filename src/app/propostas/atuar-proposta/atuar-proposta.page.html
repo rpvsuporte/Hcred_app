@@ -132,7 +132,8 @@
                         [attr.maxlength]="maxLength"
                         fill="outline"
                         [class.borda-vermelha-input]="!chavePixValida && dadosPix.chave.length > 0"
-                    ></ion-input>
+                    >
+                    </ion-input>
                 </ng-container>
 
                 <ng-container *ngIf="tipoRecebimento === 'banco'">
@@ -193,7 +194,8 @@
                             (ionInput)="formatarCPF($event)"
                             [class.borda-vermelha-input]="!cpfValidoTerceiro && terceiroPF.cpf.length > 0"
                             maxlength="14"
-                        ></ion-input>
+                        >
+                        </ion-input>
 
                         <ion-select label="Parentesco" labelPlacement="floating" fill="outline" [(ngModel)]="terceiroPF.parentesco">
                             <ion-select-option value="pai_mae">Pai/Mãe</ion-select-option>
@@ -212,7 +214,8 @@
                             labelPlacement="floating"
                             fill="outline"
                             [(ngModel)]="terceiroPF.parentescoOutros"
-                        ></ion-input>
+                        >
+                        </ion-input>
 
                     </ng-container>
 
@@ -230,7 +233,8 @@
                             (ionBlur)="validarCNPJInput()"
                             [class.borda-vermelha-input]="!cnpjValidoTerceiro && terceiroPJ.cnpj.length > 0"
                             maxlength="18"
-                        ></ion-input>
+                        >
+                        </ion-input>
 
                         <ion-input label="Vínculo com a Empresa" labelPlacement="floating" fill="outline" [(ngModel)]="terceiroPJ.vinculo"></ion-input>
                     </ng-container>

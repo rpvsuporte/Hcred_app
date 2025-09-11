@@ -80,6 +80,7 @@ export class HomePage {
                 const idKey = 'id' + tipoLogado.charAt(0).toUpperCase() + tipoLogado.slice(1);
 
                 // Salva dados do usuário no localStorage
+
                 Object.entries(this.resultadoLogin.dados).forEach(([chave, valor]) => {
                     if (chave !== 'senhaAcesso') {
                         localStorage.setItem(chave, valor != null ? String(valor) : '');
@@ -89,6 +90,7 @@ export class HomePage {
                 localStorage.setItem('senhaAcesso', await this.hashSenha(this.resultadoLogin.dados.senhaAcesso));
 
                 // Busca saldo usando a mesma função
+                
                 this.buscarSaldo({
                     idUser: this.resultadoLogin.dados.idLogado,
                     tipo: tipoLogado,
