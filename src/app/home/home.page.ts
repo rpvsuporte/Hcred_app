@@ -18,6 +18,7 @@ export class HomePage {
     public login: any = {};
     resultadoLogin: any = {};
     isLoading = false;
+    showPassword = false;
 
     constructor(
         private navCtrl: NavController,
@@ -37,6 +38,10 @@ export class HomePage {
         } else {
             localStorage.clear();
         }
+    }
+
+    togglePasswordVisibility() {
+        this.showPassword = !this.showPassword;
     }
 
     async loginApp() {

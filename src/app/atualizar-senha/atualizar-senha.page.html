@@ -5,20 +5,47 @@
 
         <h2 class="titulo">Defina uma nova senha!</h2>
         <p class="subtitulo">Por motivos de segurança, sua senha expirou.</p>
-    
+
         <form (ngSubmit)="atualizarSenha()" #senhaForm="ngForm">
-    
-            <ion-input placeholder="Nova Senha" type="password" fill="outline" required [(ngModel)]="novaSenha" name="novaSenha"></ion-input>
-    
-            <ion-input placeholder="Confirme a Senha" type="password" fill="outline" required [(ngModel)]="confirmaSenha" name="confirmaSenha"></ion-input>
+
+            <!-- Nova Senha -->
+            <ion-input
+                placeholder="Nova Senha"
+                [type]="showNovaSenha ? 'text' : 'password'"
+                fill="outline"
+                required
+                [(ngModel)]="novaSenha"
+                name="novaSenha">
+                <ion-icon
+                slot="end"
+                [name]="showNovaSenha ? 'eye-off' : 'eye'"
+                (click)="toggleNovaSenha()"
+                style="cursor: pointer; font-size: 20px; margin-right: 8px;">
+                </ion-icon>
+            </ion-input>
+
+            <!-- Confirmar Senha -->
+            <ion-input
+                placeholder="Confirme a Senha"
+                [type]="showConfirmaSenha ? 'text' : 'password'"
+                fill="outline"
+                required
+                [(ngModel)]="confirmaSenha"
+                name="confirmaSenha">
+                <ion-icon
+                slot="end"
+                [name]="showConfirmaSenha ? 'eye-off' : 'eye'"
+                (click)="toggleConfirmaSenha()"
+                style="cursor: pointer; font-size: 20px; margin-right: 8px;">
+                </ion-icon>
+            </ion-input>
 
             <ion-button expand="block" type="submit" [disabled]="isLoading">
                 {{ isLoading ? 'Aguarde...' : 'Salvar' }}
             </ion-button>
 
-
             <p class="subtext">Gestão de Propostas</p>
-    
+
         </form>
     </div>
 

@@ -15,6 +15,8 @@ export class AtualizarSenhaPage {
     novaSenha: string = '';
     confirmaSenha: string = '';
     isLoading = false;
+    showNovaSenha = false;
+    showConfirmaSenha = false;
 
     constructor(
         private apiService: ApiService,
@@ -60,5 +62,13 @@ export class AtualizarSenhaPage {
                 this.isLoading = false;
             }
         });
+    }
+
+    toggleNovaSenha() {
+        this.showNovaSenha = !this.showNovaSenha;
+    }
+
+    toggleConfirmaSenha() {
+        this.showConfirmaSenha = !this.showConfirmaSenha;
     }
 }
