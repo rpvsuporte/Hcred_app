@@ -78,6 +78,7 @@ export class PropostasPage  {
         "Contestação": "#9E0000",
     };
 
+
     constructor(
         private apiService: ApiService,
         private navigationService: NavigationService,
@@ -144,6 +145,7 @@ export class PropostasPage  {
         this.labelFiltro = '';
         this.mostrarInputFiltro = false;
     }
+
 
     realizarBusca(){
         const valor = this.valorFiltro.trim();

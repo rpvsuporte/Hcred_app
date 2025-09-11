@@ -53,8 +53,8 @@
     </div>
 
     <div class="button-form">
-        <ion-button class="saldoAcao" expand="block" (click)="abrirModal()">+ Saque</ion-button>
         <ion-button class="buscar" expand="block" style="font-size: 1em;" (click)="consultarContas()"><ion-icon name="search-outline"></ion-icon></ion-button>
+        <ion-button class="saldoAcao" expand="block" (click)="abrirModal()">+ Saque</ion-button>
     </div>
 
     <div *ngIf="contas.length > 0" class="table-container">
