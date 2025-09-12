@@ -163,13 +163,16 @@ ion-select::part(icon) {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px dashed #ccc;
+    border-bottom: 1px dashed #004977;
     padding-bottom: 8px;
 }
 
 .extrato-data {
-    font-size: 0.9em;
-    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1em;
+    color: #004977;
     margin: 0;
 }
 
@@ -191,6 +194,13 @@ ion-select::part(icon) {
 .extrato-detalhes {
     font-size: 0.95em;
     color: #004977;
+
+    h2{
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
     p {
         margin: 2px 0;
     }

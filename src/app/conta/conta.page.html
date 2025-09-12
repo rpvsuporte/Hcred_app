@@ -65,7 +65,7 @@
             <ion-card-content class="extrato-item">
                 <div class="extrato-header">
                     <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <h3 class="extrato-data">{{ conta.dataBr }}</h3>
+                        <h3 class="extrato-data"><ion-icon name="calendar-outline"></ion-icon> {{ conta.dataBr }}</h3>
                         <h2 class="extrato-id" *ngIf="conta.tipoLancamento !== 'lancamento'">ID: {{ conta.idProposta }}</h2>
                     </div>
                     <div class="extrato-valor" [class.debito]="conta.tipo.toLowerCase() === 'débito'">
@@ -75,7 +75,7 @@
 
                 <div class="extrato-detalhes">
                     <ng-container *ngIf="conta.tipoLancamento == 'lancamento'">
-                        <h2>{{conta.nome}}.</h2>
+                        <h2><ion-icon name="information-circle-outline"></ion-icon> {{conta.nome}}.</h2>
                     </ng-container>
 
                     <ng-container *ngIf="conta.tipoLancamento !== 'lancamento'">

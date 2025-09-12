@@ -111,10 +111,6 @@ export class PropostasPage  {
     onFiltroSelecionado() {
         this.mostrarInputFiltro = true;
         switch (this.filtroSelecionado) {
-            case 'nome':
-                this.labelFiltro = 'Nome Completo';
-                this.tipoInput = 'text';
-                break;
             case 'cpf':
                 this.labelFiltro = 'CPF';
                 this.tipoInput = 'text';
@@ -169,6 +165,7 @@ export class PropostasPage  {
             estatus: this.status,
             filtro: this.filtroSelecionado,
             valor: this.valorFiltro,
+            [this.idQuery]: localStorage.getItem(this.idQuery),
             idUser: localStorage.getItem("idLogado")
         };
 
@@ -217,7 +214,7 @@ export class PropostasPage  {
             [this.idQuery]: localStorage.getItem(this.idQuery)
         };
 
-        this.apiService.buscaPropsProv(data).subscribe({
+        this.apiService.buscaProps(data).subscribe({
             next: async (response) => {
                 await loading.dismiss();
                 if (response.estatus === 'erro') {

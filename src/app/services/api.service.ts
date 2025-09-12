@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class ApiService {
 
@@ -40,7 +40,7 @@ export class ApiService {
         return this.http.post<any>(`${this.apiHcred}selectPropsFilter.php`, JSON.stringify(data), this.options);
     }
 
-    buscaPropsProv(data: any){
+    buscaProps(data: any){
         return this.http.post<any>(`${this.apiHcred}selectProps.php`, JSON.stringify(data), this.options);
     }
 

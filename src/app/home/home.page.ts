@@ -107,9 +107,9 @@ export class HomePage {
     private buscarSaldo(params: { idUser: any, tipo: string, idKey: string }) {
         this.apiService.listarSaldo({
             auth_hash: AUTH_HASH,
+            [params.idKey]: localStorage.getItem(params.idKey) ?? params.idUser,
             idUser: params.idUser,
-            tipo: params.tipo,
-            [params.idKey]: localStorage.getItem(params.idKey) ?? params.idUser
+            tipo: params.tipo
         }).subscribe({
             next: (resConta) => {
                 if (resConta.estatus === "erro") {
