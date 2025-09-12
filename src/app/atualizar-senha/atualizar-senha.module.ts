@@ -9,12 +9,12 @@ import { AtualizarSenhaPageRoutingModule } from './atualizar-senha-routing.modul
 import { AtualizarSenhaPage } from './atualizar-senha.page';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    AtualizarSenhaPageRoutingModule
-  ],
-  declarations: [AtualizarSenhaPage]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        AtualizarSenhaPageRoutingModule
+    ],
+    declarations: [AtualizarSenhaPage]
 })
 export class AtualizarSenhaPageModule {}

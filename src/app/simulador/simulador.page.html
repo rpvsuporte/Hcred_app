@@ -138,7 +138,9 @@
         </ion-button>
     </div>
 
-    <h1 *ngIf="listaResultado.length > 0 && simula?.tipo?.includes('Cartão de Crédito')" class="title_simulacao">Confira o resultado da simulação</h1>
+    <h1 *ngIf="listaResultado.length > 0 && simula?.tipo?.includes('Cartão de Crédito')" class="title_simulacao">
+        Confira o resultado da simulação
+    </h1>
 
     <!-- Resultados -->
 
@@ -149,7 +151,8 @@
             </ion-card-header>
 
             <ion-card-content>
-                {{this.tipoValorSelecionado === 'solicitado' ? 'Limite Necessário' : 'Valor Líquido'}}: <br><strong>{{ formatarValorReal(calculaValorTotal(item)) }}</strong>
+                {{this.tipoValorSelecionado === 'solicitado' ? 'Limite Necessário' : 'Valor Líquido'}}: <br>
+                <strong>{{ formatarValorReal(calculaValorTotal(item)) }}</strong>
             </ion-card-content>
 
             <div class="buttons-card">

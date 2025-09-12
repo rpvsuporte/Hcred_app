@@ -67,6 +67,7 @@ export class CadastroPage implements OnInit {
     ngOnInit() {}
 
     // Validação de campos
+
     validarCampos() {
         this.errosCampos = {}; 
 
@@ -103,6 +104,8 @@ export class CadastroPage implements OnInit {
         return Object.keys(this.errosCampos).length === 0;
     }
 
+    // Validação e máscara para a data
+
     validaData(dia: string, mes: string, ano: string): boolean {
         const d = parseInt(dia, 10);
         const m = parseInt(mes, 10);
@@ -125,6 +128,8 @@ export class CadastroPage implements OnInit {
         if (valor.length > 10) valor = valor.slice(0, 10);
         event.target.value = valor;
     }
+
+    // Função para salvar no localStorage
 
     salvarCadastroNoLocalStorage() {
         try {
@@ -157,6 +162,8 @@ export class CadastroPage implements OnInit {
             console.error('Erro ao salvar no localStorage:', e);
         }
     }
+
+    // Função para ir para a próxima page
 
     continuar() {
         if (this.validarCampos()) {

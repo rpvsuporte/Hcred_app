@@ -28,7 +28,6 @@ export class RelatoriosPage {
             return;
         }
         
-
         const payload = {
             idUser: localStorage.getItem('id' + localStorage.getItem('tipoLogado')) || '',
             tipoUser: localStorage.getItem('tipoLogado') || '',

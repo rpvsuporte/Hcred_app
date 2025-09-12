@@ -7,29 +7,27 @@ import { ToastController } from '@ionic/angular';
 })
 export class ToastService {
 
-  constructor(private toastController: ToastController) { }
+    constructor(private toastController: ToastController) { }
 
     /**
-     * Exibe um toast
-     * @param message Mensagem do toast
-     * @param duration Duração em milissegundos (default 2000)
-     * @param color Cor do toast ('primary', 'success', 'warning', 'danger', etc)
-     */
+        * Exibe um toast
+        * @param message Mensagem do toast
+        * @param duration Duração em milissegundos (default 2000)
+        * @param color Cor do toast ('primary', 'success', 'warning', 'danger', etc)
+    */
     async show(message: string, duration: number = 2000, color: string = 'primary') {
         const toast = await this.toastController.create({
-        message,
-        duration,
-        color,
-        position: 'bottom',
-        animated: true,
-        icon: undefined // você pode adicionar ícone se quiser
+            message,
+            duration,
+            color,
+            position: 'bottom',
+            animated: true,
+            icon: undefined 
         });
         await toast.present();
     }
 
-    /**
-     * Atalhos para cores específicas
-     */
+
     async success(message: string, duration: number = 2000) {
         return this.show(message, duration, 'success');
     }

@@ -4,7 +4,9 @@
 
     <div class="topo-cadastro">
         <ion-icon name="chevron-back-outline" (click)="navigation('simulador')" class="icone-voltar"></ion-icon>
+
         <h1>Cadastro</h1>
+
         <img src="../../assets/img/logoHcred-mobile.png" class="logo-cadastro" alt="">
     </div>
 
@@ -44,7 +46,9 @@
 
         <ion-item *ngIf="camposVisiveis.has('prazo') && operacao.tabela === 'PIX FÁCIL'">
             <ion-select label="Prazo" [ngClass]="{'input-erro': errosCampos['bandeiraCartao'], 'select-erro': errosCampos['bandeiraCartao']}" fill="outline" labelPlacement="floating" [(ngModel)]="cadastro.prazo">
-                <ion-select-option *ngFor="let parcela of listaResultado" [value]="parcela.prazo + 'x de ' + getValorParcela(parcela)">{{ parcela.prazo }}x de {{ getValorParcela(parcela) }}</ion-select-option>
+                <ion-select-option *ngFor="let parcela of listaResultado" [value]="parcela.prazo + 'x de ' + getValorParcela(parcela)">
+                    {{ parcela.prazo }}x de {{ getValorParcela(parcela) }}
+                </ion-select-option>
             </ion-select>
         </ion-item>
 
@@ -118,7 +122,9 @@
 
         <ion-item *ngIf="camposVisiveis.has('operadora')">
             <ion-select label="Selecione a Operadora" [ngClass]="{'input-erro': errosCampos['bandeiraCartao'],'select-erro': errosCampos['bandeiraCartao']}" labelPlacement="floating" fill="outline" [(ngModel)]="cadastro.operadora">
-                <ion-select-option *ngFor="let operadora of listaOperadoras" [value]="operadora.operadora">{{operadora.operadora.toUpperCase()}}</ion-select-option>
+                <ion-select-option *ngFor="let operadora of listaOperadoras" [value]="operadora.operadora">
+                    {{operadora.operadora.toUpperCase()}}
+                </ion-select-option>
             </ion-select>
         </ion-item>
 

@@ -156,7 +156,7 @@ ion-select::part(icon) {
 .extrato-item {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
 .extrato-header {
@@ -167,13 +167,25 @@ ion-select::part(icon) {
     padding-bottom: 8px;
 }
 
+.extrato-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .extrato-data {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 1em;
-    color: #004977;
-    margin: 0;
+    gap: 6px;
+
+    span{
+        color: #004977;
+    }
+
+    .icon {
+        font-size: 1.2em; // ajusta o tamanho do ion-icon
+        color: #004977;
+    }
 }
 
 .extrato-id {
@@ -186,60 +198,32 @@ ion-select::part(icon) {
     font-size: 1.3em;
     font-weight: bold;
     color: green;
+
     &.debito {
         color: red;
     }
 }
 
 .extrato-detalhes {
-    font-size: 0.95em;
+    font-size: 1.125em;
     color: #004977;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 
-    h2{
+    h2, p {
         display: flex;
         align-items: center;
         gap: 8px;
+
+        .icon {
+            font-size: 1.2em;
+            color: #004977;
+        }
     }
-
-    p {
-        margin: 2px 0;
-    }
 }
 
-.transacoes-lista {
-    background-color: #efeef4;
-    margin-top: 160px;
-}
 
-.transacao-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    background-color: #efeef4;
-}
-
-.transacao-info {
-    max-width: 60%;
-    font-size: 12px;
-    color: #000;
-}
-
-.transacao-data {
-    color: #969696;
-    font-size: 10px;
-}
-
-.transacao-valor {
-    text-align: right;
-    color: #000;
-    font-size: 12px;
-}
-
-.transacao-valor .transacao-saldo {
-    color: #969696;
-    font-size: 10px;
-}
 
 hr {
     border: none;

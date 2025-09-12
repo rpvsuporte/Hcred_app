@@ -65,6 +65,7 @@ export class SimuladorPage implements OnInit {
     }
 
     // Função para validar formulário
+
     validarFormulario() {
         this.erroValor = !this.simula.valor || this.simula.valor === 'R$ 0,00';
         this.erroTipo = !this.simula.tipo;
@@ -73,6 +74,7 @@ export class SimuladorPage implements OnInit {
     }
 
     // Função para consultar as tabelas
+
     async consultarTipo() {
         const data = {
             auth_hash: AUTH_HASH,
@@ -93,6 +95,8 @@ export class SimuladorPage implements OnInit {
             }
         });
     }
+
+    // Função para atualizar as tabelas
 
     atualizaTabelas() {
         this.simula.tabela = '';
@@ -117,18 +121,21 @@ export class SimuladorPage implements OnInit {
         });
     }
 
-    // Função para trocar o tipo 
+    // Função para trocar o tipo
+
     setTipoValor(tipo: 'limite' | 'solicitado') {
         this.tipoValorSelecionado = tipo;
     }
 
     // Função para pegar a taxa
+
     private getTaxa(item: any): number {
         const taxaStr = this.tipoValorSelecionado === 'limite' ? item.taxaValorLiquido : item.taxa;
         return parseFloat(taxaStr.replace(',', '.')) || 0;
     }
 
     // Função para converter para o JS reconhecer
+
     private getValorNumerico(valor: any): number {
         if (typeof valor === 'number') return valor;
         if (typeof valor === 'string') {
@@ -138,6 +145,7 @@ export class SimuladorPage implements OnInit {
     }
 
     // Função para calcular a parcela
+
     calculaParcela(item: any): number {
         const valor = this.getValorNumerico(this.simula.valor);
         const taxa = this.getTaxa(item);
@@ -150,6 +158,7 @@ export class SimuladorPage implements OnInit {
     }
 
     // Função para calcular o valor total
+
     calculaValorTotal(item: any): number {
         const parcela = this.calculaParcela(item);
 
@@ -161,6 +170,7 @@ export class SimuladorPage implements OnInit {
     }
 
     // Função para copiar o link
+
     async linkCopiado(item: any) {
         const valorTotal = this.formatarValorReal(this.calculaValorTotal(item));
         const valorParcela = this.formatarValorReal(this.calculaParcela(item));
@@ -194,6 +204,7 @@ export class SimuladorPage implements OnInit {
     }
 
     // Transforma o valor brasileiro em um para a linguagem entender
+
     formatarMoeda(event: any) {
         let valor = event.target.value.replace(/\D/g, '');
         const valorNumerico = (Number(valor) / 100).toFixed(2);
@@ -204,6 +215,7 @@ export class SimuladorPage implements OnInit {
     }
 
     // Transforma o valor em brasileiro
+
     formatarValorReal(valor: number | string): string {
         return Number(valor).toLocaleString('pt-BR', {
             style: 'currency',
@@ -212,6 +224,7 @@ export class SimuladorPage implements OnInit {
     }
 
     // Função de simular
+
     async simular() {
         this.validarFormulario();
         if (this.formInvalido) return;
@@ -254,7 +267,8 @@ export class SimuladorPage implements OnInit {
         }
     }
 
-    // Função para validar o boleto
+    // Funções para validar o boleto e máscara
+
     validarBoleto(index: number) {
         const boleto = this.boletos[index];
         const valor = boleto.codigo.replace(/\D/g, '');
@@ -338,6 +352,7 @@ export class SimuladorPage implements OnInit {
     }
 
     // Função de redirecionamento
+
     salvarEAvancar(item: any) {
         const valorTotal = this.calculaValorTotal(item);
 
@@ -362,6 +377,8 @@ export class SimuladorPage implements OnInit {
         localStorage.setItem('dados', JSON.stringify(dados));
         this.navigation('simulador/cadastro');
     }
+
+    // Função que navegação
 
     navigation(page: string) {
         this.navigationService.navigate(page);

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
-    const routes: Routes = [
+const routes: Routes = [
     {
         path: '',
         redirectTo: 'home',
@@ -34,11 +34,11 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
     {
         path: 'index',
         loadChildren: () => import('./index/index.module').then( m => m.IndexPageModule)
-    },  {
-    path: 'atualizar-senha',
-    loadChildren: () => import('./atualizar-senha/atualizar-senha.module').then( m => m.AtualizarSenhaPageModule)
-  }
-
+    },
+    {
+        path: 'atualizar-senha',
+        loadChildren: () => import('./atualizar-senha/atualizar-senha.module').then( m => m.AtualizarSenhaPageModule)
+    }
 ];
 
 @NgModule({

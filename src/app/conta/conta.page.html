@@ -53,7 +53,10 @@
     </div>
 
     <div class="button-form">
-        <ion-button class="buscar" expand="block" style="font-size: 1em;" (click)="consultarContas()"><ion-icon name="search-outline"></ion-icon></ion-button>
+        <ion-button class="buscar" expand="block" style="font-size: 1em;" (click)="consultarContas()">
+            <ion-icon name="search-outline"></ion-icon>
+        </ion-button>
+
         <ion-button class="saldoAcao" expand="block" (click)="abrirModal()">+ Saque</ion-button>
     </div>
 
@@ -63,23 +66,40 @@
 
         <ion-card class="contas-card" *ngFor="let conta of contas">  
             <ion-card-content class="extrato-item">
+
+                <!-- Header -->
+                
                 <div class="extrato-header">
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <h3 class="extrato-data"><ion-icon name="calendar-outline"></ion-icon> {{ conta.dataBr }}</h3>
-                        <h2 class="extrato-id" *ngIf="conta.tipoLancamento !== 'lancamento'">ID: {{ conta.idProposta }}</h2>
+                    <div class="extrato-info">
+                        <div class="extrato-data">
+                            <ion-icon name="calendar-outline" class="icon"></ion-icon>
+                            <span>{{ conta.dataBr }}</span>
+                        </div>
+
+                        <h2 *ngIf="conta.tipoLancamento !== 'lancamento'" class="extrato-id">
+                            ID: {{ conta.idProposta }}
+                        </h2>
                     </div>
+
                     <div class="extrato-valor" [class.debito]="conta.tipo.toLowerCase() === 'débito'">
                         R$ {{ (conta.tipo.toLowerCase() === 'débito' ? '-' : '') + conta.valor }}
                     </div>
                 </div>
 
+                <!-- Detalhes -->
                 <div class="extrato-detalhes">
-                    <ng-container *ngIf="conta.tipoLancamento == 'lancamento'">
-                        <h2><ion-icon name="information-circle-outline"></ion-icon> {{conta.nome}}.</h2>
+                    <ng-container *ngIf="conta.tipoLancamento === 'lancamento'">
+                        <h2>
+                            <ion-icon name="information-circle-outline" class="icon"></ion-icon>
+                            {{ conta.nome }}
+                        </h2>
                     </ng-container>
 
                     <ng-container *ngIf="conta.tipoLancamento !== 'lancamento'">
-                        <p><strong>Nome/CPF:</strong> {{ conta.nome }}</p>
+                        <p>
+                            <ion-icon name="person-outline" class="icon"></ion-icon>
+                            {{ conta.nome }}
+                        </p>
                         <p><strong>Prazo:</strong> {{ conta.prazo }}x</p>
                         <p><strong>Tipo/Tabela:</strong> {{ conta.tipo }}</p>
                         <p><strong>Comissão:</strong> {{ conta.comissao }}%</p>
@@ -88,6 +108,7 @@
                 </div>
             </ion-card-content>
         </ion-card>
+
     </div>
 
     <ion-modal #modal [presentingElement]="presentingElement" style="--background: transparent;">

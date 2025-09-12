@@ -27,6 +27,7 @@ export class EnderecoPage implements OnInit {
     };
 
     // Objeto para controlar os erros dos campos
+
     public errosCampos: { [key: string]: boolean } = {};
 
     constructor(
@@ -40,6 +41,7 @@ export class EnderecoPage implements OnInit {
     }
 
     // Função para formatar o CEP
+
     formatarCEP(event: any) {
         let valor = event.target.value.replace(/\D/g, '');
         valor = valor.replace(/^(\d{5})(\d{0,3})/, '$1-$2');
@@ -48,6 +50,7 @@ export class EnderecoPage implements OnInit {
     }
 
     // Função com integração da API dos Correios
+
     buscarEnderecoPorCep() {
         const cepLimpo = this.endereco.cep.replace(/\D/g, '');
         
@@ -79,6 +82,8 @@ export class EnderecoPage implements OnInit {
         });
     }
 
+    // Função para validar os campos digitados
+
     validarCampos(): boolean {
         this.errosCampos = {}; 
         const camposObrigatorios: (keyof typeof this.endereco)[] = ['cep', 'rua', 'numero', 'bairro', 'cidade', 'estado'];
@@ -98,6 +103,8 @@ export class EnderecoPage implements OnInit {
         return formularioValido;
     }
 
+    // Função para salvar o endereço no localtStorage
+
     salvarEnderecoNoLocalStorage() {
         try {
             const dadosAntigos = JSON.parse(localStorage.getItem('dados') || '{}');
@@ -112,6 +119,8 @@ export class EnderecoPage implements OnInit {
             console.error('Erro ao salvar endereço no localStorage:', e);
         }
     }
+
+    // Função para carregar os dados do endereço caso já preenchidos
 
     carregarEnderecoSalvo() {
         try {
@@ -132,6 +141,8 @@ export class EnderecoPage implements OnInit {
         }
     }
 
+    // Função de ir para próxima página
+
     avancar() {
         if (this.validarCampos()) {
             this.salvarEnderecoNoLocalStorage();
@@ -148,6 +159,8 @@ export class EnderecoPage implements OnInit {
             this.toastService.error('Formulário inválido. Preencha todos os campos obrigatórios.');
         }
     }
+
+    // Função de redirecionamento
 
     navigation(page: string) {
         this.navigationService.navigate(page);

@@ -44,16 +44,16 @@
 
 /* iOS: usa safe-area normalmente */
 $topo-selectors: (
-  "app-header .topo",
-  "app-conta .topo-conta",
-  "app-propostas .topo-propostas",
-  "app-atuar-proposta .topo-view_propostas",
-  "app-anexos .topo-anexo",
-  "app-banco .topo-banco",
-  "app-cadastro .topo-cadastro",
-  "app-endereco .topo-endereco",
-  "app-simulador .topo-simulador",
-  "app-relatorios .topo-relatorios"
+    "app-header .topo",
+    "app-conta .topo-conta",
+    "app-propostas .topo-propostas",
+    "app-atuar-proposta .topo-view_propostas",
+    "app-anexos .topo-anexo",
+    "app-banco .topo-banco",
+    "app-cadastro .topo-cadastro",
+    "app-endereco .topo-endereco",
+    "app-simulador .topo-simulador",
+    "app-relatorios .topo-relatorios"
 );
 
 @each $selector in $topo-selectors {
