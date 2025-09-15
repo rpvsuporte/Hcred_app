@@ -16,6 +16,7 @@ ion-content {
     border-radius: 20px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
     text-align: center;
+    gap: 50px;
 }
 
 .logo {
@@ -57,11 +58,12 @@ ion-button:hover {
 
 .back-button {
     position: absolute;
-    top: 15px;
+    top: calc(env(safe-area-inset-top) + 15px);
     left: 15px;
     z-index: 100;
     --padding-start: 0;
     --padding-end: 0;
     --background: transparent;
     --color: #004977;
+    font-size: 1.5em;
 }

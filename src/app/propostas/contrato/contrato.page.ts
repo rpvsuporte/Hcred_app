@@ -39,7 +39,7 @@ export class ContratoPage implements OnInit {
         this.apiService.listarContrato(data).subscribe({
             next: (response) => {
                 if (response.estatus === 'erro') {
-                    this.toastService.error(response.mensagem); // <-- substituído
+                    this.toastService.error(response.mensagem); 
                 } else {
                     this.proposta = response.resultado;
                 }
@@ -48,7 +48,7 @@ export class ContratoPage implements OnInit {
             },
             error: () => {
                 this.isLoading = false;
-                this.toastService.error('Erro na conexão.'); // <-- substituído
+                this.toastService.error('Erro na conexão.'); 
             }
         });
 
