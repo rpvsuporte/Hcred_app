@@ -1,0 +1,26 @@
+<ion-content>
+    <ion-button fill="clear" class="back-button" (click)="voltar()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+    </ion-button>
+    
+    <div class="container">
+        <!-- Logo maior e centralizada -->
+        <img src="../../assets/img/logoHcred-azul.png" alt="Logo Hcred" class="logo">
+
+        <!-- Título maior e com espaçamento -->
+        <h1>Insira seu e-mail ou usuário para confirmarmos a sua identidade</h1>
+
+        <!-- Input estilizado -->
+        <ion-input
+            label="Insira o e-mail"
+            label-placement="floating"
+            placeholder="Endereço de e-mail"
+            [(ngModel)]="email"
+            fill="outline"
+            class="custom-input"
+        ></ion-input>
+
+        <!-- Botão destacado -->
+        <ion-button expand="block" (click)="confirmarEmail()">Confirmar Email</ion-button>
+    </div>
+</ion-content>

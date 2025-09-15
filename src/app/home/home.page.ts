@@ -76,6 +76,15 @@ export class HomePage {
                     return;
                 }
 
+                if (this.resultadoLogin.estatus === "verificacao_incompleta") {
+                    this.toastService.warning(this.resultadoLogin.mensagem);
+                    localStorage.setItem('idLogado', this.resultadoLogin.idUser);
+                    localStorage.setItem('senhaExpirada', 'true');
+                    this.navCtrl.navigateForward('auth-email'); 
+                    this.isLoading = false;
+                    return;
+                }
+
                 const tipoLogado = this.resultadoLogin.dados.tipoLogado;
                 const idKey = 'id' + tipoLogado.charAt(0).toUpperCase() + tipoLogado.slice(1);
 

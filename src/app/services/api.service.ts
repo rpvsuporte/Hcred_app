@@ -92,6 +92,10 @@ export class ApiService {
         return this.http.post<any>(`${this.apiHcred}alterarProposta.php`, JSON.stringify(data), this.options);
     }
 
+    gerarCode(data:any){
+        return this.http.post<any>(`${this.apiHcred}gerarCode.php`, JSON.stringify(data), this.options);
+    }
+
     gerarLink(data: any){
         return this.http.post<any>(`${this.apiHcred}cad_session.php`, JSON.stringify(data), this.options);
     }
@@ -126,6 +130,10 @@ export class ApiService {
 
     validarBoleto(data: any){
         return this.http.post<any>(`${this.apiHcred}validarBoleto.php`, JSON.stringify(data), this.options);
+    }
+
+    verificarCodigo(data: any){
+        return this.http.post<any>(`${this.apiHcred}verificarCodigo.php`, JSON.stringify(data), this.options);
     }
 
     verificarPropsView(data: any){

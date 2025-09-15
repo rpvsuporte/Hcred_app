@@ -38,7 +38,15 @@ const routes: Routes = [
     {
         path: 'atualizar-senha',
         loadChildren: () => import('./atualizar-senha/atualizar-senha.module').then( m => m.AtualizarSenhaPageModule)
-    }
+    },  {
+    path: 'auth-email',
+    loadChildren: () => import('./auth-email/auth-email.module').then( m => m.AuthEmailPageModule)
+  },
+  {
+    path: 'auth-celular',
+    loadChildren: () => import('./auth-celular/auth-celular.module').then( m => m.AuthCelularPageModule)
+  }
+
 ];
 
 @NgModule({
