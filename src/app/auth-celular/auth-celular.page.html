@@ -16,6 +16,9 @@
         <ion-input
             label="Insira o telefone"
             label-placement="floating"
+            type="tel"
+            inputmode="numeric"
+            pattern="[0-9]*"
             placeholder="Telefone"
             [(ngModel)]="telefone"
             fill="outline"
