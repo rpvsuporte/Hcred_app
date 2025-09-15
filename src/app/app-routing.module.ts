@@ -45,6 +45,10 @@ const routes: Routes = [
   {
     path: 'auth-celular',
     loadChildren: () => import('./auth-celular/auth-celular.module').then( m => m.AuthCelularPageModule)
+  },
+  {
+    path: 'forget-password',
+    loadChildren: () => import('./forget-password/forget-password.module').then( m => m.ForgetPasswordPageModule)
   }
 
 ];

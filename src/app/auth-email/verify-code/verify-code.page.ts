@@ -51,6 +51,7 @@ export class VerifyCodePage implements OnInit {
 
         const data = {
             auth_hash: AUTH_HASH,
+            type: 'email',
             idUser: localStorage.getItem('idLogado'),
             codigo: this.codigoDigitado.toUpperCase()
         };
@@ -83,6 +84,7 @@ export class VerifyCodePage implements OnInit {
         const data = {
             auth_hash: AUTH_HASH,
             email: this.email,
+            type: 'email',
             idUser: localStorage.getItem('idLogado')
         };
 

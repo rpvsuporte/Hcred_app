@@ -144,4 +144,8 @@ export class HomePage {
         const hashArray = Array.from(new Uint8Array(hashBuffer));
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
+
+    forgetPass(){
+        this.navCtrl.navigateForward('forget-password');
+    }
 }

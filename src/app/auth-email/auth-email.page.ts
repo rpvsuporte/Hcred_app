@@ -12,6 +12,8 @@ import { ToastService } from '../services/toast.service';
 })
 export class AuthEmailPage {
 
+    // Variáveis Iniciais
+
     email: string = '';
     isLoading = false;
 
@@ -31,6 +33,7 @@ export class AuthEmailPage {
 
         const data = {
             auth_hash: AUTH_HASH,
+            type: 'email',
             email: this.email.trim(),
             idUser: localStorage.getItem('idLogado')
         };

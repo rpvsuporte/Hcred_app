@@ -1,13 +1,42 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>verify-code</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content>
+    <ion-button fill="clear" class="back-button" (click)="voltar()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+    </ion-button>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">verify-code</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <div class="otp-container">
+        <ion-icon name="lock-open-outline"></ion-icon>
+
+        <h2>Verificação de Código</h2>
+
+
+        <p>Por favor informe o código de autenticação de 6 dígitos que enviamos para o telefone <strong>+55 {{telefone}}.</strong></p>
+
+        <div class="otp-wrapper">
+            <ion-input-otp
+                type="text"
+                style="--border-color: #004977; --border-width: 1px;"
+                size="small"
+                length="3"
+                [(ngModel)]="parte1"
+                (ionInput)="onPrimeiraParte()"
+            >
+            </ion-input-otp>
+            <span class="hyphen">-</span>
+            <ion-input-otp
+                type="text"
+                style="--border-color: #004977; --border-width: 1px;"
+                length="3"
+                size="small"
+                [(ngModel)]="parte2"
+                (ionInput)="onSegundaParte()"
+            >
+            </ion-input-otp>
+        </div>
+
+
+        <p class="resend">
+            Não recebeu o código? 
+            <a href="#" (click)="reenviarCodigo($event)">Reenviar o código</a>
+        </p>
+    </div>
 </ion-content>

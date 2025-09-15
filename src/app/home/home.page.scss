@@ -43,6 +43,16 @@
     text-align: start;
 }
 
+ion-text{
+    display: block;          
+    color: #de9f13;          
+    font-weight: 600;        
+    font-size: 0.95rem;     
+    margin: 10px 0 20px 0;   
+    cursor: pointer;         
+    transition: color 0.2s; 
+}
+
 ion-button {
     --background: #de9f13;
     --color: #FFF;

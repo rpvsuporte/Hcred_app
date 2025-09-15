@@ -16,22 +16,23 @@ ion-content {
     border-radius: 20px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
     text-align: center;
-    gap: 50px;
+    gap: 20px;
 }
 
 .logo {
     width: 150px;
     height: auto;
-    margin-bottom: 25px;
+    margin-bottom: 45px;
 }
 
 h1 {
     font-size: 1.2rem;
-    margin-bottom: 25px;
+    margin-bottom: 45px;
     color: #004977;
     font-weight: 600;
     line-height: 1.4;
 }
+
 
 ion-input.custom-input {
     width: 100%;
@@ -65,5 +66,5 @@ ion-button:hover {
     --padding-end: 0;
     --background: transparent;
     --color: #004977;
-    font-size: 1.5em;
+    font-size: 1em;
 }
