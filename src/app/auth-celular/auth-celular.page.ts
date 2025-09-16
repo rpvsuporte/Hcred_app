@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from "@ionic/angular";
+import { NavigationService } from '../services/navigation.service';
 import { ApiService } from "../services/api.service";
 import { AUTH_HASH } from '../services/auth-config'; 
 import { ToastService } from '../services/toast.service'; 
@@ -18,7 +18,7 @@ export class AuthCelularPage implements OnInit {
     isLoading: boolean = false;
 
     constructor(        
-        private navCtrl: NavController,
+        private navigationService: NavigationService,
         private apiService: ApiService,
         private toastService: ToastService
     ) { }
@@ -34,7 +34,7 @@ export class AuthCelularPage implements OnInit {
 
         const data = {
             auth_hash: AUTH_HASH,
-            email: localStorage.getItem('telefone'), // pega do localStorage
+            email: localStorage.getItem('telefone'), 
             type: 'telefone',
             idUser: localStorage.getItem('idLogado')
         };
@@ -43,7 +43,7 @@ export class AuthCelularPage implements OnInit {
             next: (res: any) => {
                 this.isLoading = false;
                 if (res.estatus === 'success') {
-                    this.navCtrl.navigateForward('auth-celular/verify-code');
+                    this.navigation('auth-celular/verify-code');
                 } else {
                     this.toastService.warning(res.mensagem || 'Erro ao gerar código');
                 }
@@ -76,7 +76,7 @@ export class AuthCelularPage implements OnInit {
                     this.toastService.success(res.mensagem);
                     localStorage.setItem('telefone', this.telefone);
 
-                    this.navCtrl.navigateForward('auth-celular/verify-code'); 
+                    this.navigation('auth-celular/verify-code'); 
                 } else {
                     this.toastService.warning(res.mensagem || 'Erro ao gerar código');
                 }
@@ -90,10 +90,9 @@ export class AuthCelularPage implements OnInit {
     }
 
     validarTelefone(telefone: string): boolean {
-        // Remove tudo que não é número
+
         const numeros = telefone.replace(/\D/g, '');
 
-        // Verifica se tem 10 ou 11 dígitos (fixo ou celular)
         if (numeros.length < 10 || numeros.length > 11) {
             return false;
         }
@@ -108,12 +107,9 @@ export class AuthCelularPage implements OnInit {
             valor = valor.substring(0, 11);
         }
 
-        // Formata o telefone
         if (valor.length <= 10) {
-            // Formato fixo: (99) 9999-9999
             valor = valor.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
         } else {
-            // Formato celular: (99) 99999-9999
             valor = valor.replace(/^(\d{2})(\d{5})(\d{0,4})$/, '($1) $2-$3');
         }
 
@@ -121,9 +117,12 @@ export class AuthCelularPage implements OnInit {
         this.telefone = valor;
     }
 
+    navigation(page: string) {
+        this.navigationService.navigate(page);
+    }
 
     voltar() {
-        this.navCtrl.back(); 
+        this.navigation('auth-email/verify-code'); 
     }
 }
 

@@ -3,7 +3,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { UserService } from 'src/app/services/user.service';
 import { AUTH_HASH } from 'src/app/services/auth-config';
-import { NavController } from '@ionic/angular';
+import { NavigationService } from 'src/app/services/navigation.service';
 
 @Component({
     selector: 'app-verify-code',
@@ -22,7 +22,7 @@ export class VerifyCodePage implements OnInit {
     erro: boolean = false;
     telefone = localStorage.getItem('telefone') || '';
 
-    constructor(private userService: UserService, private apiService: ApiService, private toastService: ToastService, private navCtrl: NavController) { }
+    constructor(private userService: UserService, private apiService: ApiService, private toastService: ToastService, private navigationService: NavigationService) { }
 
     ngOnInit() {}
 
@@ -65,13 +65,11 @@ export class VerifyCodePage implements OnInit {
                     if (res.estatus === 'success') {
                         this.toastService.success('Código verificado com sucesso!');
     
-                        // Aqui sim, após o código confirmado, fazer login completo
                         const usuario = localStorage.getItem('usuarioParcial')!;
                         const senha = localStorage.getItem('senhaParcial')!;
     
                         const resLogin = await this.userService.login(usuario, senha);
     
-                        // Salva os dados do usuário no localStorage
                         if (resLogin.dados) {
                             Object.entries(resLogin.dados).forEach(([chave, valor]) => {
                                 if (chave !== 'senhaAcesso') localStorage.setItem(chave, valor != null ? String(valor) : '');
@@ -80,19 +78,18 @@ export class VerifyCodePage implements OnInit {
     
                         await this.userService.buscarSaldo();
     
-                        // Limpa os parciais
                         localStorage.removeItem('usuarioParcial');
                         localStorage.removeItem('senhaParcial');
                         localStorage.removeItem('telefone');
                         localStorage.removeItem('emailValidado');
     
-                        this.navCtrl.navigateForward('index');
+                        this.navigation('index');
                     } else {
                         this.toastService.warning(res.mensagem || 'Código inválido');
                     }
                 } else {
                     localStorage.removeItem('resetSenha');
-                    this.navCtrl.navigateForward('atualizar-senha');
+                    this.navigation('atualizar-senha');
                 }
 
             },
@@ -134,21 +131,23 @@ export class VerifyCodePage implements OnInit {
     mascararTelefone(telefone: string): string {
         if (!telefone) return '';
 
-        // Remove tudo que não for número
         const numeros = telefone.replace(/\D/g, '');
 
-        if (numeros.length < 8) return telefone; // fallback se o número estiver incompleto
+        if (numeros.length < 8) return telefone; 
 
         const ddd = numeros.slice(0, 2);
-        const meio = numeros.slice(2, -4); // mantém todos os dígitos exceto DDD e últimos 4
-        const fim = '0000'; // últimos 4 mascarados
+        const meio = numeros.slice(2, -4); 
+        const fim = '0000';
 
         return `(${ddd}) ${meio}-${fim}`;
     }
 
+    navigation(page: string) {
+        this.navigationService.navigate(page);
+    }
 
     voltar() {
-        this.navCtrl.back(); 
+        localStorage.getItem('resetSenha') === 'true' ? this.navigation('auth-email/verify-code') : this.navigation('auth-celular'); 
     }
 
 }

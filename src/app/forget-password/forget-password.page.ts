@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { NavigationService } from '../services/navigation.service';
 import { ApiService } from '../services/api.service';
 import { ToastService } from '../services/toast.service';
 import { AUTH_HASH, VERSION_APP } from '../services/auth-config';
@@ -18,14 +18,14 @@ export class ForgetPasswordPage  {
     isLoading = false;
 
     constructor(
-        private navCtrl: NavController,
+        private navigationService: NavigationService,
         private apiService: ApiService,
         private toastService: ToastService
     ) {}
 
-    async confirmarEmail() {
+    async confirmarNomeUser() {
         if (!this.nomeUser) {
-            this.toastService.warning('Dado inválido');
+            this.toastService.warning('Nome de usuário inválido ou vazio.');
             return;
         }
 
@@ -43,9 +43,9 @@ export class ForgetPasswordPage  {
                     localStorage.setItem('email', res.email);
                     localStorage.setItem('telefone', res.telefone);
                     localStorage.setItem('idLogado', res.idUser);
-
                     localStorage.setItem('resetSenha', 'true');
-                    this.navCtrl.navigateForward('auth-email'); 
+
+                    this.navigation('auth-email'); 
                 } else {
                     this.toastService.warning(res.mensagem || 'Erro ao gerar código');
                 }
@@ -57,9 +57,13 @@ export class ForgetPasswordPage  {
         });
     }
 
+    navigation(page: string) {
+        this.navigationService.navigate(page);
+    }
 
     voltar() {
-        this.navCtrl.back(); 
+        localStorage.clear();
+        this.navigation('home'); 
     }
 
 }

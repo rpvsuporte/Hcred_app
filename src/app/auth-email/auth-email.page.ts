@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from "@ionic/angular";
+import { NavigationService } from '../services/navigation.service';
 import { ApiService } from "../services/api.service";
 import { AUTH_HASH } from '../services/auth-config'; 
 import { ToastService } from '../services/toast.service'; 
@@ -13,11 +13,12 @@ import { ToastService } from '../services/toast.service';
 export class AuthEmailPage {
 
     // Variáveis Iniciais
+    
     email: string = '';
     isLoading = false;
 
     constructor(
-        private navCtrl: NavController,
+        private navigationService: NavigationService,
         private apiService: ApiService,
         private toastService: ToastService
     ) {
@@ -35,7 +36,7 @@ export class AuthEmailPage {
 
         const data = {
             auth_hash: AUTH_HASH,
-            email: localStorage.getItem('email'), // pega do localStorage
+            email: localStorage.getItem('email'), 
             type: 'email',
             idUser: localStorage.getItem('idLogado')
         };
@@ -44,7 +45,7 @@ export class AuthEmailPage {
             next: (res: any) => {
                 this.isLoading = false;
                 if (res.estatus === 'success') {
-                    this.navCtrl.navigateForward('auth-email/verify-code');
+                    this.navigation('auth-email/verify-code');
                 } else {
                     this.toastService.warning(res.mensagem || 'Erro ao gerar código');
                 }
@@ -77,7 +78,7 @@ export class AuthEmailPage {
                     this.toastService.success(res.mensagem);
                     localStorage.setItem('email', this.email);
 
-                    this.navCtrl.navigateForward('auth-email/verify-code'); 
+                    this.navigation('auth-email/verify-code'); 
                 } else {
                     this.toastService.warning(res.mensagem || 'Erro ao gerar código');
                 }
@@ -95,8 +96,12 @@ export class AuthEmailPage {
         return regex.test(email.toLowerCase());
     }
 
+    navigation(page: string) {
+        this.navigationService.navigate(page);
+    }
+
     voltar() {
-        this.navCtrl.back(); 
+        this.navigation('home'); 
         localStorage.clear();
     }
 }

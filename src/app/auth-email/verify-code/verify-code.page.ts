@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { AUTH_HASH } from 'src/app/services/auth-config';
-import { NavController } from '@ionic/angular';
+import { NavigationService } from 'src/app/services/navigation.service';
 
 @Component({
     selector: 'app-verify-code',
@@ -12,6 +12,8 @@ import { NavController } from '@ionic/angular';
 })
 export class VerifyCodePage implements OnInit {
 
+    // Variáveis Iniciais
+
     codigoDigitado: string = '';
     parte1: string = '';
     parte2: string = '';
@@ -20,7 +22,7 @@ export class VerifyCodePage implements OnInit {
     email = localStorage.getItem('email') || '';
     telefone = localStorage.getItem('telefone') || '';
 
-    constructor(private apiService: ApiService, private toastService: ToastService, private navCtrl: NavController,) { }
+    constructor(private apiService: ApiService, private toastService: ToastService, private navigationService: NavigationService) { }
 
     ngOnInit() {}
 
@@ -64,7 +66,7 @@ export class VerifyCodePage implements OnInit {
                     this.toastService.success('Código verificado com sucesso!');
                     localStorage.removeItem('email');
                     localStorage.setItem('emailValidado', 'true');
-                    this.navCtrl.navigateForward('auth-celular'); 
+                    this.navigation('auth-celular'); 
                 } else {
                     this.erro = true;
                     this.toastService.warning(res.mensagem || 'Código inválido');
@@ -85,9 +87,8 @@ export class VerifyCodePage implements OnInit {
 
         if (!usuario || !dominio) return email;
 
-        // Pega os 2 primeiros caracteres do usuário e substitui o resto por *
         const inicio = usuario.slice(0, 2);
-        const oculto = '*'.repeat(Math.max(usuario.length - 2, 3)); // garante pelo menos 3 *
+        const oculto = '*'.repeat(Math.max(usuario.length - 2, 3)); 
 
         return `${inicio}${oculto}@${dominio}`;
     }
@@ -120,8 +121,12 @@ export class VerifyCodePage implements OnInit {
         });
     }
 
+    navigation(page: string) {
+        this.navigationService.navigate(page);
+    }
+
     voltar() {
-        this.navCtrl.back(); 
+        localStorage.getItem('resetSenha') === 'true' ? this.navigation('forget-password') : this.navigation('auth-email'); 
     }
 
 }
