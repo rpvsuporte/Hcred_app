@@ -139,4 +139,8 @@ export class ApiService {
     verificarPropsView(data: any){
         return this.http.post<any>(`${this.apiHcred}verificarPropsView.php`, JSON.stringify(data), this.options);
     }
+
+    verificarUser(data: any){
+        return this.http.post<any>(`${this.apiHcred}verificarUser.php`, JSON.stringify(data), this.options);
+    }
 }

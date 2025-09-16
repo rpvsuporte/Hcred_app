@@ -14,7 +14,7 @@ export class AuthCelularPage implements OnInit {
 
     // Variáveis Iniciais
 
-    telefone: string = '';
+    telefone: string = localStorage.getItem('telefone') || '';
     isLoading: boolean = false;
 
     constructor(        
@@ -24,6 +24,35 @@ export class AuthCelularPage implements OnInit {
     ) { }
 
     ngOnInit() {
+        if (localStorage.getItem('resetSenha') === 'true') {
+            this.enviarCodigoAutomatico();
+        }
+    }
+
+    enviarCodigoAutomatico() {
+        this.isLoading = true;
+
+        const data = {
+            auth_hash: AUTH_HASH,
+            email: localStorage.getItem('telefone'), // pega do localStorage
+            type: 'telefone',
+            idUser: localStorage.getItem('idLogado')
+        };
+
+        this.apiService.gerarCode(data).subscribe({
+            next: (res: any) => {
+                this.isLoading = false;
+                if (res.estatus === 'success') {
+                    this.navCtrl.navigateForward('auth-celular/verify-code');
+                } else {
+                    this.toastService.warning(res.mensagem || 'Erro ao gerar código');
+                }
+            },
+            error: () => {
+                this.isLoading = false;
+                this.toastService.error('Erro na comunicação com o servidor.');
+            }
+        });
     }
 
     confirmarTelefone(){

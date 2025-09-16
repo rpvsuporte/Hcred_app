@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { UserService } from 'src/app/services/user.service';
 import { AUTH_HASH } from 'src/app/services/auth-config';
 import { NavController } from '@ionic/angular';
 
@@ -12,6 +13,8 @@ import { NavController } from '@ionic/angular';
 })
 export class VerifyCodePage implements OnInit {
 
+    // Variáveis Iniciais
+
     codigoDigitado: string = '';
     parte1: string = '';
     parte2: string = '';
@@ -19,7 +22,7 @@ export class VerifyCodePage implements OnInit {
     erro: boolean = false;
     telefone = localStorage.getItem('telefone') || '';
 
-    constructor(private apiService: ApiService, private toastService: ToastService, private navCtrl: NavController,) { }
+    constructor(private userService: UserService, private apiService: ApiService, private toastService: ToastService, private navCtrl: NavController) { }
 
     ngOnInit() {}
 
@@ -43,9 +46,8 @@ export class VerifyCodePage implements OnInit {
         }
     }
 
-    verificarCodigo() {
+    async verificarCodigo() {
         if (this.codigoDigitado.length !== 7) return;
-
         this.isLoading = true;
 
         const data = {
@@ -56,25 +58,51 @@ export class VerifyCodePage implements OnInit {
         };
 
         this.apiService.verificarCodigo(data).subscribe({
-            next: (res: any) => {
+            next: async (res: any) => {
                 this.isLoading = false;
-                if (res.estatus === 'success') {
-                    this.erro = false;
-                    this.toastService.success('Código verificado com sucesso!');
-                    localStorage.removeItem('telefone');
-                    this.navCtrl.navigateForward('atualizar-senha'); 
+
+                if(localStorage.getItem('resetSenha') !== 'true'){
+                    if (res.estatus === 'success') {
+                        this.toastService.success('Código verificado com sucesso!');
+    
+                        // Aqui sim, após o código confirmado, fazer login completo
+                        const usuario = localStorage.getItem('usuarioParcial')!;
+                        const senha = localStorage.getItem('senhaParcial')!;
+    
+                        const resLogin = await this.userService.login(usuario, senha);
+    
+                        // Salva os dados do usuário no localStorage
+                        if (resLogin.dados) {
+                            Object.entries(resLogin.dados).forEach(([chave, valor]) => {
+                                if (chave !== 'senhaAcesso') localStorage.setItem(chave, valor != null ? String(valor) : '');
+                            });
+                        }
+    
+                        await this.userService.buscarSaldo();
+    
+                        // Limpa os parciais
+                        localStorage.removeItem('usuarioParcial');
+                        localStorage.removeItem('senhaParcial');
+                        localStorage.removeItem('telefone');
+                        localStorage.removeItem('emailValidado');
+    
+                        this.navCtrl.navigateForward('index');
+                    } else {
+                        this.toastService.warning(res.mensagem || 'Código inválido');
+                    }
                 } else {
-                    this.erro = true;
-                    this.toastService.warning(res.mensagem || 'Código inválido');
+                    localStorage.removeItem('resetSenha');
+                    this.navCtrl.navigateForward('atualizar-senha');
                 }
+
             },
             error: () => {
                 this.isLoading = false;
-                this.erro = true;
                 this.toastService.error('Erro ao se comunicar com o servidor');
             }
         });
     }
+
 
     reenviarCodigo(event: Event) {
         event.preventDefault();
@@ -102,6 +130,22 @@ export class VerifyCodePage implements OnInit {
             }
         });
     }
+
+    mascararTelefone(telefone: string): string {
+        if (!telefone) return '';
+
+        // Remove tudo que não for número
+        const numeros = telefone.replace(/\D/g, '');
+
+        if (numeros.length < 8) return telefone; // fallback se o número estiver incompleto
+
+        const ddd = numeros.slice(0, 2);
+        const meio = numeros.slice(2, -4); // mantém todos os dígitos exceto DDD e últimos 4
+        const fim = '0000'; // últimos 4 mascarados
+
+        return `(${ddd}) ${meio}-${fim}`;
+    }
+
 
     voltar() {
         this.navCtrl.back(); 

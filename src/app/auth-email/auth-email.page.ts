@@ -13,7 +13,6 @@ import { ToastService } from '../services/toast.service';
 export class AuthEmailPage {
 
     // Variáveis Iniciais
-
     email: string = '';
     isLoading = false;
 
@@ -21,7 +20,41 @@ export class AuthEmailPage {
         private navCtrl: NavController,
         private apiService: ApiService,
         private toastService: ToastService
-    ) {}
+    ) {
+        
+    }
+
+    ngOnInit(){
+        if (localStorage.getItem('resetSenha') === 'true') {
+            this.enviarCodigoAutomatico();
+        }
+    }
+
+    enviarCodigoAutomatico() {
+        this.isLoading = true;
+
+        const data = {
+            auth_hash: AUTH_HASH,
+            email: localStorage.getItem('email'), // pega do localStorage
+            type: 'email',
+            idUser: localStorage.getItem('idLogado')
+        };
+
+        this.apiService.gerarCode(data).subscribe({
+            next: (res: any) => {
+                this.isLoading = false;
+                if (res.estatus === 'success') {
+                    this.navCtrl.navigateForward('auth-email/verify-code');
+                } else {
+                    this.toastService.warning(res.mensagem || 'Erro ao gerar código');
+                }
+            },
+            error: () => {
+                this.isLoading = false;
+                this.toastService.error('Erro na comunicação com o servidor.');
+            }
+        });
+    }
 
     async confirmarEmail() {
         if (!this.validarEmail(this.email.trim())) {

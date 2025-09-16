@@ -18,6 +18,7 @@ export class VerifyCodePage implements OnInit {
     isLoading: boolean = false;
     erro: boolean = false;
     email = localStorage.getItem('email') || '';
+    telefone = localStorage.getItem('telefone') || '';
 
     constructor(private apiService: ApiService, private toastService: ToastService, private navCtrl: NavController,) { }
 
@@ -37,7 +38,6 @@ export class VerifyCodePage implements OnInit {
 
     atualizaCodigoDigitado() {
         this.codigoDigitado = `${this.parte1}${this.parte2 ? '-' + this.parte2 : ''}`;
-        console.log(this.codigoDigitado);
 
         if (this.parte1.length === 3 && this.parte2.length === 3) {
             this.verificarCodigo();
@@ -63,6 +63,7 @@ export class VerifyCodePage implements OnInit {
                     this.erro = false;
                     this.toastService.success('Código verificado com sucesso!');
                     localStorage.removeItem('email');
+                    localStorage.setItem('emailValidado', 'true');
                     this.navCtrl.navigateForward('auth-celular'); 
                 } else {
                     this.erro = true;
@@ -76,6 +77,21 @@ export class VerifyCodePage implements OnInit {
             }
         });
     }
+
+    mascararEmail(email: string): string {
+        if (!email) return '';
+
+        const [usuario, dominio] = email.split('@');
+
+        if (!usuario || !dominio) return email;
+
+        // Pega os 2 primeiros caracteres do usuário e substitui o resto por *
+        const inicio = usuario.slice(0, 2);
+        const oculto = '*'.repeat(Math.max(usuario.length - 2, 3)); // garante pelo menos 3 *
+
+        return `${inicio}${oculto}@${dominio}`;
+    }
+
 
     reenviarCodigo(event: Event) {
         event.preventDefault();
