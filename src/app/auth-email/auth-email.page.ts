@@ -97,5 +97,6 @@ export class AuthEmailPage {
 
     voltar() {
         this.navCtrl.back(); 
+        localStorage.clear();
     }
 }

@@ -13,7 +13,6 @@ ion-content {
     min-height: 100%;
     padding: 0 20px 0 20px;
     border-radius: 20px;
-    text-align: center;
     gap: 20px;
 }
 
@@ -29,17 +28,26 @@ h1 {
     color: #004977;
     font-weight: 600;
     line-height: 1.4;
+    text-align: center;
 }
 
-
-ion-input.custom-input {
+.input{
     width: 100%;
     margin-bottom: 20px;
     --border-radius: 12px;
     --placeholder-color: #004977;
     font-size: 1rem;
-    --border-color: #004977;
-    --color: #004977
+    --color: #004977;
+    --border-color-focus: #004977; 
+    --border-color: #004977;           
+    --border-color-focus: #004977;     
+    --border-color-invalid: #004977;   
+    --highlight-color-focused: #004977; 
+    --highlight-color-invalid: #004977; 
+}
+
+.input::part(native) {
+  text-align: left; /* alinha texto à esquerda */
 }
 
 ion-button {

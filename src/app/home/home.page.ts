@@ -18,7 +18,19 @@ export class HomePage {
         private navCtrl: NavController,
         private toastService: ToastService,
         private userService: UserService
-    ) {}
+    ) {
+        const idLogado = localStorage.getItem("idLogado"); 
+        const usuarioLogado = localStorage.getItem("usuarioLogado"); 
+        const senhaExpirada = localStorage.getItem("senhaExpirada"); 
+
+        if (idLogado && usuarioLogado === 'true' && senhaExpirada !== "true") { 
+            this.userService.buscarSaldo().then(() => {
+                this.navCtrl.navigateForward('index');
+            });
+        } else { 
+            localStorage.clear(); 
+        }
+    }
 
     togglePasswordVisibility() {
         this.showPassword = !this.showPassword;

@@ -14,6 +14,7 @@
 
         <!-- Input estilizado -->
         <ion-input
+            class="input"
             label="Insira o telefone"
             label-placement="floating"
             type="tel"
@@ -22,7 +23,6 @@
             placeholder="Telefone"
             [(ngModel)]="telefone"
             fill="outline"
-            class="custom-input"
             (ionInput)="aplicarMascaraTelefone($event)"
         ></ion-input>
 
