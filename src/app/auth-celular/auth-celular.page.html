@@ -1,32 +1,46 @@
 <ion-content>
-    <ion-button fill="clear" class="back-button" (click)="voltar()">
-        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
-    </ion-button>
 
-    <div class="container">
-        <!-- Logo maior e centralizada -->
-        <img src="../../assets/img/logoHcred-azul.png" alt="Logo Hcred" class="logo">
-
-        <ion-icon name="call-outline" style="background: #004977; color: #FFF; padding: 20px; border-radius: 50%; font-size: 2em;"></ion-icon>
-
-        <!-- Título maior e com espaçamento -->
-        <h1>Insira seu telefone para confirmarmos a sua identidade</h1>
-
-        <!-- Input estilizado -->
-        <ion-input
-            class="input"
-            label="Insira o telefone"
-            label-placement="floating"
-            type="tel"
-            inputmode="numeric"
-            pattern="[0-9]*"
-            placeholder="Telefone"
-            [(ngModel)]="telefone"
-            fill="outline"
-            (ionInput)="aplicarMascaraTelefone($event)"
-        ></ion-input>
-
-        <!-- Botão destacado -->
-        <ion-button expand="block" (click)="confirmarTelefone()"><ion-icon name="arrow-forward"></ion-icon></ion-button>
+    <!-- Loading overlay -->
+    <div class="loading-container" *ngIf="isLoading">
+        <ion-spinner name="crescent" style="color: #004977"></ion-spinner>
     </div>
+
+    <!-- Conteúdo principal -->
+    <div *ngIf="!isLoading">
+
+        <ion-button fill="clear" class="back-button" (click)="voltar()">
+            <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+        </ion-button>
+
+        <div class="container">
+            <!-- Logo maior e centralizada -->
+            <img src="../../assets/img/logoHcred-azul.png" alt="Logo Hcred" class="logo">
+
+            <ion-icon name="call-outline" style="background: #004977; color: #FFF; padding: 20px; border-radius: 50%; font-size: 2em;"></ion-icon>
+
+            <!-- Título maior e com espaçamento -->
+            <h1>Insira seu telefone para confirmarmos a sua identidade</h1>
+
+            <!-- Input estilizado -->
+            <ion-input
+                class="input"
+                type="tel"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                placeholder="Digite o seu Telefone"
+                [(ngModel)]="telefone"
+                fill="outline"
+                (ionInput)="aplicarMascaraTelefone($event)"
+            >
+                <ion-icon name="call-outline" slot="start"></ion-icon>
+            </ion-input>
+
+            <!-- Botão destacado -->
+            <ion-button expand="block" (click)="confirmarTelefone()">
+                <ion-icon name="arrow-forward"></ion-icon>
+            </ion-button>
+        </div>
+
+    </div>
+
 </ion-content>

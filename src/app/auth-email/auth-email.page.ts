@@ -15,6 +15,7 @@ export class AuthEmailPage {
     // Variáveis Iniciais
     
     email: string = '';
+    confirmEmail: string = '';
     isLoading = false;
 
     constructor(
@@ -60,6 +61,11 @@ export class AuthEmailPage {
     async confirmarEmail() {
         if (!this.validarEmail(this.email.trim())) {
             this.toastService.warning('E-mail inválido');
+            return;
+        }
+
+        if(this.email !== this.confirmEmail){
+            this.toastService.warning('Os e-mails não conferem');
             return;
         }
 
