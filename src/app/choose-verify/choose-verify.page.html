@@ -1,0 +1,47 @@
+<ion-content>
+    <ion-button fill="clear" class="back-button" (click)="voltar()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+    </ion-button>
+
+    <div class="container">
+        <!-- Logo maior e centralizada -->
+        <img src="../../assets/img/logoHcred-azul.png" alt="Logo Hcred" class="logo">
+
+        <ion-icon
+        name="shield-checkmark-outline"
+        style="background: #004977; color: #FFF; padding: 20px; border-radius: 50%; font-size: 2em;">
+        </ion-icon>
+
+        <!-- Título -->
+        <h1>Escolha como deseja confirmar sua identidade</h1>
+
+        <!-- Card SMS -->
+
+        <ion-card button="true" class="verify-card" (click)="navigation('auth-celular')">
+            <ion-item lines="none">
+                <ion-icon name="chatbubbles-outline" slot="start" class="verify-icon"></ion-icon>
+
+                <ion-label>
+                    <h2>Mensagem de texto (SMS)</h2>
+                    <p>Receba um código de verificação por SMS que enviaremos para o número {{formatarTelefone(telefone)}}.</p>
+                </ion-label>
+
+                <ion-icon name="chevron-forward-outline" slot="end" class="arrow-icon"></ion-icon>
+            </ion-item>
+        </ion-card>
+
+        <!-- Card Email -->
+        <ion-card button="true" class="verify-card" (click)="navigation('auth-email')">
+            <ion-item lines="none">
+                <ion-icon name="mail-outline" slot="start" class="verify-icon"></ion-icon>
+
+                <ion-label>
+                    <h2>E-mail</h2>
+                    <p>Receba um código de verificação no e-mail que enviaremos para  {{mascararEmail(email)}}.</p>
+                </ion-label>
+
+                <ion-icon name="chevron-forward-outline" slot="end" class="arrow-icon"></ion-icon>
+            </ion-item>
+        </ion-card>
+    </div>
+</ion-content>

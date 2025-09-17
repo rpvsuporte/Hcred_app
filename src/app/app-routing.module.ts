@@ -49,6 +49,10 @@ const routes: Routes = [
   {
     path: 'forget-password',
     loadChildren: () => import('./forget-password/forget-password.module').then( m => m.ForgetPasswordPageModule)
+  },
+  {
+    path: 'choose-verify',
+    loadChildren: () => import('./choose-verify/choose-verify.module').then( m => m.ChooseVerifyPageModule)
   }
 
 ];

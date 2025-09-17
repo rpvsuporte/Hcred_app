@@ -45,7 +45,7 @@ export class ForgetPasswordPage  {
                     localStorage.setItem('idLogado', res.idUser);
                     localStorage.setItem('resetSenha', 'true');
 
-                    this.navigation('auth-email'); 
+                    this.navigation('choose-verify'); 
                 } else {
                     this.toastService.warning(res.mensagem || 'Erro ao gerar código');
                 }

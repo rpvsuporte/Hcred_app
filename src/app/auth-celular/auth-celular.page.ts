@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationService } from '../services/navigation.service';
 import { ApiService } from "../services/api.service";
 import { AUTH_HASH } from '../services/auth-config'; 
-import { ToastService } from '../services/toast.service'; 
+import { ToastService } from '../services/toast.service';
+import { Location } from '@angular/common'; 
 
 @Component({
     selector: 'app-auth-celular',
@@ -20,7 +21,8 @@ export class AuthCelularPage implements OnInit {
     constructor(        
         private navigationService: NavigationService,
         private apiService: ApiService,
-        private toastService: ToastService
+        private toastService: ToastService,
+        private location: Location 
     ) { }
 
     ngOnInit() {
@@ -34,7 +36,7 @@ export class AuthCelularPage implements OnInit {
 
         const data = {
             auth_hash: AUTH_HASH,
-            email: localStorage.getItem('telefone'), 
+            telefone: localStorage.getItem('telefone'), 
             type: 'telefone',
             idUser: localStorage.getItem('idLogado')
         };

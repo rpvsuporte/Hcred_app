@@ -4,6 +4,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { AUTH_HASH } from 'src/app/services/auth-config';
 import { NavigationService } from 'src/app/services/navigation.service';
 
+
 @Component({
     selector: 'app-verify-code',
     templateUrl: './verify-code.page.html',
@@ -61,15 +62,21 @@ export class VerifyCodePage implements OnInit {
         this.apiService.verificarCodigo(data).subscribe({
             next: (res: any) => {
                 this.isLoading = false;
-                if (res.estatus === 'success') {
-                    this.erro = false;
-                    this.toastService.success('Código verificado com sucesso!');
-                    localStorage.removeItem('email');
-                    localStorage.setItem('emailValidado', 'true');
-                    this.navigation('auth-celular'); 
+
+                if(localStorage.getItem('resetSenha') !== 'true'){
+                    if (res.estatus === 'success') {
+                        this.erro = false;
+                        this.toastService.success('Código verificado com sucesso!');
+                        localStorage.removeItem('email');
+                        localStorage.setItem('emailValidado', 'true');
+                        this.navigation('auth-celular'); 
+                    } else {
+                        this.erro = true;
+                        this.toastService.warning(res.mensagem || 'Código inválido');
+                    }
                 } else {
-                    this.erro = true;
-                    this.toastService.warning(res.mensagem || 'Código inválido');
+                    localStorage.removeItem('resetSenha');
+                    this.navigation('atualizar-senha');
                 }
             },
             error: () => {
@@ -126,7 +133,7 @@ export class VerifyCodePage implements OnInit {
     }
 
     voltar() {
-        localStorage.getItem('resetSenha') === 'true' ? this.navigation('forget-password') : this.navigation('auth-email'); 
+        localStorage.getItem('resetSenha') === 'true' ? this.navigation('choose-verify') : this.navigation('auth-email'); 
     }
 
 }

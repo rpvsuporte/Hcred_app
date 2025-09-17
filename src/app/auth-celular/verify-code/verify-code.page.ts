@@ -147,7 +147,7 @@ export class VerifyCodePage implements OnInit {
     }
 
     voltar() {
-        localStorage.getItem('resetSenha') === 'true' ? this.navigation('auth-email/verify-code') : this.navigation('auth-celular'); 
+        localStorage.getItem('resetSenha') === 'true' ? this.navigation('choose-verify') : this.navigation('auth-celular'); 
     }
 
 }
