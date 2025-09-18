@@ -64,8 +64,4 @@ export class ChooseVerifyPage {
         this.navigationService.navigate(page);
     }
 
-    voltar() {
-        this.navigation('home'); 
-        localStorage.clear();
-    }
 }
