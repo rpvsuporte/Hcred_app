@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Permitir que o app salve fotos na sua biblioteca</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -24,6 +22,12 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Este app precisa acessar a câmera para tirar fotos de anexos.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Permitir que o app salve fotos na sua biblioteca</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Este app precisa acessar a galeria para selecionar fotos de anexos.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -45,11 +49,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSCameraUsageDescription</key>
-	<string>Este app precisa acessar a câmera para tirar fotos de anexos.</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Este app precisa acessar a galeria para selecionar fotos de anexos.</string>
 </dict>
 </plist>
