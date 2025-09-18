@@ -31,6 +31,8 @@ export class AuthCelularPage implements OnInit {
         }
     }
 
+    // Função de enviarCódigo automático quando for esquecer a senha
+
     enviarCodigoAutomatico() {
         this.isLoading = true;
 
@@ -56,6 +58,8 @@ export class AuthCelularPage implements OnInit {
             }
         });
     }
+
+    // Função de enviar o telefone
 
     confirmarTelefone(){
         if (!this.validarTelefone(this.telefone.trim())) {
@@ -91,6 +95,8 @@ export class AuthCelularPage implements OnInit {
         });
     }
 
+    // Função de validar o telefone
+
     validarTelefone(telefone: string): boolean {
 
         const numeros = telefone.replace(/\D/g, '');
@@ -101,6 +107,8 @@ export class AuthCelularPage implements OnInit {
 
         return true;
     }
+
+    // Função de Máscara do telefone
 
     aplicarMascaraTelefone(event: any) {
         let valor = event.target.value.replace(/\D/g, '');
@@ -119,9 +127,13 @@ export class AuthCelularPage implements OnInit {
         this.telefone = valor;
     }
 
+    // Função de navegação
+
     navigation(page: string) {
         this.navigationService.navigate(page);
     }
+
+    // Função voltar
 
     voltar() {
         this.navigation('auth-email/verify-code'); 

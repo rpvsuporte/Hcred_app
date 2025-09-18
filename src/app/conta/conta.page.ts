@@ -176,6 +176,8 @@ export class ContaPage {
         });
     }
 
+    // Função de saque
+
     sacar(){
         if(!this.valorNumerico){
             this.toastService.warning('Por favor, preencha os campos corretamente');

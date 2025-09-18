@@ -27,6 +27,8 @@ export class VerifyCodePage implements OnInit {
 
     ngOnInit() {}
 
+    // Função para padronizar o texto
+
     onPrimeiraParte() {
         if (this.parte1.length === 3) {
             const nextInput = document.querySelectorAll('ion-input-otp')[1] as any;
@@ -46,6 +48,8 @@ export class VerifyCodePage implements OnInit {
             this.verificarCodigo();
         }
     }
+
+    // Função de verificar o código
 
     verificarCodigo() {
         if (this.codigoDigitado.length !== 7) return;
@@ -87,6 +91,8 @@ export class VerifyCodePage implements OnInit {
         });
     }
 
+    // Função de máscara para o email
+
     mascararEmail(email: string): string {
         if (!email) return '';
 
@@ -100,6 +106,7 @@ export class VerifyCodePage implements OnInit {
         return `${inicio}${oculto}@${dominio}`;
     }
 
+    // Função de reenviar código
 
     reenviarCodigo(event: Event) {
         event.preventDefault();
@@ -127,6 +134,8 @@ export class VerifyCodePage implements OnInit {
             }
         });
     }
+
+    // Função de redirecionamento
 
     navigation(page: string) {
         this.navigationService.navigate(page);

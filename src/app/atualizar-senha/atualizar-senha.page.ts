@@ -26,6 +26,8 @@ export class AtualizarSenhaPage {
         private navCtrl: NavController
     ) {}
 
+    // Função de atualizar a senha
+
     async atualizarSenha() {
         if (this.novaSenha !== this.confirmaSenha) {
             this.toastService.error('As senhas não conferem.');
@@ -65,6 +67,8 @@ export class AtualizarSenhaPage {
             }
         });
     }
+
+    // Função dos inputs
 
     toggleNovaSenha() {
         this.showNovaSenha = !this.showNovaSenha;

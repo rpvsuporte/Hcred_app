@@ -17,7 +17,6 @@ export class ChooseVerifyPage {
     email: string = localStorage.getItem('email') || '';
     telefone: string = localStorage.getItem('telefone') || '';
 
-
     constructor(        
         private navigationService: NavigationService,
         private apiService: ApiService,
@@ -25,6 +24,8 @@ export class ChooseVerifyPage {
 
     ngOnInit() {
     }
+
+    // Função de formatar o telefone
 
     formatarTelefone(telefone: string): string {
         if (!telefone) return '';
@@ -48,6 +49,8 @@ export class ChooseVerifyPage {
         return telefone;
     }
 
+    // Função de máscara do email
+
     mascararEmail(email: string): string {
         if (!email) return '';
 
@@ -59,6 +62,8 @@ export class ChooseVerifyPage {
 
         return `${visivel}${oculto}@${dominio}`;
     }
+
+    // Função de redirecionamento
 
     navigation(page: string) {
         this.navigationService.navigate(page);

@@ -32,6 +32,8 @@ export class AuthEmailPage {
         }
     }
 
+    // Função de enviarCódigo automático quando for esquecer a senha
+
     enviarCodigoAutomatico() {
         this.isLoading = true;
 
@@ -57,6 +59,8 @@ export class AuthEmailPage {
             }
         });
     }
+
+    // Função de enviar o email
 
     async confirmarEmail() {
         if (!this.validarEmail(this.email.trim())) {
@@ -97,10 +101,14 @@ export class AuthEmailPage {
         });
     }
 
+    // Função de validar o email
+
     validarEmail(email: string): boolean {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regex.test(email.toLowerCase());
     }
+
+    // Função de redirecionamento
 
     navigation(page: string) {
         this.navigationService.navigate(page);
