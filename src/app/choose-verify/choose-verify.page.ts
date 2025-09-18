@@ -31,12 +31,11 @@ export class ChooseVerifyPage {
 
         let numeros = telefone.replace(/\D/g, '');
         
-        // Se for telefone com DDD
         if (numeros.length === 11) {
             const ddd = numeros.substring(0, 2);
-            const parte1 = numeros.substring(2, 3);  // 9
-            const parte2 = '****';                   // máscara
-            const parte3 = numeros.substring(7);     // últimos 4 dígitos
+            const parte1 = numeros.substring(2, 3);  
+            const parte2 = '****';                   
+            const parte3 = numeros.substring(7);     
 
             return `(${ddd}) ${parte1}${parte2}-${parte3}`;
         } else if (numeros.length === 10) {
@@ -55,7 +54,6 @@ export class ChooseVerifyPage {
         const [usuario, dominio] = email.split('@');
         if (!usuario || !dominio) return email;
 
-        // Mostrar só os 3 primeiros caracteres e mascarar o resto
         const visivel = usuario.substring(0, 3);
         const oculto = '*'.repeat(Math.max(usuario.length - 3, 2));
 

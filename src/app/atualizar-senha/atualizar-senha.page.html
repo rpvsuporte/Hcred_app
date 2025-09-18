@@ -9,6 +9,7 @@
         <form (ngSubmit)="atualizarSenha()" #senhaForm="ngForm">
 
             <!-- Nova Senha -->
+
             <ion-input
                 placeholder="Nova Senha"
                 [type]="showNovaSenha ? 'text' : 'password'"
@@ -27,6 +28,7 @@
             </ion-input>
 
             <!-- Confirmar Senha -->
+
             <ion-input
                 placeholder="Confirme a Senha"
                 [type]="showConfirmaSenha ? 'text' : 'password'"

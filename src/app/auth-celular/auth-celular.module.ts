@@ -9,12 +9,12 @@ import { AuthCelularPageRoutingModule } from './auth-celular-routing.module';
 import { AuthCelularPage } from './auth-celular.page';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    AuthCelularPageRoutingModule
-  ],
-  declarations: [AuthCelularPage]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        AuthCelularPageRoutingModule
+    ],
+    declarations: [AuthCelularPage]
 })
 export class AuthCelularPageModule {}

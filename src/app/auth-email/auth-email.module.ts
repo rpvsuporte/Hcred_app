@@ -9,12 +9,12 @@ import { AuthEmailPageRoutingModule } from './auth-email-routing.module';
 import { AuthEmailPage } from './auth-email.page';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    AuthEmailPageRoutingModule
-  ],
-  declarations: [AuthEmailPage]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        AuthEmailPageRoutingModule
+    ],
+    declarations: [AuthEmailPage]
 })
 export class AuthEmailPageModule {}

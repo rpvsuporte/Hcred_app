@@ -1,5 +1,5 @@
 ion-content {
-    --background: #f5f4fa; /* fundo suave */
+    --background: #004977 url('../../assets/img/pattern-hcred-bg.png') no-repeat center center / cover;
     min-height: 100vh;
 }
 
@@ -25,7 +25,7 @@ ion-content {
 h1 {
     font-size: 1.2rem;
     margin-bottom: 45px;
-    color: #004977;
+    color: #FFF;
     font-weight: 600;
     line-height: 1.4;
     text-align: center;
@@ -33,28 +33,27 @@ h1 {
 
 .input{
     width: 100%;
-    --background: #D5D4D9;
     margin-bottom: 20px;
     --padding-start: 20px;
     --border-radius: 12px;
-    --placeholder-color: #004977;
+    --placeholder-color: #FFF;
     font-size: 1rem;
-    --color: #004977;
-    --border-color-focus: #004977;
-    --border-color: #004977;
-    --border-color-focus: #004977;
-    --border-color-invalid: #004977;
-    --highlight-color-focused: #004977;
-    --highlight-color-invalid: #004977;
+    --color: #FFF;
+    --border-color-focus: #FFF;
+    --border-color: #FFF;
+    --border-color-focus: #FFF;
+    --border-color-invalid: #FFF;
+    --highlight-color-focused: #FFF;
+    --highlight-color-invalid: #FFF;
 }
 
 .input::part(native) {
-  text-align: left; /* alinha texto à esquerda */
+    text-align: left; 
 }
 
 ion-button {
     --border-radius: 12px;
-    --background: #004977;
+    --background: #de9f13;
     --color: #fff;
     font-weight: 600;
     font-size: 1rem;
@@ -73,7 +72,7 @@ ion-button:hover {
     --padding-start: 0;
     --padding-end: 0;
     --background: transparent;
-    --color: #004977;
+    --color: #FFF;
     font-size: 1em;
 }
 

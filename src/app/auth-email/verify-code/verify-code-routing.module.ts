@@ -4,14 +4,14 @@ import { Routes, RouterModule } from '@angular/router';
 import { VerifyCodePage } from './verify-code.page';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: VerifyCodePage
-  }
+    {
+        path: '',
+        component: VerifyCodePage
+    }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
 export class VerifyCodePageRoutingModule {}

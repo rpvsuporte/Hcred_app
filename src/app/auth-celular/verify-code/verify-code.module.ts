@@ -9,12 +9,12 @@ import { VerifyCodePageRoutingModule } from './verify-code-routing.module';
 import { VerifyCodePage } from './verify-code.page';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    VerifyCodePageRoutingModule
-  ],
-  declarations: [VerifyCodePage]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        VerifyCodePageRoutingModule
+    ],
+    declarations: [VerifyCodePage]
 })
 export class VerifyCodePageModule {}
