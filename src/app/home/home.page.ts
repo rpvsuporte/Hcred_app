@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, Platform } from '@ionic/angular';
+import { NavigationService } from '../services/navigation.service';
 import { ToastService } from '../services/toast.service';
 import { UserService } from '../services/user.service';
 
@@ -10,14 +11,17 @@ import { UserService } from '../services/user.service';
     standalone: false
 })
 export class HomePage {
+
+    // Variáveis Iniciais
+
     login: any = {};
     isLoading = false;
     showPassword = false;
 
     constructor(
-        private navCtrl: NavController,
         private toastService: ToastService,
-        private userService: UserService
+        private userService: UserService,
+        private navigationService: NavigationService
     ) {
         const idLogado = localStorage.getItem("idLogado"); 
         const usuarioLogado = localStorage.getItem("usuarioLogado"); 
@@ -25,16 +29,20 @@ export class HomePage {
 
         if (idLogado && usuarioLogado === 'true' && senhaExpirada !== "true") { 
             this.userService.buscarSaldo().then(() => {
-                this.navCtrl.navigateForward('index');
+                this.navigation('index');
             });
         } else { 
             localStorage.clear(); 
         }
     }
 
+    // Função de mudar o tipo de input
+
     togglePasswordVisibility() {
         this.showPassword = !this.showPassword;
     }
+
+    // Função de logar
 
     async loginApp() {
         if (!this.login.usuario || !this.login.senha) {
@@ -54,14 +62,14 @@ export class HomePage {
 
                 case 'senha_expirada':
                     localStorage.setItem('idLogado', resLogin.idUser);
-                    this.navCtrl.navigateForward('atualizar-senha');
+                    this.navigation('atualizar-senha');
                     break;
 
                 case 'verificacao_incompleta':
                     localStorage.setItem('idLogado', resLogin.idUser);
                     localStorage.setItem('usuarioParcial', this.login.usuario);
                     localStorage.setItem('senhaParcial', this.login.senha);
-                    this.navCtrl.navigateForward('auth-email');
+                    this.navigation('auth-email');
                     break;
 
                 default:
@@ -70,7 +78,7 @@ export class HomePage {
                         if (chave !== 'senhaAcesso') localStorage.setItem(chave, valor != null ? String(valor) : '');
                     });
                     await this.userService.buscarSaldo();
-                    this.navCtrl.navigateForward('index');
+                    this.navigation('index');
             }
 
         } catch (err) {
@@ -80,7 +88,10 @@ export class HomePage {
         }
     }
 
-    forgetPass() {
-        this.navCtrl.navigateForward('forget-password');
+    // Função de redirecionamento
+
+    navigation(page: string, estatus?: string) {
+        this.navigationService.navigate(page, estatus || '');
     }
+
 }

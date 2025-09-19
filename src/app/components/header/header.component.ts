@@ -68,14 +68,20 @@ export class HeaderComponent implements OnInit {
         await this.popoverCtrl.dismiss();
     }
 
+    // Função de logout
+
     logout() {
         localStorage.clear();
         this.navigation('home');
     }
 
+    // Função do olho
+
     olhoClic() {
         this.saldoValue = (this.saldoValue == "● ● ● ●") ? localStorage.getItem('saldoLoja') : "● ● ● ●";
     }
+
+    // Função de buscar proposta
 
     buscarPropostas() {
         const data = {
@@ -114,18 +120,26 @@ export class HeaderComponent implements OnInit {
         }
     }
 
+    // Função de toogle
+
     togglePopover(event: MouseEvent) {
         event.stopPropagation(); 
         this.mostrarPopover = !this.mostrarPopover;
     }
 
+    // Função de selecionar
+
     selecionarProposta(estatus: string) {
         this.navigation('propostas', estatus);
     }
 
+    // Função de navegação
+
     navigation(page: string, estatus?: string) {
         this.navigationService.navigate(page, estatus || '');
     }
+
+    // Função de alert
 
     async alert(texto: string) {
         this.toastService.info(texto); 

@@ -48,6 +48,8 @@ export class ContaPage {
         this.consultarContasAll();
     }
 
+    // Função de mascarar a data
+
     mascararData(event: any, campo: 'dataInicial' | 'dataFinal') {
         let valor = event.target.value;
         valor = valor.replace(/\D/g, '');
@@ -66,6 +68,8 @@ export class ContaPage {
         }
     }
 
+    // Função de converter para ISO
+
     converterParaISO(data: string): string | null {
         const partes = data.split('/');
         if (partes.length === 3) {
@@ -76,6 +80,8 @@ export class ContaPage {
         }
         return null;
     }
+
+    // Função de validar data
 
     validaData(dia: string, mes: string, ano: string): boolean {
         const d = parseInt(dia, 10);
@@ -89,6 +95,8 @@ export class ContaPage {
         return true;
     }
 
+    // Função de abrir modal
+
     abrirModal() {
         this.modal.present().then(() => {
             setTimeout(() => {
@@ -96,6 +104,8 @@ export class ContaPage {
             }, 100);
         });
     }
+
+    // Função de formatar moeda
 
     formatarMoeda(event: any) {
         let digits = event.target.value.replace(/\D/g, '');
@@ -110,6 +120,8 @@ export class ContaPage {
         this.valorExibicao = valorReal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         event.target.value = this.valorExibicao;
     }
+
+    // Função de consultar contas
 
     consultarContas(){
         if (!this.dataInicial || !this.dataFinal) {
@@ -152,6 +164,8 @@ export class ContaPage {
             }
         });
     }
+
+    // Função de consultar contas assim que entrar
 
     consultarContasAll() {
         this.loading = true; 
@@ -217,6 +231,8 @@ export class ContaPage {
             }
         });
     }
+
+    // Função de redirecionamento
 
     navigation(page: string, estatus?: string) {
         this.navigationService.navigate(page, estatus || '');

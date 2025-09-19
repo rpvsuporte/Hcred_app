@@ -35,6 +35,7 @@ export class DashboardPage implements OnInit {
     ngOnInit() {}
 
     // Função de loading e para carregar os cards
+
     async buscarDados() {
         const loading = await this.loadingController.create({
             message: 'Carregando informações...',
@@ -64,6 +65,8 @@ export class DashboardPage implements OnInit {
         );
     }
 
+    // Função de atualizar propostas
+
     atualizarPropostas() {
         const resultado = this.resultadoBusca.resultado || [];
 
@@ -85,15 +88,21 @@ export class DashboardPage implements OnInit {
         ];
     }
 
+    // Função para pegar o total
+
     getTotal(resultado: any[], estatus: string): number {
         const found = resultado.find(item => item.estatus.toLowerCase() === estatus.toLowerCase());
         return found ? found.total : 0;
     }
 
+    // Função de logout
+
     logout() {
         localStorage.clear();
         this.navigation('home');
     }
+
+    // Função de redirecionamento
 
     navigation(page: string, estatus?: string) {
         this.navigationService.navigate(page, estatus || '');

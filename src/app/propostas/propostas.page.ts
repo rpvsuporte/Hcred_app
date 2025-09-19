@@ -6,10 +6,10 @@ import { AUTH_HASH } from 'src/app/services/auth-config';
 import { ToastService } from '../services/toast.service'; 
 
 @Component({
-  selector: 'app-propostas',
-  templateUrl: './propostas.page.html',
-  styleUrls: ['./propostas.page.scss'],
-  standalone: false
+    selector: 'app-propostas',
+    templateUrl: './propostas.page.html',
+    styleUrls: ['./propostas.page.scss'],
+    standalone: false
 })
 export class PropostasPage  {
 

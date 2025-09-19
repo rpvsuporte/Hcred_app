@@ -173,6 +173,8 @@ export class CadastroPage implements OnInit {
         }
     }
 
+    // Função para carregar os campos
+
     private loadCadastroData() {
         this.operacao = JSON.parse(localStorage.getItem('dados') || '{}');
         if (this.operacao) {
@@ -224,6 +226,8 @@ export class CadastroPage implements OnInit {
         }
     }
 
+    // Função de listar a operadora
+
     listarOperadora() {
         try {
             const data = { auth_hash: AUTH_HASH, idFranqueado: localStorage.getItem('idFranqueado'), tipoOperacao: this.cadastro.tipoOperacao };
@@ -238,6 +242,8 @@ export class CadastroPage implements OnInit {
             this.toastService.error('Erro ao carregar dados da operação.');
         }
     }
+
+    // Função de validar CPF
 
     validarCPF(cpf: string): boolean {
         cpf = cpf.replace(/[^\d]+/g, '');
@@ -257,15 +263,21 @@ export class CadastroPage implements OnInit {
         return digito2 === parseInt(cpf.charAt(10));
     }
 
+    // Função de validar email
+
     validarEmail(email: string): boolean {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
         return regex.test(email.trim());
     }
 
+    // Função de validar telefone
+
     validarTelefone(telefone: string): boolean {
         const somenteNumeros = telefone.replace(/\D/g, '');
         return somenteNumeros.length >= 10 && somenteNumeros.length <= 11;
     }
+
+    // Função de validar data de nascimento
 
     validarDataNascimento(data: string): boolean {
         if (!data) return false;
@@ -278,6 +290,8 @@ export class CadastroPage implements OnInit {
         return idade >= 18 && nascimento <= hoje;
     }
 
+    // Função de formatar CPF
+
     formatarCPF(event: any) {
         let valor = event.target.value.replace(/\D/g, '');
         valor = valor.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
@@ -285,6 +299,16 @@ export class CadastroPage implements OnInit {
         this.cadastro.cpf = valor;
         if (valor.length === 14) this.consultarCPF(valor);
     }
+
+    // Função de formatar telefone
+    
+    formatarTelefone(event: any) {
+        let valor = event.target.value.replace(/\D/g, '');
+        valor = valor.replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d{5})(\d{1,4})$/, '$1-$2');
+        event.target.value = valor;
+    }
+
+    // Função de consultar CPF
 
     consultarCPF(cpf: string) {
         const data = { auth_hash: AUTH_HASH, cpf };
@@ -300,6 +324,8 @@ export class CadastroPage implements OnInit {
         });
     }
 
+    // Função de preencher os campos
+
     preencherCampos(dados: any) {
         localStorage.setItem('dadosCliente', JSON.stringify(dados));
         if (dados.nome) this.cadastro.nomeCompleto = dados.nome;
@@ -310,11 +336,7 @@ export class CadastroPage implements OnInit {
         if (dados.rg) this.cadastro.rg = dados.rg;
     }
 
-    formatarTelefone(event: any) {
-        let valor = event.target.value.replace(/\D/g, '');
-        valor = valor.replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d{5})(\d{1,4})$/, '$1-$2');
-        event.target.value = valor;
-    }
+    // Função de pegar o valor da parcela
 
     getValorParcela(parcela: any): string {
         const valorOperacao = parseFloat(this.converterMoedaParaNumero(this.operacao.valor));
@@ -324,10 +346,14 @@ export class CadastroPage implements OnInit {
         return this.formatarValorReal((valorOperacao * taxaLiquido));
     }
 
+    // Função de formatar valor
+
     formatarValorReal(valor: number | string): string {
         const num = parseFloat(String(valor).replace(/,/g, '.'));
         return isNaN(num) ? 'R$ 0,00' : num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
+
+    // Função de converter para número
 
     converterMoedaParaNumero(valorMoeda: string): string {
         if (!valorMoeda) return '0.00';
@@ -335,6 +361,8 @@ export class CadastroPage implements OnInit {
         const num = parseFloat(valorLimpo);
         return isNaN(num) ? '0.00' : num.toFixed(2);
     }
+
+    // Função de redirecionamento
 
     navigation(page: string) {
         this.navigationService.navigate(page);

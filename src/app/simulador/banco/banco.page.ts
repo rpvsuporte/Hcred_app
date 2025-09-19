@@ -49,7 +49,6 @@ export class BancoPage implements OnInit {
     };
 
     constructor(
-        private navCtrl: NavController,
         private apiService: ApiService,
         private navigationService: NavigationService,
         private toastService: ToastService
@@ -58,6 +57,8 @@ export class BancoPage implements OnInit {
     ngOnInit() {
         this.selectBanks();
     }
+
+    // Função para selecionar os bancos
 
     async selectBanks() {
         this.apiService.buscaBanks({ auth_hash: AUTH_HASH }).subscribe({
@@ -75,12 +76,16 @@ export class BancoPage implements OnInit {
         });
     }
 
+    // Função para filtrar os bancos
+
     filtrarBancos() {
         const termo = this.termoBuscaBanco.toLowerCase();
         this.bancosFiltrados = this.listaBanks.filter((banco: any) =>
             banco.Name.toLowerCase().includes(termo)
         );
     }
+
+    // Função de selecionar o banco
 
     selecionarBancoInput(banco: any) {
         this.termoBuscaBanco = banco.Name;
@@ -91,6 +96,8 @@ export class BancoPage implements OnInit {
     ocultarComDelay() {
         setTimeout(() => this.mostrarListaBancos = false, 200);
     }
+
+    // Função de validar os campos
 
     validarCampos(): boolean {
         this.errosCampos = {};

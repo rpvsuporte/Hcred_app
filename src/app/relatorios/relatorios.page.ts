@@ -22,6 +22,8 @@ export class RelatoriosPage {
         public navigationService: NavigationService,
     ) { }
 
+    // Função para gerar o relatório
+
     gerarRelatorio() {
         if (!this.periodo) {
             this.toastService.warning('Selecione um período');
@@ -56,6 +58,8 @@ export class RelatoriosPage {
             }
         })
     }
+
+    // Função de redirecionamento
 
     navigation(page: string, estatus?: string, idProposta?:string) {
         this.navigationService.navigate(page, estatus || '', idProposta || '');

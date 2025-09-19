@@ -23,6 +23,8 @@ export class ForgetPasswordPage  {
         private toastService: ToastService
     ) {}
 
+    // Função de confirmar o nome de usuário
+
     async confirmarNomeUser() {
         if (!this.nomeUser) {
             this.toastService.warning('Nome de usuário inválido ou vazio.');
@@ -57,9 +59,13 @@ export class ForgetPasswordPage  {
         });
     }
 
+    // Função de redirecionamento
+
     navigation(page: string) {
         this.navigationService.navigate(page);
     }
+
+    // Função voltar
 
     voltar() {
         localStorage.clear();
