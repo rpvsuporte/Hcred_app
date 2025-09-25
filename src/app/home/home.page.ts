@@ -73,7 +73,6 @@ export class HomePage {
                     break;
 
                 default:
-                    // login completo
                     Object.entries(resLogin.dados).forEach(([chave, valor]) => {
                         if (chave !== 'senhaAcesso') localStorage.setItem(chave, valor != null ? String(valor) : '');
                     });

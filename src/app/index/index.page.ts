@@ -13,9 +13,10 @@ import { ToastService } from '../services/toast.service';
 })
 export class IndexPage implements OnInit {
 
-    // Variáveis Iniciais
+    // Variáveis Inicias
 
     urlImage: string = '';
+    isLoading: boolean = true; 
 
     constructor(
         private navigationService: NavigationService,
@@ -41,17 +42,17 @@ export class IndexPage implements OnInit {
                 } else {
                     this.toastService.error('Nenhum banner encontrado');
                 }
+                this.isLoading = false; 
             },
             error: () => {
                 this.toastService.error('Erro ao carregar banner');
+                this.isLoading = false; 
             }
         });
     }
 
-    // Função de redirecionamento
-
     navigation(page: string, estatus?: string) {
         this.navigationService.navigate(page, estatus || '');
     }
-
 }
+

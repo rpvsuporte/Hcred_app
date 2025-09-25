@@ -1,6 +1,11 @@
 <ion-content [fullscreen]="true" class="pageIndex">
-    <app-header></app-header>
+  <app-header></app-header>
 
+  <ng-container *ngIf="isLoading; else content">
+        <ion-spinner name="crescent" class="spinner-center"></ion-spinner>
+  </ng-container>
+
+  <ng-template #content>
     <div class="img-home">
         <img [src]="urlImage" alt="Aviso Home">
     </div>
@@ -10,5 +15,6 @@
             <ion-icon name="bar-chart-outline"></ion-icon>
         </ion-fab-button>
     </ion-fab>
-</ion-content>
 
+  </ng-template>
+</ion-content>
