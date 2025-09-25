@@ -56,7 +56,7 @@ export class RelatoriosPage {
             error: () => {
                 this.toastService.error('Erro ao gerar relatório');
             }
-        })
+        });
     }
 
     // Função de redirecionamento

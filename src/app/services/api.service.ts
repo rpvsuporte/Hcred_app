@@ -104,6 +104,10 @@ export class ApiService {
         return this.http.post<any>(`${this.apiHcred}gerarRelatorio.php`, JSON.stringify(data), this.options);
     }
 
+    getBanner(data: any){
+        return this.http.post<any>(`${this.apiHcred}getBanner.php`, JSON.stringify(data), this.options);
+    }
+
     listarContrato(data: any){
         return this.http.post<any>(`${this.apiHcred}listarContrato.php`, JSON.stringify(data), this.options);
     }
