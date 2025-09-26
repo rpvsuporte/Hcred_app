@@ -13,7 +13,7 @@ import { ToastService } from '../services/toast.service';
 })
 export class IndexPage implements OnInit {
 
-    // Variáveis Inicias
+    // Variáveis Iniciais
 
     urlImage: string = '';
     isLoading: boolean = true; 

@@ -1,5 +1,3 @@
-// cadastro.page.ts
-
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service'; 

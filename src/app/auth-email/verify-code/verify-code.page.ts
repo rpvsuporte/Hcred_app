@@ -4,7 +4,6 @@ import { ToastService } from 'src/app/services/toast.service';
 import { AUTH_HASH } from 'src/app/services/auth-config';
 import { NavigationService } from 'src/app/services/navigation.service';
 
-
 @Component({
     selector: 'app-verify-code',
     templateUrl: './verify-code.page.html',
