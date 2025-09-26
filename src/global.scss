@@ -53,7 +53,8 @@ $topo-selectors: (
     "app-cadastro .topo-cadastro",
     "app-endereco .topo-endereco",
     "app-simulador .topo-simulador",
-    "app-relatorios .topo-relatorios"
+    "app-relatorios .topo-relatorios",
+    
 );
 
 @each $selector in $topo-selectors {

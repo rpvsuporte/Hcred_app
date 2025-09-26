@@ -66,7 +66,7 @@ ion-button:hover {
 
 .back-button {
     position: absolute;
-    top: calc(env(safe-area-inset-top) + 15px);
+    top: calc(env(safe-area-inset-top) + 25px);
     left: 15px;
     z-index: 100;
     --padding-start: 0;
